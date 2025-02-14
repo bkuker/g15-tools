@@ -2,8 +2,19 @@ import fs from "fs";
 import * as util from "./assemblerUtils.js";
 import disassembleWord from "./PaulDecoder.js";
 import * as tape from "./tapeUtils.js";
+import { Command } from 'commander';
 
-const fileName = process.argv[2];
+
+
+const commandLine = new Command();
+commandLine
+    .option('--nostatic', 'Do not perform static analysis.')
+    .option('-e, --entrypoints <entry points>', 'Comma separated list of entry points for static analysis')
+    .argument('<string>');
+commandLine.parse();
+
+const fileName = commandLine.args[0];
+
 const data = fs.readFileSync(fileName, 'utf-8'); // Read file synchronously
 const lines = data.split(/\r?\n/); // Split into lines
 
@@ -129,53 +140,60 @@ for (let l = 0; l < block.length; l++) {
     program[l] = cmd;
 }
 
-let todo = [0, 37,47,59];
 let done = [];
-while (todo.length) {
-    //console.log(todo);
-    //console.log(done);
 
-    let cur = todo.shift();
-    done.push(cur);
-    let cmd = program[cur];
+//Perform static analysis if enabled
+if (!commandLine.opts().nostatic) {
 
-    if (cmd.src == 31 && cmd.dst == 31 && cmd.c == 0) {
-        continue;
-    }
+    //Initialize TODO with list of entrypoints from command
+    //line, or with just a zero.
+    let todo = commandLine.opts().entrypoints || "0";
+    todo = todo.split(",").map(e=>+e);
+    
+    while (todo.length) {
+        //console.log(todo);
+        //console.log(done);
 
-    //TODO All of them!
-    if (cur == 100)
-        console.log(util.formatCommand(cmd));
-    let test = false;
-   // console.log(cmd.src);
-    if (cmd.dst == 27) {
-        test = true;
-    } else if (cmd.src == 28 && cmd.dst == 31 && cmd.c <= 3) {
-        test = true;
-    } else if (cmd.src == 22 && cmd.dst == 31 && cmd.c == 0) {
-        test = true;
-    } else if (cmd.comment.indexOf("TEST") != -1) {
-        test = true;
-    }
-    //console.log(test);
+        let cur = todo.shift();
+        done.push(cur);
+        let cmd = program[cur];
 
-
-    if (test) {
-        if (done.indexOf(cmd.n + 1) == -1) {
-           // console.log(cur, cmd.n + 1);
-            todo.unshift(cmd.n + 1);
+        if (cmd.src == 31 && cmd.dst == 31 && cmd.c == 0) {
+            continue;
         }
-    }
 
-    if (done.indexOf(cmd.n) == -1) {
-        //console.log(cur, cmd.n);
-        todo.unshift(cmd.n);
+        //TODO All of them!
+        if (cur == 100)
+            console.log(util.formatCommand(cmd));
+        let test = false;
+        // console.log(cmd.src);
+        if (cmd.dst == 27) {
+            test = true;
+        } else if (cmd.src == 28 && cmd.dst == 31 && cmd.c <= 3) {
+            test = true;
+        } else if (cmd.src == 22 && cmd.dst == 31 && cmd.c == 0) {
+            test = true;
+        } else if (cmd.comment.indexOf("TEST") != -1) {
+            test = true;
+        }
+        //console.log(test);
+
+
+        if (test) {
+            if (done.indexOf(cmd.n + 1) == -1) {
+                // console.log(cur, cmd.n + 1);
+                todo.unshift(cmd.n + 1);
+            }
+        }
+
+        if (done.indexOf(cmd.n) == -1) {
+            //console.log(cur, cmd.n);
+            todo.unshift(cmd.n);
+        }
     }
 }
 
-//console.log(done);
-
-let out = "";
+let out = "#" + fileName + "\n";
 let last = false;
 for (let l of done) {
     if (last && last.n != l)
@@ -188,13 +206,13 @@ for (let l of done) {
     last = cmd;
 }
 
-
-
-out += "\n\n#Not Reached from Entry Points\n\n";
+if (!commandLine.opts().nostatic) {
+    out += "\n\n#Not Reached from Entry Points\n\n";
+}
 for (let cmd of program) {
     if (done.indexOf(cmd.l) == -1 && cmd.word != 0) {
         cmd.comment = util.g15Hex(cmd.word) + "\t" + util.wordToDec(cmd.word).toString().padStart(9) + "\t" + cmd.comment;
-        if ( cmd.comment.indexOf("Invalid") != -1 ){
+        if (cmd.comment.indexOf("Invalid") != -1) {
             out = out + `.${util.intToG15Dec(cmd.l)} ${util.g15SignedHex(cmd.word)}\n`;
         } else {
             out = out + util.formatCommand(cmd) + "\n";

@@ -12,6 +12,7 @@
     "vite": "^5.0.0"
   },
   "dependencies": {
+    "commander": "^13.1.0",
     "cytoscape": "^3.31.0",
     "spark-md5": "^3.0.2"
   }
