@@ -15,6 +15,8 @@ Also because huge inspiration and help came from Paul's web based emulator, and 
 
 You will need to install npm to use them on the command line, and then `npm ci` to install the required libraries.
 
+**❗ WARNING:** Windows users, powerShell seems do output redirection in UTF-16 or something terrible. Use `cmd.exe`.
+
 ## Assembler
 
 The assembler converts a file of decimal instructions to 29-bit instruction words, and outputs them to STDOUT in .pti paper tape image format.
@@ -30,7 +32,7 @@ C:\Users\bkuker\g15-tools\programs>npm run asm -- fib.asm
 
 # fib.asm
 00000000000000000000000000000/
-...❗OUTPUT SKIPPED❗...
+...⊘ OUTPUT SKIPPED ⊘...
 00000000000000000000000000000/
 00000004z823w0280390713w1uz00/
 9z0w41w5005vw027w2u0753w12838/
@@ -42,6 +44,8 @@ C:\Users\bkuker\g15-tools\programs>npm run asm -- fib.asm
 
 The disassembler converts a .pti tape image file to an assembly program.
 
+**❗ WARNING:** This only works on .pti files containing a single block of code, no number track.
+
 By default it will perform a rudimentary static analysis, reordering code locations to match the order in which they are executed. It inserts a blank line after any line of code that does not simply jump to the next line. Continuous blocks of code are therefor output, making manual interpretation easier. You will likely still need to perform some rearraingement of these blocks to make source code organized and logical.
 
 The `--nostatic` option disables this, code will be output in location order, from 0-u7.
@@ -50,7 +54,7 @@ The `--entrypoints` or `-e` option allows you to provide a comma seperated list 
 
 Output is to STDOUT, you might want to redirect the output to a file.
 
-**WARNING:** Windows users, powerShell seems do output redirection in UTF-16 or something terrible. Use `cmd.exe`.
+
 
 ### Example:
 
@@ -63,7 +67,7 @@ C:\Users\bkuker\g15-tools\programs\music>npm run dasm -- m1.pti --entrypoints 0,
 .04 .  .u7.05.3.19.28    d SU 19:107 > AR
 .05 . u.06.06.1.19.29    i AD 19:6 > AR+ #108
 
-...❗OUTPUT TRUNCATED❗...
+...⊘ OUTPUT TRUNCATED ⊘...
 ```
 
 ## Tracer
