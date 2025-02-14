@@ -4,8 +4,13 @@ import disassembleWord from "./PaulDecoder.js";
 import * as tape from "./tapeUtils.js";
 import { Command } from 'commander';
 
+//If running from "npm run" change back
+//to the directory the user ran the program from
+if (process.env.INIT_CWD){
+    process.chdir(process.env.INIT_CWD);
+}
 
-
+//Command line stuff
 const commandLine = new Command();
 commandLine
     .option('--nostatic', 'Do not perform static analysis.')

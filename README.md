@@ -1,2 +1,42 @@
 # g15-tools
-Assembler, disassembler and assorted tools for the Bendix G15
+
+Assembler, disassembler and assorted tools for the Bendix G15.
+
+Assembler is too strong a word, it encodes programs written in the G15 decimal format (similar to the paper programming problem worksheet) into binary words and then outputs them as a [.pti file](https://github.com/retro-software/G15-software/).
+
+You can run the programs on Paul Kimpel's [Bendix g15 Emulator](https://www.phkimpel.us/Bendix-G15/).
+
+## Assembler
+
+The assembler converts a file of decimal instructions to 29-bit instruction words, and outputs them in .pti paper tape image format.
+
+## Disassembler
+
+The disassembler converts a .pti tape image file to an assembly program.
+
+By default it will perform a rudimentary static analysis, reordering code locations to match the order in which they are executed. It inserts a blank line after any line of code that does not simply jump to the next line. Continuous blocks of code are therefor output, making manual interpretation easier. You will likely still need to perform some rearraingement of these blocks to make source code organized and logical.
+
+The `--nostatic` option disables this, code will be output in location order, from 0-u7.
+
+The `--entrypoints` or `-e` option allows you to provide a comma seperated list of entry points for this analysis, default is `0`.
+
+Output is to STDOUT, you might want to redirect the output to a file.
+
+**WARNING:** Windows users, powerShell seems do output redirection in UTF-16 or something terrible. Use `cmd.exe`.
+
+### Example:
+
+```
+C:\Users\bkuker\g15-tools\programs\music>npm run dasm -- m1.pti --entrypoints 0,49   
+
+> g15-tools@0.0.0 dasm
+> node assembler/disassembler.js m1.pti --entrypoints 0,49
+
+#m1.pti
+.00 . u.01.02.0.19.00    i TR 19:1 > 0:1 #108
+.02 .  .04.04.0.21.31    i MARK:3, CD=0 #1
+.04 .  .u7.05.3.19.28    d SU 19:107 > AR
+.05 . u.06.06.1.19.29    i AD 19:6 > AR+ #108
+
+...❗OUTPUT TRUNCATED❗...
+```
