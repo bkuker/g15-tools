@@ -21,7 +21,9 @@ The assembler converts a file of decimal instructions to 29-bit instruction word
 
 ### Example
 
-```C:\Users\bkuker\g15-tools\programs>npm run asm -- fib.asm
+```
+C:\Users\bkuker\g15-tools\programs>npm run asm -- fib.asm
+
 # fib.asm
 00000000000000000000000000000/
 ...❗OUTPUT SKIPPED❗...
