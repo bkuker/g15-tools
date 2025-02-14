@@ -15,7 +15,7 @@ Also because huge inspiration and help came from Paul's web based emulator, and 
 
 You will need to install npm to use them on the command line, and then `npm ci` to install the required libraries.
 
-**❗ WARNING:** Windows users, powerShell seems do output redirection in UTF-16 or something terrible. Use `cmd.exe`.
+**⚠️ WARNING:** Windows users, powerShell seems do output redirection in UTF-16 or something terrible. Use `cmd.exe`.
 
 ## Assembler
 
@@ -44,7 +44,7 @@ C:\Users\bkuker\g15-tools\programs>npm run asm -- fib.asm
 
 The disassembler converts a .pti tape image file to an assembly program.
 
-**❗ WARNING:** This only works on .pti files containing a single block of code, no number track.
+**⚠️ WARNING:** This only works on .pti files containing a single block of code, no number track.
 
 By default it will perform a rudimentary static analysis, reordering code locations to match the order in which they are executed. It inserts a blank line after any line of code that does not simply jump to the next line. Continuous blocks of code are therefor output, making manual interpretation easier. You will likely still need to perform some rearraingement of these blocks to make source code organized and logical.
 
