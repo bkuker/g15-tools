@@ -1,0 +1,86 @@
+LL  i/d T   N C  S  D DP BP  L  Interpretation
+
+#Load the Track 0 Music data load instruction into PN:1
+#Load ??? Into PN:2
+49  d  56  59 0  0 28       49: d TR 0:56 > AR, nL=57, N=59*            AR = Track 0 Load
+59  d  61  48 0 28  0       59: d TR AR > 0:61, nL=62, N=48*            0:61 = AR
+48  d  60  62 4  0 26 1     48: d DP-TR 0:60 > PN:0, nL=62, N=62*       PN:0 = 0:60, PN:1 = 0:61
+
+
+#Song loop?
+62  i  64  64 1 26 28       62: i AD PN:1 > AR #1, nL=64, N=64*         Load Music Data Load instruction from PN:1 to AR
+64  i  66  66 0 31 31       64: i NEXT CMD FROM AR:65 #1, nL=66, N=66*  Execute AR
+AR                          AR: d TR 1:0 > AR, nL=1, N=68*              Copy music data from line 1 to AR           
+                            
+68  d  70  72 4 28 21 1     68: d DP-TR AR > 21:2, nL=72, N=72*         Copy Music data from AR to 21:2 & 3 (DP = Two copies)
+72  d  75  76 0 31 28       72: d TR (20.21):3 > AR, nL=76, N=76*       Somehow does AND ...00011110000?? SP EXTRACT!!
+                                                                        It ANDS 20.T and 21.T Into AR
+                                                                        21 Contains AR
+                                                                        20.3 Contains 00000z0 aka bin ...11110000
+                                                                        
+
+76  i  78  78 0 28 27       76: i TR AR > TEST:77 #1, nL=78, N=78*      If AR == 0 GOTO 78 else GOTO 79
+78                                                                      (TODO)
+79  i  81  81 0 28 29       79: i TR AR > AR+ #1, nL=81, N=81*          AR = AR * 2? AKA Shift left
+81  i  83  84 0  0 29       81: i TR 0:82 > AR+ #1, nL=83, N=84*        AR += 0:82
+84  i  86  86 0 31 31       84: i NEXT CMD FROM AR:85 #1, nL=86, N=86*
+AR                          AR: TR X:1 > 19:1                           Play Note X (Copy note to line 19)
+
+
+10  d  90  91 2 31 28       10: d AV (20.21):2 > AR, nL=91, N=91*       Note Data & -000000z Extract 4 bits length
+
+#Delay Loop
+# while ( AR != 0 ) {
+#   AR--
+#   Delay one revolution   
+#}
+91  i  93  93 0 28 27       91: i TR AR > TEST:92 #1, nL=93, N=93*      IF AR == 0 GOTO 93
+94  d  95  67 3  0 29       94: d SU 0:95 > AR+, nL=96, N=67*           AR--
+67  d  67  66 0  0  0       67: d TR 0:67 > 0:67, nL=68, N=66*          GOTO 66 (1 rotation delay)
+66  d  66  91 0  0  0       66: d TR 0:66 > 0:66, nL=67, N=91*          GOTO 91
+
+93  i  95  97 0 21 28       93: i TR 21:2 > AR #1, nL=95, N=97*         Load music data from 21:2 to AR
+97  i 100 100 4  0 30 1     97: i DP-TR 0:98 > PN+:0 #2, nL=100, N=100* Adjust PN with values in 0:98, 0:99
+
+#Stacatto / Legatto code
+# If AR is neagative copy 0s to track 19 for one revolution
+# Otherwise NOP
+100 i 102 102 0 22 31      TEST AR-SIGN
+102 i 103 104 0  0  0      AR Positive? Skip to 104
+103 i 104 104 0 29 19      AR Negative? Zero out track 19 TR (20.IR):0 > 19:104 #108
+
+#If PN:0 > 0 Go back to 62 else ???
+104 d 106  18 0 26 27      104: d TR PN:0 > TEST:106, nL=107, N=18*     IF PN == 0 GOTO 18 else GOTO 19
+18                                                                      (TODO)
+19  i  21  62 0  0  0       19: i TR 0:20 > 0:20 #1, nL=21, N=62*       NOP GOTO 62
+
+#DATA
+
+#Base of dynamic instructions to load music data from track 1,2 or 3
+.56 10088078     d   0  68 0  1 28       56: d TR 1:0 > AR, nL=1, N=68*
+.57 100880v8     d   0  68 0  2 28       57: d TR 2:0 > AR, nL=1, N=68*
+.58 100880z8     d   0  68 0  3 28       58: d TR 3:0 > AR, nL=1, N=68*
+
+.60 0x800000     i 108   0 0  0  0       60: i TR 0:61 > 0:61 #47, nL=0, N=0*
+.61 10088078     d   0  68 0  1 28       61: d TR 1:0 > AR, nL=1, N=68*
+
+#Base of dynamic note set instruction
+.82 0uy140y6     i  87  10 0  3 19       82: i TR 3:83 > 19:83 #4, nL=87, N=10*
+
+.95 1                                    Constant 1
+
+#Used at :97 to adjust the instruction words held in PN
+1zy00000  zz00000  267386880  0.996093750 d 127   0 0  0  0       98: d TR 0:127 > 0:127, nL=20, N=0*
+001zzzzz -00zzzzz   -1048575 -0.003906246 i   0 127 7 31 31 1  b  99: i DP-S=31:100 <C=3 Invalid> #8, nL=0, N=127*
+
+
+#DATA RAW
+10088078  804403w  134496316  0.501037821 d   0  68 0  1 28       56: d TR 1:0 > AR, nL=1, N=68*
+100880v8  804405w  134496348  0.501037940 d   0  68 0  2 28       57: d TR 2:0 > AR, nL=1, N=68*
+100880z8  804407w  134496380  0.501038060 d   0  68 0  3 28       58: d TR 3:0 > AR, nL=1, N=68*
+0x800000  6w00000  113246208  0.421875000 i 108   0 0  0  0       60: i TR 0:61 > 0:61 #47, nL=0, N=0*
+10088078  804403w  134496316  0.501037821 d   0  68 0  1 28       61: d TR 1:0 > AR, nL=1, N=68*
+0uy140y6  570u073   91267187  0.339996766 i  87  10 0  3 19       82: i TR 3:83 > 19:83 #4, nL=87, N=10*
+00000002  0000001          1  0.000000004 i   0   0 0  0  1       95: i TR 0:96 > 1:96 #12, nL=0, N=0*
+1zy00000  zz00000  267386880  0.996093750 d 127   0 0  0  0       98: d TR 0:127 > 0:127, nL=20, N=0*
+001zzzzz -00zzzzz   -1048575 -0.003906246 i   0 127 7 31 31 1  b  99: i DP-S=31:100 <C=3 Invalid> #8, nL=0, N=127*

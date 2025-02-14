@@ -1,0 +1,18 @@
+{
+  "name": "g15-tools",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "cytoscape": "^3.31.0",
+    "spark-md5": "^3.0.2"
+  }
+}
