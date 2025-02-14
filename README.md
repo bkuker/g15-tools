@@ -19,6 +19,10 @@ You will need to install npm to use them on the command line, and then `npm ci` 
 
 The assembler converts a file of decimal instructions to 29-bit instruction words, and outputs them to STDOUT in .pti paper tape image format.
 
+The `--words` option outputs the program words in G15 hex, not a .pti file.
+
+The `--bootable` option will output the Number Track prior to the program code.
+
 ### Example
 
 ```

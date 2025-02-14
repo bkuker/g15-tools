@@ -37,6 +37,7 @@ if (process.env.INIT_CWD) {
 const commandLine = new Command();
 commandLine
     .option('--words', 'Output words, not pti')
+    .option('--bootable', 'Output a number track before the program block')
     .argument('<string>');
 commandLine.parse();
 
@@ -163,7 +164,11 @@ if (commandLine.opts().words) {
     }
 } else {
     //Output PTI Paper tape image
-    let pti = "# " + fileName + "\n" + tape.lineToTape(lineWords);
+    let pti = "";
+    if (commandLine.opts().bootable ) {
+        pti += numberTrack() + "\n\n";
+    }
+    pti += "# " + fileName + "\n" + tape.lineToTape(lineWords);
     console.log(pti);
 }
 
@@ -182,4 +187,37 @@ function g15DecToInt(v) {
     v = v.replace("y", "14");
     v = v.replace("z", "15");
     return +v;
+}
+
+function numberTrack() {
+    let nt = `# Number Track
+-1414794z5v58003u9u8001x2x2000/
+y86800073v380039998001wuwu000/
+y46400071v180038988001w2w2000/
+y0600006zuz80037978001vuvu000/
+xw5w0006xux80036968001v2v2000/
+x8580006vuv80035958001uuuu000/
+x45400069u980034948001u2u2000/
+x05000067u7800339380019u9u000/
+ww4w00065u5800329280019292000/
+w84800063u3800319180018u8u000/
+w44400061u1800309080018282000/
+w0400005z9z8002z8z80017u7u000/
+vw3w0005x9x8002y8y80017272000/
+v8380005v9v8002x8x80016u6u000/
+v43400059998002w8w80016262000/
+v03000057978002v8v80015u5u000/
+uw2w00055958002u8u80015252000/
+u8280005393800298980014u4u000/
+u4240005191800288880014242000/
+u0200004z8z800278780013u3u000/
+9w1w0004x8x800268680013232000/
+98180004v8v800258580012u2u000/
+94140004989800248480012222000/
+90100004787800238380011u1u000/
+8w0w0004585800228280011212000/
+88080004383800218180010u0u000/
+84040004181800208080010202000S`
+
+    return nt;
 }
