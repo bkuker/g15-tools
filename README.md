@@ -1,4 +1,4 @@
-# g15-tools
+# Bendix G-15 Software tools
 
 Assembler, disassembler and assorted tools for the Bendix G15.
 
@@ -6,9 +6,31 @@ Assembler is too strong a word, it encodes programs written in the G15 decimal f
 
 You can run the programs on Paul Kimpel's [Bendix g15 Emulator](https://www.phkimpel.us/Bendix-G15/).
 
+
+## Getting Started
+
+These tools are written in JavaScript because I love you.
+
+Also because huge inspiration and help came from Paul's web based emulator, and I envision these tools being used to add the ability to program his emulator via an integrated web based interface.
+
+You will need to install npm to use them on the command line, and then `npm ci` to install the required libraries.
+
 ## Assembler
 
-The assembler converts a file of decimal instructions to 29-bit instruction words, and outputs them in .pti paper tape image format.
+The assembler converts a file of decimal instructions to 29-bit instruction words, and outputs them to STDOUT in .pti paper tape image format.
+
+### Example
+
+```C:\Users\bkuker\g15-tools\programs>npm run asm -- fib.asm
+# fib.asm
+00000000000000000000000000000/
+...❗OUTPUT SKIPPED❗...
+00000000000000000000000000000/
+00000004z823w0280390713w1uz00/
+9z0w41w5005vw027w2u0753w12838/
+070739z000000001w1w47x3w0u838/
+0000000021515z8080898002044w0S
+```
 
 ## Disassembler
 
@@ -29,9 +51,6 @@ Output is to STDOUT, you might want to redirect the output to a file.
 ```
 C:\Users\bkuker\g15-tools\programs\music>npm run dasm -- m1.pti --entrypoints 0,49   
 
-> g15-tools@0.0.0 dasm
-> node assembler/disassembler.js m1.pti --entrypoints 0,49
-
 #m1.pti
 .00 . u.01.02.0.19.00    i TR 19:1 > 0:1 #108
 .02 .  .04.04.0.21.31    i MARK:3, CD=0 #1
@@ -40,3 +59,7 @@ C:\Users\bkuker\g15-tools\programs\music>npm run dasm -- m1.pti --entrypoints 0,
 
 ...❗OUTPUT TRUNCATED❗...
 ```
+
+## Tracer
+This is a work in progress :)
+

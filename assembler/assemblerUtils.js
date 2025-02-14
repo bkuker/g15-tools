@@ -50,7 +50,6 @@ function g15HexToDec(v) {
     v = v.replaceAll("x", "d");
     v = v.replaceAll("y", "e");
     v = v.replaceAll("z", "f");
-    console.log(v);
     return parseInt(v, 16);
 }
 

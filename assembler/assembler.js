@@ -25,8 +25,22 @@ These are @UsagiElectric's notes from Discord
 import fs from "fs";
 import * as util from "./assemblerUtils.js";
 import * as tape from "./tapeUtils.js";
+import { Command } from 'commander';
 
-const fileName = process.argv[2];
+//If running from "npm run" change back
+//to the directory the user ran the program from
+if (process.env.INIT_CWD) {
+    process.chdir(process.env.INIT_CWD);
+}
+
+//Command line stuff
+const commandLine = new Command();
+commandLine
+    .option('--words', 'Output words, not pti')
+    .argument('<string>');
+commandLine.parse();
+
+const fileName = commandLine.args[0];
 
 const data = fs.readFileSync(fileName, 'utf-8'); // Read file synchronously
 const lines = data.split(/\r?\n/); // Split into lines
@@ -140,19 +154,18 @@ for (let l = 0; l < 108; l++) {
     }
 }
 
-let pti = /*"# " + fileName + "\n" + */tape.lineToTape(lineWords);
-//Print out the PTI
-console.log(pti);
-//fs.writeFileSync(fileName + ".pti", pti);
-
-/*
-A dump of words
-for (let l = 0; l < 108; l++) {
-    if ( lineWords[l] != 0 ){
-        console.log(l.toString().padStart(2, "0"), util.g15Hex(lineWords[l]));
+if (commandLine.opts().words) {
+    //Dump words
+    for (let l = 0; l < 108; l++) {
+        if (lineWords[l] != 0) {
+            console.log(l.toString().padStart(3, " "), util.g15Hex(lineWords[l]));
+        }
     }
-}*/
-
+} else {
+    //Output PTI Paper tape image
+    let pti = "# " + fileName + "\n" + tape.lineToTape(lineWords);
+    console.log(pti);
+}
 
 
 function g15DecToInt(v) {
