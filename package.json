@@ -11,9 +11,9 @@
     "dasm": "tsx assembler/disassembler.js"
   },
   "dependencies": {
-    "vue": "^3.5.13",
     "commander": "^13.1.0",
-    "cytoscape": "^3.31.0"
+    "cytoscape": "^3.31.0",
+    "vue": "^3.5.13"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
@@ -21,6 +21,7 @@
     "tsx": "^4.19.2",
     "typescript": "~5.7.2",
     "vite": "^6.1.0",
+    "vite-plugin-node-polyfills": "^0.23.0",
     "vue-tsc": "^2.2.0"
   }
 }
