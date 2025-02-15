@@ -10,12 +10,13 @@
     "asm": "node assembler/assembler.js",
     "dasm": "node assembler/disassembler.js"
   },
-  "devDependencies": {
-    "vite": "^5.0.0"
-  },
   "dependencies": {
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "vite": "^6.1.0",
     "commander": "^13.1.0",
-    "cytoscape": "^3.31.0",
-    "spark-md5": "^3.0.2"
+    "cytoscape": "^3.31.0"
   }
 }
