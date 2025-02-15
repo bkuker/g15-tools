@@ -1,4 +1,4 @@
-import { ASM, Numbers as N } from "./AsmTypes";
+import { Numbers as N } from "./AsmTypes";
 import assert from "assert";
 
 export function wordToDec(w: N.word): number {
@@ -70,15 +70,6 @@ export function g15HexToNormalHex(val: N.g15Hex): N.normalHex {
     return v as N.normalHex;
 }
 
-
-export function formatCommand(c: ASM.Instruction): string {
-    /**
-     * Returns a formatted version of a command object in the same format
-     * as the input.
-     */
-    return `.${intToG15Dec(c.l)} ${c.s} ${c.p}.${intToG15Dec(c.t)}.${intToG15Dec(c.n)}.${c.c}.${intToG15Dec(c.src)}.${intToG15Dec(c.dst)} ${c.bp ? "-" : " "}  ${c.comment}`;
-}
-
 export function g15DecToInt(val: N.g15Dec): number {
     /**
      * Converts a G15 decimal number to an integer.
@@ -116,68 +107,4 @@ export function intToG15Dec(v: number): N.g15Dec {
     }
     assert(ret.length == 2);
     return ret as N.g15Dec;
-}
-
-export function commandToInstructionWord(c: ASM.Instruction): N.word {
-    /**
-     * Converts a command object into an instruction word.
-     * Returns an integer, not g15 hex
-     * 
-     * TODO Review https://rbk.delosent.com/allq/Q9896.pdf p29
-     * T needs modified for block commands maybe?
-     */
-    let o = 0;
-    o = o | (c.dst << 1);
-    o = o | (c.src << 6);
-
-    //Disassembler shows C as
-    //(dp*4 + c)
-
-    o = o | ((c.c & 0b11) << 11);
-    o = o | (c.c >> 2); //TODO CHECK SINGLE vs DOUBLE
-
-    o = o | (c.n << 13);
-    o = o | ((c.bp ? 1 : 0) << 20);
-
-    //Is this deferred?
-    // Prefix u: i/d = 0 immediate
-    //        w: i/d = 1 deferred
-    //    blank: i/d = 1 deferred
-    //           UNLESS dest = 31 or t = l + 1
-    let tPrime = c.t;
-    const DEFERRED = 1;
-    const IMMEDIATE = 0;
-    let id;
-    if (c.p == "u") {
-        id = IMMEDIATE;
-    } else if (c.p == "w") {
-        id = DEFERRED;
-    } else if (c.p == " ") {
-        if (c.dst == 31) {
-            id = IMMEDIATE;
-        } else if (c.t == c.l + 1) {
-            //TODO T is wrong
-            id = IMMEDIATE;
-
-            if (c.c < 4) {
-                tPrime = c.t + 1;
-            } else {
-                if (c.t % 2 == 0) {
-                    tPrime = c.t + 2;
-                } else {
-                    tPrime = c.t + 1;
-                }
-            }
-
-        } else {
-            id = DEFERRED;
-        }
-    }
-
-    o = o | (tPrime << 21);
-
-
-    o = o | (id << 28);
-
-    return o as N.word;
 }

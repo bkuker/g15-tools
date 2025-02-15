@@ -1,6 +1,7 @@
 import fs from "fs";
 import assert from "assert";
-import * as util from "./assemblerUtils";
+import * as convert from "./conversionUtils";
+import {commandToInstructionWord, formatCommand} from "./instructionUtils";
 import disassembleWord from "./PaulDecoder.js";
 import * as tape from "./tapeUtils";
 import { ASM, Numbers as N } from "./AsmTypes";
@@ -17,7 +18,7 @@ const commandLine = new Command();
 commandLine
     .option('--nostatic', 'Do not perform static analysis.')
     .option('-e, --entrypoints <entry points>', 'Comma separated list of entry points for static analysis')
-    .argument('<string>');
+    .argument('<pti tape file>');
 commandLine.parse();
 
 const fileName = commandLine.args[0];
@@ -79,7 +80,7 @@ function rawToCommand(raw) {
         word: raw.word
     }
 
-    assert(raw.word == util.commandToInstructionWord(cmd));
+    assert(raw.word == commandToInstructionWord(cmd));
 
     return cmd;
 }
@@ -92,7 +93,7 @@ function normalizeCmd(cmd) {
      */
 
     //The original command's word
-    const inWord = util.commandToInstructionWord(cmd);
+    const inWord = commandToInstructionWord(cmd);
 
     //If any of the following transformations result in the
     //same word as the original command they are returned.
@@ -102,7 +103,7 @@ function normalizeCmd(cmd) {
     //If removeing the prefix has no effect, remove the
     //prefix
     let cpy = { ...cmd, p: " " };
-    if (util.commandToInstructionWord(cpy) == inWord) {
+    if (commandToInstructionWord(cpy) == inWord) {
         return cpy;
     }
 
@@ -112,14 +113,14 @@ function normalizeCmd(cmd) {
         //No prefix might mean immediate if T was originally
         //L+1 and 1 was added
         cpy = { ...cmd, p: " ", t: cmd.t - 1 };
-        if (util.commandToInstructionWord(cpy) == inWord) {
+        if (commandToInstructionWord(cpy) == inWord) {
             return cpy;
         }
 
         //Same as above, but EVEN DP version
         if (cmd.c >= 4) {
             cpy = { ...cmd, p: " ", t: cmd.t - 2 };
-            if (util.commandToInstructionWord(cpy) == inWord) {
+            if (commandToInstructionWord(cpy) == inWord) {
                 return cpy;
             }
         }
@@ -171,7 +172,7 @@ if (!commandLine.opts().nostatic) {
 
         //TODO All of them!
         if (cur == 100)
-            console.log(util.formatCommand(cmd));
+            console.log(formatCommand(cmd));
         let test = false;
         // console.log(cmd.src);
         if (cmd.dst == 27) {
@@ -206,7 +207,7 @@ for (let l of done) {
     if (last && last.n != l)
         out += "\n";
     let cmd = program[l];
-    out = out + util.formatCommand(cmd) + "\n";
+    out = out + formatCommand(cmd) + "\n";
     if (cmd.src == 31 && cmd.dst == 31 && cmd.c == 0) {
         out = out + "#AR";
     }
@@ -218,11 +219,11 @@ if (!commandLine.opts().nostatic) {
 }
 for (let cmd of program) {
     if (done.indexOf(cmd.l) == -1 && cmd.word != 0) {
-        cmd.comment = util.g15Hex(cmd.word) + "\t" + util.wordToDec(cmd.word).toString().padStart(9) + "\t" + cmd.comment;
+        cmd.comment = convert.g15Hex(cmd.word) + "\t" + convert.wordToDec(cmd.word).toString().padStart(9) + "\t" + cmd.comment;
         if (cmd.comment.indexOf("Invalid") != -1) {
-            out = out + `.${util.intToG15Dec(cmd.l)} ${util.g15SignedHex(cmd.word)}\n`;
+            out = out + `.${convert.intToG15Dec(cmd.l)} ${convert.g15SignedHex(cmd.word)}\n`;
         } else {
-            out = out + util.formatCommand(cmd) + "\n";
+            out = out + formatCommand(cmd) + "\n";
         }
     }
 }

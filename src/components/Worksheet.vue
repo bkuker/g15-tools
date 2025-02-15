@@ -2,6 +2,11 @@
 import Header from './Header.vue'
 import Locations from './Locations.vue'
 import Code from './Code.vue'
+
+import fib from "/programs/fib.asm?raw"
+
+console.log(fib);
+
 </script>
 
 <template>

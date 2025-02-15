@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-import { g15Hex } from "./assemblerUtils.js";
+import { g15Hex } from "./conversionUtils.js";
 
 const two28 = 0x10000000;           // 2**28 for complementing word values
 const longLineSize = 108;           // words per long drum line

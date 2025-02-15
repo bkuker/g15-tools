@@ -1,12 +1,12 @@
 <script setup>
-  import * as util from "/assembler/assemblerUtils.js";
+  import * as convert from "/assembler/conversionUtils";
 
 </script>
 
 <template>
   <div id="locations">
     <div v-for="n in 107" :key="n-1">
-      {{ util.intToG15Dec(n - 1).replace(/^0/,"") }}
+      {{ convert.intToG15Dec(n - 1).replace(/^0/,"") }}
     </div>
   </div>
 </template>
