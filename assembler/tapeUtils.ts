@@ -1,6 +1,8 @@
 import * as util from "./assemblerUtils.js";
+import { Numbers as N } from "./AsmTypes";
+import assert from "assert";
 
-function lineToTape(lineWords) {
+function lineToTape(lineWords: N.word[]): string {
     /**
      * This function takes a 108 long array of integers
      * and converts it to a string in the .pti format
@@ -18,12 +20,12 @@ function lineToTape(lineWords) {
     }
 
     //Convert binary to tape
-    let chunks = bin.match(/.{1,116}/g);
+    let chunks = bin.match(/.{1,116}/g)!;
     let ptiBlock = "";
     const SYM = "0123456789uvwxyz";
     for (let i = 0; i < chunks.length; i++) {
         let out = "";
-        let nibbles = chunks[i].match(/.{1,4}/g);
+        let nibbles = chunks[i].match(/.{1,4}/g)!;
         for (let nibble of nibbles) {
             let v = parseInt(nibble, 2);
             out += SYM[v];
@@ -36,28 +38,28 @@ function lineToTape(lineWords) {
 
 }
 
-function tapeToWords( tapeBlock ){
+function tapeToWords(tapeBlock: string): N.word[] {
     /**
      * This function takes a tape block as a string and returns
      * an array of words.
      */
     const lines = tapeBlock.split(/\r?\n/); // Split into lines
-    
-    let block = [];
+
+    let block: N.word[] = [];
     for (const rawText of lines) {
         if (rawText.trim().startsWith("#")) {
             continue;   //Ignore Comment
         } if (rawText.trim().length == 0) {
             continue;   //Ignore blank space
         }
-    
+
         //TODO just assuming it is one single block in normal format
         //so just ignore any end or stops.
-        let line = rawText.trim().replace("/", "").replace("S", "").replace("-", "");
-    
+        let cleanedLine: N.g15Hex = rawText.trim().replace("/", "").replace("S", "").replace("-", "") as N.g15Hex;
+
         //Change line to normal hex
-        line = util.g15HexToNormalHex(line);
-    
+        let line: N.normalHex = util.g15HexToNormalHex(cleanedLine);
+
         //Build line as a stiing of 1 and 0
         //This is inefficient but simple and mirrors what happens
         //in the machine
@@ -65,14 +67,15 @@ function tapeToWords( tapeBlock ){
         for (let hd of line) {
             bin += parseInt(hd, 16).toString(2).padStart(4, "0");
         }
-        console.assert(bin.length == 116);
-    
+        assert.equal(bin.length, 116, "Wrong number of bits in line");
+
         //Each 116 bits of tape is four 29-bit words
-        let bWords = bin.match(/.{1,29}/g);
-        console.assert(bWords.length == 4);
-    
-        let words = bWords.map(b => parseInt(b, 2));
-    
+        let bWords = bin.match(/.{1,29}/g)!;
+
+        assert(bWords.length == 4);
+
+        let words = bWords.map(b => parseInt(b, 2)) as N.word[];
+
         block = words.reverse().concat(block);
     }
     return block;

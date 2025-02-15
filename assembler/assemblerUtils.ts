@@ -1,20 +1,22 @@
+import { ASM, Numbers as N } from "./AsmTypes";
+import assert from "assert";
 
-function wordToDec(w){
+export function wordToDec(w: N.word): number {
     let sign = w & 1;   //Extract sign bit
     let val = w >> 1;   //Extract absolute value
-    if ( sign )
+    if (sign)
         val *= -1;      //Apply sign
     return val;
 }
 
-function g15SignedHex(w){
+export function g15SignedHex(w: N.word): N.signedG15Hex {
     let sign = w & 1;   //Extract sign bit
     let val = w >> 1;   //Extract absolute value
-    let hex = g15Hex(val);
-    return (sign?"-":"") + hex;
+    let hex = g15Hex(val as N.word);
+    return ((sign ? "-" : "") + hex) as N.signedG15Hex;
 }
 
-function g15Hex(v) {
+export function g15Hex(v: N.word): N.g15Hex {
     /**
      * Converts the value "v" to a hexidecimal string using the G-15
      */
@@ -36,14 +38,14 @@ function g15Hex(v) {
             default:
                 return "?";
         }
-    }).padStart(8, "0");
+    }).padStart(8, "0") as N.g15Hex;
 }
 
-function g15HexToDec(v) {
+export function g15HexToDec(val: N.g15Hex): number {
     /**
      * Convert a string in bendix hex to an integer
      */
-    v = v.toLowerCase();
+    let v: string = val.toLowerCase();
     v = v.replaceAll("u", "a");
     v = v.replaceAll("v", "b");
     v = v.replaceAll("w", "c");
@@ -53,23 +55,23 @@ function g15HexToDec(v) {
     return parseInt(v, 16);
 }
 
-function g15HexToNormalHex(v) {
+export function g15HexToNormalHex(val: N.g15Hex): N.normalHex {
     /**
      * Convert a string in bendix hex
      * to normal human hex
      */
-    v = v.toLowerCase();
+    let v: string = val.toLowerCase();
     v = v.replaceAll("u", "a");
     v = v.replaceAll("v", "b");
     v = v.replaceAll("w", "c");
     v = v.replaceAll("x", "d");
     v = v.replaceAll("y", "e");
     v = v.replaceAll("z", "f");
-    return v;
+    return v as N.normalHex;
 }
 
 
-function formatCommand(c) {
+export function formatCommand(c: ASM.Instruction): string {
     /**
      * Returns a formatted version of a command object in the same format
      * as the input.
@@ -77,15 +79,14 @@ function formatCommand(c) {
     return `.${intToG15Dec(c.l)} ${c.s} ${c.p}.${intToG15Dec(c.t)}.${intToG15Dec(c.n)}.${c.c}.${intToG15Dec(c.src)}.${intToG15Dec(c.dst)} ${c.bp ? "-" : " "}  ${c.comment}`;
 }
 
-function g15DecToInt(v) {
+export function g15DecToInt(val: N.g15Dec): number {
     /**
      * Converts a G15 decimal number to an integer.
      * Numbers less than 100 are just normal, but
      * numbers greater than 100 have a u in the tens
      * place and so on. 107 = u7.
      */
-    console.assert(v < 108); //Why would there be bigger numbers?
-
+    let v: string = val;
     v = v.replace("u", "10");
     v = v.replace("v", "11");
     v = v.replace("w", "12");
@@ -95,29 +96,29 @@ function g15DecToInt(v) {
     return +v;
 }
 
-function intToG15Dec(v){
+export function intToG15Dec(v: number): N.g15Dec {
     /**
      * Convert an integer to 2 digit G15 decimal
      */
     let ret = v.toString().padStart(2, "0");
-    if (v >= 100 && v < 110 ) {
+    if (v >= 100 && v < 110) {
         ret = "u" + (v - 100);
-    }  else  if (v >= 110 && v < 120 ) {
+    } else if (v >= 110 && v < 120) {
         ret = "v" + (v - 110);
-    } else  if (v >= 120 && v < 130 ) {
+    } else if (v >= 120 && v < 130) {
         ret = "w" + (v - 120);
-    } else  if (v >= 130 && v < 140 ) {
+    } else if (v >= 130 && v < 140) {
         ret = "x" + (v - 130);
-    } else  if (v >= 140 && v < 150 ) {
+    } else if (v >= 140 && v < 150) {
         ret = "y" + (v - 140);
-    } else  if (v >= 150 && v < 160 ) {
+    } else if (v >= 150 && v < 160) {
         ret = "z" + (v - 150);
     }
-    console.assert(ret.length == 2);
-    return ret;
+    assert(ret.length == 2);
+    return ret as N.g15Dec;
 }
 
-function commandToInstructionWord(c) {
+export function commandToInstructionWord(c: ASM.Instruction): N.word {
     /**
      * Converts a command object into an instruction word.
      * Returns an integer, not g15 hex
@@ -158,10 +159,10 @@ function commandToInstructionWord(c) {
             //TODO T is wrong
             id = IMMEDIATE;
 
-            if ( c.c < 4 ){
+            if (c.c < 4) {
                 tPrime = c.t + 1;
             } else {
-                if ( c.t % 2 == 0 ){
+                if (c.t % 2 == 0) {
                     tPrime = c.t + 2;
                 } else {
                     tPrime = c.t + 1;
@@ -178,10 +179,5 @@ function commandToInstructionWord(c) {
 
     o = o | (id << 28);
 
-    return o;
-}
-
-
-export {
-    g15Hex, g15HexToNormalHex, formatCommand, commandToInstructionWord, wordToDec, g15HexToDec, intToG15Dec, g15SignedHex
+    return o as N.word;
 }

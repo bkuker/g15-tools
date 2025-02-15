@@ -1,12 +1,14 @@
 import fs from "fs";
-import * as util from "./assemblerUtils.js";
+import assert from "assert";
+import * as util from "./assemblerUtils";
 import disassembleWord from "./PaulDecoder.js";
-import * as tape from "./tapeUtils.js";
+import * as tape from "./tapeUtils";
+import { ASM, Numbers as N } from "./AsmTypes";
 import { Command } from 'commander';
 
 //If running from "npm run" change back
 //to the directory the user ran the program from
-if (process.env.INIT_CWD){
+if (process.env.INIT_CWD) {
     process.chdir(process.env.INIT_CWD);
 }
 
@@ -63,7 +65,7 @@ function rawToString(raw) {
 function rawToCommand(raw) {
     //U - Immediate
     //W - Deferred
-    let cmd = {
+    let cmd: ASM.Instruction = {
         l: 0,
         s: ".",
         p: raw.p == 1 ? "w" : "u",  //TODO Blank if it would not change result
@@ -77,7 +79,7 @@ function rawToCommand(raw) {
         word: raw.word
     }
 
-    console.assert(raw.word == util.commandToInstructionWord(cmd));
+    assert(raw.word == util.commandToInstructionWord(cmd));
 
     return cmd;
 }
@@ -127,7 +129,7 @@ function normalizeCmd(cmd) {
     return cmd;
 }
 
-let program = [];
+let program: ASM.Instruction[] = [];
 for (let l = 0; l < block.length; l++) {
     let loc = l.toString().padStart(2, "0");
     if (l >= 100) {
@@ -145,7 +147,7 @@ for (let l = 0; l < block.length; l++) {
     program[l] = cmd;
 }
 
-let done = [];
+let done : number[] = [];
 
 //Perform static analysis if enabled
 if (!commandLine.opts().nostatic) {
@@ -153,8 +155,8 @@ if (!commandLine.opts().nostatic) {
     //Initialize TODO with list of entrypoints from command
     //line, or with just a zero.
     let todo = commandLine.opts().entrypoints || "0";
-    todo = todo.split(",").map(e=>+e);
-    
+    todo = todo.split(",").map(e => +e);
+
     while (todo.length) {
         //console.log(todo);
         //console.log(done);
@@ -178,7 +180,7 @@ if (!commandLine.opts().nostatic) {
             test = true;
         } else if (cmd.src == 22 && cmd.dst == 31 && cmd.c == 0) {
             test = true;
-        } else if (cmd.comment.indexOf("TEST") != -1) {
+        } else if (cmd.comment && cmd.comment.indexOf("TEST") != -1) {
             test = true;
         }
         //console.log(test);
@@ -199,7 +201,7 @@ if (!commandLine.opts().nostatic) {
 }
 
 let out = "#" + fileName + "\n";
-let last = false;
+let last : ASM.Instruction | null = null;
 for (let l of done) {
     if (last && last.n != l)
         out += "\n";

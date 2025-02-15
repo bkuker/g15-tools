@@ -9,7 +9,7 @@ You can run the programs on Paul Kimpel's [Bendix g15 Emulator](https://www.phki
 
 ## Getting Started
 
-These tools are written in JavaScript because I love you.
+These tools are written in TypeScript because I love you.
 
 Also because huge inspiration and help came from Paul's web based emulator, and I envision these tools being used to add the ability to program his emulator via an integrated web based interface.
 

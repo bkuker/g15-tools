@@ -23,8 +23,9 @@ These are @UsagiElectric's notes from Discord
 */
 
 import fs from "fs";
-import * as util from "./assemblerUtils.js";
-import * as tape from "./tapeUtils.js";
+import * as util from "./assemblerUtils";
+import * as tape from "./tapeUtils";
+import { ASM, Numbers as N } from "./AsmTypes";
 import { Command } from 'commander';
 
 //If running from "npm run" change back
@@ -41,19 +42,18 @@ commandLine
     .argument('<string>');
 commandLine.parse();
 
-const fileName = commandLine.args[0];
+const fileName: string = commandLine.args[0];
+const data: string = fs.readFileSync(fileName, 'utf-8'); // Read file synchronously
+const lines: string[] = data.split(/\r?\n/); // Split into lines
 
-const data = fs.readFileSync(fileName, 'utf-8'); // Read file synchronously
-const lines = data.split(/\r?\n/); // Split into lines
+function parseLine(rawText: string): ASM.Line {
 
-let program = []; //The commands and comments in PROGRM order, not location order
-let sourceLineNumber = 0;
-for (const rawText of lines) {
-    sourceLineNumber++;
-    if (rawText.trim().startsWith("#")) {
-        continue;   //Ignore Comment
-    } if (rawText.trim().length == 0) {
-        continue;   //Ignore blank space
+    //TODO Create ASMLines
+    if (rawText.trim().startsWith("#") || rawText.trim().length == 0) {
+        return {
+            sourceLineNumber: 0,
+            rawText
+        };
     }
 
     //Each line follows the pattern:
@@ -62,16 +62,16 @@ for (const rawText of lines) {
     //and various published source listings.
 
     //Extract the Location and s columns
-    let l = g15DecToInt(rawText.substring(1, 3));
-    let s = rawText.substring(4, 5);
+    let l = util.g15DecToInt(rawText.substring(1, 3) as N.g15Dec);
+    let s = rawText.substring(4, 5) as ASM.sType;
 
     if (s == "." || s == "s") {
         //If s is "." or "s" this is an instruction
 
         //Extract the rest
-        let p = rawText.substring(6, 7);
-        let t = rawText.substring(8, 10);
-        let n = rawText.substring(11, 13);
+        let p = rawText.substring(6, 7) as ASM.prefixType;
+        let t = rawText.substring(8, 10) as N.g15Dec;
+        let n = rawText.substring(11, 13) as N.g15Dec;
         let c = rawText.substring(14, 15);
         let src = rawText.substring(16, 18);
         let dst = rawText.substring(19, 21);
@@ -79,41 +79,44 @@ for (const rawText of lines) {
         let comment = rawText.substring(24).trim();
 
         //Place into an object
-        let cmd = {
+        let cmd: ASM.Instruction = {
             rawText,
             l,
             s,
             p,
-            t: g15DecToInt(t),
-            n: g15DecToInt(n),
+            t: util.g15DecToInt(t),
+            n: util.g15DecToInt(n),
             c: +c,
             src: +src,
             dst: +dst,
             bp: bp.trim().length > 0,
             comment,
-            sourceLineNumber
+            word: 0 as N.word
         }
 
         //This is the command's actual binary value as an integer
         cmd.word = util.commandToInstructionWord(cmd);
 
-        program.push(cmd);
+        return cmd;
     } else {
         //TODO: Support double precision constants?
 
         //There was not a "." or "s" in the s column...
         //This is a constant in +/- hex form
-        let val = rawText.substring(4, 20).trim();
+        let val: N.signedG15Hex = rawText.substring(4, 20).trim() as N.signedG15Hex;
 
         //Separate sign bit from absolute value hex
         let neg = false;
+        let abs: N.g15Hex;
         if (val.startsWith("-")) {
-            val = val.substring(1);
+            abs = val.substring(1) as N.g15Hex;
             neg = true;
+        } else {
+            abs = val as string as N.g15Hex;
         }
 
         //convert the abs to an integer
-        let valNum = util.g15HexToDec(val);
+        let valNum = util.g15HexToDec(abs);
 
         //Convert that integer and sign into the
         //raw g15 word
@@ -126,32 +129,40 @@ for (const rawText of lines) {
         let comment = rawText.substring(24).trim();
 
         //Place into an object
-        let data = {
+        let data: ASM.Constant = {
             rawText,
-            l,
-            word,
+            l: l,
+            word: word as N.word,
             value: valNum * (neg ? -1 : 1),
-            comment,
-            sourceLineNumber
+            comment
         }
-        program.push(data);
+        return data;
     }
 
 }
 
-//Order the program by location.
-let line = [];  //An array with each command at it's L value. (sparse)
-for (let cmd of program) {
+let program: ASM.Line[] = []; //The commands and comments in PROGRM order, not location order
+let sourceLineNumber = 0;
+for (const rawText of lines) {
+    let line: ASM.Line = parseLine(rawText);
+    line.sourceLineNumber = sourceLineNumber++;
+    program.push(line);
+}
+
+//Order the program by location (Constants and Instructions only)
+let line: ASM.Loc[] = [];
+for (let cmd of program.filter((o: any): o is ASM.Loc => typeof o.l === 'number')) {
     line[cmd.l] = cmd;
 }
 
+
 //Convert the program to an array of words at the appropriate locations
-let lineWords = [];
+let lineWords: N.word[] = [];
 for (let l = 0; l < 108; l++) {
     if (line[l]) {
         lineWords[l] = line[l].word;
     } else {
-        lineWords[l] = 0;
+        lineWords[l] = 0 as N.word;
     }
 }
 
@@ -165,31 +176,14 @@ if (commandLine.opts().words) {
 } else {
     //Output PTI Paper tape image
     let pti = "";
-    if (commandLine.opts().bootable ) {
+    if (commandLine.opts().bootable) {
         pti += numberTrack() + "\n\n";
     }
     pti += "# " + fileName + "\n" + tape.lineToTape(lineWords);
     console.log(pti);
 }
 
-
-function g15DecToInt(v) {
-    /**
-     * Converts a G15 decimal number to an integer.
-     * Numbers less than 100 are just normal, but
-     * numbers greater than 100 have a u in the tens
-     * place and so on. 107 = u7.
-     */
-    v = v.replace("u", "10");
-    v = v.replace("v", "11");
-    v = v.replace("w", "12");
-    v = v.replace("x", "13");
-    v = v.replace("y", "14");
-    v = v.replace("z", "15");
-    return +v;
-}
-
-function numberTrack() {
+function numberTrack(): string {
     let nt = `# Number Track
 -1414794z5v58003u9u8001x2x2000/
 y86800073v380039998001wuwu000/
