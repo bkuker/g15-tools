@@ -1,6 +1,31 @@
 <script setup lang="ts">
-import Tape from './components/Tape.vue'
-import Worksheet from './components/Worksheet.vue'
+import Tape from './components/Tape.vue';
+import Worksheet from './components/Worksheet.vue';
+import { onMounted, onUnmounted } from 'vue';
+import { inputAssembly } from "./components/Program";
+
+onMounted(() => {
+  document.body.addEventListener('drop', handleDrop);
+  document.body.addEventListener('dragover', (event) => event.preventDefault()); // Prevent default to allow dropping
+});
+
+onUnmounted(() => {
+  document.body.removeEventListener('drop', handleDrop);
+});
+
+function handleDrop(e: DragEvent){
+  e.preventDefault();
+  const file = e.dataTransfer?.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    if ( reader.result ){
+      inputAssembly.value = reader.result.toString();
+    }
+  };
+  reader.readAsText(file);
+}
 </script>
 
 <template>

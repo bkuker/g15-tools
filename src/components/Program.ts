@@ -1,13 +1,13 @@
 import { ref, computed, watchEffect } from 'vue'
-
 import { ASM, type Numbers as N } from "../../assembler/AsmTypes";
 import { parseAsmProgram } from "../../assembler/instructionUtils";
 import * as tape from "../../assembler/tapeUtils";
 import numberTrack from '../../assembler/numberTrack';
 import { formatCommand } from "../../assembler/instructionUtils.ts";
-import source from "/programs/fib.asm?raw";
 
-const inputAssembly = ref<string>(source);
+const MIN_LEN = 40;
+
+export const inputAssembly = ref<string>("\n".repeat(MIN_LEN));
 
 const inputAssemblyParsed = computed<ASM.Line[]>(()=>{
     return parseAsmProgram( inputAssembly.value );
@@ -44,7 +44,10 @@ watchEffect(()=>{
         }
         pt.push(text);
     }
-    return sourceCodeText.value = pt;
+    while (pt.length <= MIN_LEN ){
+        pt.push({comment: ""});
+    }
+    sourceCodeText.value = pt;
 });
 
 export const outputAssembly = computed<string>(()=>{
