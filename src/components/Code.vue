@@ -13,8 +13,8 @@ import { sourceCodeText } from "./Program";
         <th width="20">C</th>
         <th width="40">S</th>
         <th width="40">D</th>
-        <th width="20">BP</th>
-        <th style="letter-spacing: .7em;">NOTES</th>
+        <th width="20" class="bp">BP</th>
+        <th class="notes">NOTES</th>
       </tr>
     </thead>
     <tbody>
@@ -50,6 +50,7 @@ import { sourceCodeText } from "./Program";
 #code th,
 #code td {
   border: 1px solid black;
+  padding: 0;
 }
 
 #code th{
@@ -59,6 +60,15 @@ import { sourceCodeText } from "./Program";
 #code th.tht {
   font-size: 9pt;
   line-height: 7pt;
+}
+
+#code th.bp {
+  transform: scale(.7, 1);
+}
+
+#code th.notes {
+  transform: scale(.7, 1);
+  letter-spacing: 1em;
 }
 
 input {
@@ -86,6 +96,6 @@ input.long {
 
 input.short {
   width: 1em;
-  padding-right: 2px;
+  padding-right: 1px;
 }
 </style>

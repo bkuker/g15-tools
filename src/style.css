@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,800;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 
 html {
   box-sizing: border-box;
@@ -14,9 +16,12 @@ html {
 body {
   font-family: "Open Sans", sans-serif;
   background-color: #ccc;
+  padding-bottom: 1px;
 }
 
 input {
-  font-family: cursive;
+  font-family: "Pangolin", cursive;
+  font-weight: 400;
+  font-style: normal;
   color: blue;
 }

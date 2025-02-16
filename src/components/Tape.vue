@@ -20,8 +20,10 @@ import {outputBlockPti as pti} from "./Program";
 #data {
     background-color: #B7D0E2;
     white-space: pre;
-    font-family: monospace;
-    font-size: 11px;
+    font-family: "Special Elite", monospace;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 10px;
     line-height: 24px;
     color: #444;
     width: 2in;
