@@ -75,7 +75,7 @@ This project also contains a vue/vite project implementing a UI similar to the p
 
 It's for fun, and for super casual hacking, but use the command line versions if you want to get anything done!
 
-It should be available [here](https://billkuker.com/g15-tools/).
+It should be available [here](https://www.billkuker.com/g15-tools/).
 
 ## Tracer
 This is a work in progress :)
