@@ -59,6 +59,7 @@ export const outputAssembly = computed<string>(()=>{
         if ( line.value ){
             asm += `.${line.l.padStart(2,"0")} ${line.value}\n`;
         } else if ( line.hasOwnProperty("c") ){
+            line.s = ".";
             asm += formatCommand( line ) + "\n";
         } else {
             asm += line.comment + "\n";
