@@ -1,9 +1,12 @@
-#LL S P.TT.NN.C.SS.DD BP  Comment
-
 # Copy loaded program from 19 -> 0 and begin execution at 0:04
 .00 . u.01.02.0.19.00     Line 19 to Line 0 - Test not set
 .01 . u.02.02.0.19.00     Line 19 to Line 0 - Test set
 .02 .  .04.42.0.21.31     Execute Line 0 GOTO 0:42 to set formatting
+
+# Variables
+.30 1                     A
+.31 1                     B
+.32 0                     C
 
 # Print value A to typewriter
 .04 .  .30.05.1.00.28     0.30 -> ARc   AR = A
@@ -23,11 +26,6 @@
 # GOTO :04
 .13 .  .32.14.1.00.28     AR = C
 .14 .  .31.04.1.28.00     B = AR, GOTO 4
-
-# Variables
-.30 1                     A
-.31 1                     B
-.32 0                     C
 
 #Formatting
 # Default formatting is 03:03 = -8w00000 03:02 = 1000000, but

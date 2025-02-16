@@ -1,4 +1,4 @@
-import { Numbers as N } from "./AsmTypes";
+import {type Numbers as N } from "./AsmTypes";
 import assert from "assert";
 
 export function wordToDec(w: N.word): number {

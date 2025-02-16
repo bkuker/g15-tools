@@ -1,5 +1,5 @@
-<script setup>
-
+<script setup lang="ts">
+import Downloads from './Downloads.vue'
 </script>
 
 <template>
@@ -15,6 +15,7 @@
         Date: <input type="text"/>
         Line <input type="text"/>
       </div>-->
+      <Downloads id="downloads"/>
     </div>
 </template>
 
@@ -22,6 +23,12 @@
 #header {
   border: 1px solid black;
   letter-spacing: .15em;
+}
+
+#downloads { 
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 
 #logo {

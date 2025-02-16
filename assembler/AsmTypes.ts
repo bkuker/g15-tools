@@ -17,11 +17,25 @@ export namespace Numbers {
 }
 
 export namespace ASM {
+
+    //Guard functions
+    export function isLoc( o : Line ): o is Loc {
+        return typeof (o as Loc).l == "number";
+    }
+
+    export function isConstant( o : Line ): o is Constant {
+        return typeof (o as Constant).value == "number";
+    }
+
+    export function isInstruction( o : Line ): o is Instruction {
+        return typeof (o as Instruction).c == "number";
+    }
+
     //Every line from an ASM file
     //Including blank, comment, whatever
     export interface Line {
         sourceLineNumber?: number,
-        rawText?: string
+        rawText?: string,
     }
 
     //Any line with a Location and Comment
@@ -33,7 +47,8 @@ export namespace ASM {
 
     //A line with a Location, Constant and comment
     export interface Constant extends Loc {
-        value: number
+        value: number,
+        valueText: string
     }
 
     export type prefixType = " " | "u" | "w";

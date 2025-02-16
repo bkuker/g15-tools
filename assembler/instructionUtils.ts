@@ -1,7 +1,5 @@
-import { ASM, Numbers as N } from "./AsmTypes";
+import { type ASM, type Numbers as N } from "./AsmTypes";
 import * as convert from "./conversionUtils";
-import assert from "assert";
-
 
 export function parseAsmProgram(sourceCode: string): ASM.Line[] {
     const lines: string[] = sourceCode.split(/\r?\n/); // Split into lines
@@ -75,16 +73,16 @@ export function parseAsmLine(rawText: string): ASM.Line {
 
         //There was not a "." or "s" in the s column...
         //This is a constant in +/- hex form
-        let val: N.signedG15Hex = rawText.substring(4, 20).trim() as N.signedG15Hex;
+        const valueText: N.signedG15Hex = rawText.substring(4, 20).trim() as N.signedG15Hex;
 
         //Separate sign bit from absolute value hex
         let neg = false;
         let abs: N.g15Hex;
-        if (val.startsWith("-")) {
-            abs = val.substring(1) as N.g15Hex;
+        if (valueText.startsWith("-")) {
+            abs = valueText.substring(1) as N.g15Hex;
             neg = true;
         } else {
-            abs = val as string as N.g15Hex;
+            abs = valueText as string as N.g15Hex;
         }
 
         //convert the abs to an integer
@@ -106,6 +104,7 @@ export function parseAsmLine(rawText: string): ASM.Line {
             l: l,
             word: word as N.word,
             value: valNum * (neg ? -1 : 1),
+            valueText: valueText,
             comment
         }
         return data;
@@ -150,7 +149,7 @@ export function commandToInstructionWord(c: ASM.Instruction): N.word {
     let tPrime = c.t;
     const DEFERRED = 1;
     const IMMEDIATE = 0;
-    let id;
+    let id = 0;
     if (c.p == "u") {
         id = IMMEDIATE;
     } else if (c.p == "w") {

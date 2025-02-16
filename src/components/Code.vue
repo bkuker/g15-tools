@@ -1,5 +1,5 @@
-<script setup>
-
+<script setup lang="ts">
+import { sourceCodeText } from "./Program";
 </script>
 
 <template>
@@ -18,16 +18,21 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="n in 26" :key="n-1">
-        <td><input type="text" class="long" maxlength="2"></td>
-        <td><input type="text" class="short" maxlength="1"></td>
-        <td><input type="text" class="long" maxlength="2"></td>
-        <td><input type="text" class="long" maxlength="2"></td>
-        <td><input type="text" class="short" maxlength="1"></td>
-        <td><input type="text" class="long" maxlength="2"></td>
-        <td><input type="text" class="long" maxlength="2"></td>
-        <td><input type="text" class="short" maxlength="1"></td>
-        <td><input type="text" class="comment"></td>
+      <tr v-for="line in sourceCodeText">
+        <td><input v-model="line.l" type="text" class="long" maxlength="2"></td>
+        <template v-if="line.value !== undefined">
+          <td colspan="7"><input v-model="line.value" type="text" class="constant"></td>
+        </template>
+        <template v-else>
+          <td><input v-model="line.p" type="text" class="short" maxlength="1"></td>
+          <td><input v-model="line.t" type="text" class="long" maxlength="2"></td>
+          <td><input v-model="line.n" type="text" class="long" maxlength="2"></td>
+          <td><input v-model="line.c" type="text" class="short" maxlength="1"></td>
+          <td><input v-model="line.src" type="text" class="long" maxlength="2"></td>
+          <td><input v-model="line.dst" type="text" class="long" maxlength="2"></td>
+          <td><input v-model="line.bp" type="text" class="short" maxlength="1"></td>
+        </template>
+        <td><input v-model="line.comment" type="text" class="comment"></td>
       </tr>
     </tbody>
   </table>
@@ -68,18 +73,19 @@ input:focus {
   outline: none;
 }
 
-input.comment {
+input.comment, input.constant {
   text-align: left;
-  padding-left: 10px;
+  padding-left: 5px;
+  width: 100%
 }
 
 input.long {
-  width: 3em;
-  padding-right: 12px;
+  width: 2em;
+  padding-right: 2px;
 }
 
 input.short {
-  width: 2em;
-  padding-right: 9px;
+  width: 1em;
+  padding-right: 2px;
 }
 </style>

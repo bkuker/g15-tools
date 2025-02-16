@@ -1,5 +1,5 @@
 import * as util from "./conversionUtils.js";
-import { Numbers as N } from "./AsmTypes";
+import { type Numbers as N } from "./AsmTypes";
 import assert from "assert";
 
 function lineToTape(lineWords: N.word[]): string {
