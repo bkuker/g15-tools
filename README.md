@@ -69,6 +69,13 @@ C:\Users\bkuker\g15-tools\programs\music>npm run dasm -- m1.pti --entrypoints 0,
 
 ...⊘ OUTPUT TRUNCATED ⊘...
 ```
+## Bendix G-15 Programming Workdsheet UI
+
+This project also contains a vue/vite project implementing a UI similar to the programming form that was used to write down code for the G15.
+
+It's for fun, and for super casual hacking, but use the command line versions if you want to get anything done!
+
+It should be available [here](https://billkuker.com/g15-tools/).
 
 ## Tracer
 This is a work in progress :)
