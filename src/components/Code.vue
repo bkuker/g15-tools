@@ -1,5 +1,13 @@
 <script setup lang="ts">
 import { sourceCodeText } from "./Program";
+
+function doubleClick( line : any ){
+  if ( line.hasOwnProperty("value") ){
+    delete line.value;
+  } else {
+    line.value = "";
+  }
+}
 </script>
 
 <template>
@@ -18,7 +26,7 @@ import { sourceCodeText } from "./Program";
       </tr>
     </thead>
     <tbody>
-      <tr v-for="line in sourceCodeText">
+      <tr v-for="line in sourceCodeText" @dblclick="doubleClick(line)">
         <td><input v-model="line.l" type="text" class="long" maxlength="2"></td>
         <template v-if="line.value !== undefined">
           <td colspan="7"><input v-model="line.value" type="text" class="constant"></td>
