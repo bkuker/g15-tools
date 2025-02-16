@@ -16,7 +16,7 @@ const used = computed<boolean[]>(()=>{
   let u = [];
   for ( let l of sourceCodeText.value ){
     if (l.l){
-    u[l.l] = true;
+      u[convert.g15DecToInt(l.l.toString())] = true;
     }
   }
   return u;
