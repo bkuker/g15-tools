@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { sourceCodeText } from "./Program";
 
-function doubleClick( line : any ){
+function toggleConstant( line : any, e: Event ){
+  e.preventDefault();
   if ( line.hasOwnProperty("value") ){
     delete line.value;
   } else {
@@ -26,7 +27,7 @@ function doubleClick( line : any ){
       </tr>
     </thead>
     <tbody>
-      <tr v-for="line in sourceCodeText" @dblclick="doubleClick(line)">
+      <tr v-for="line in sourceCodeText" @click.shift="e=>toggleConstant(line,e)">
         <td><input v-model="line.l" type="text" class="long" maxlength="2"></td>
         <template v-if="line.value !== undefined">
           <td colspan="7"><input v-model="line.value" type="text" class="constant"></td>
