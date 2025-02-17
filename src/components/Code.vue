@@ -9,6 +9,10 @@ function toggleConstant( line : any, e: Event ){
     line.value = "";
   }
 }
+
+function focus(e: FocusEvent ){
+  (e.target as HTMLInputElement).select();
+}
 </script>
 
 <template>
@@ -27,7 +31,7 @@ function toggleConstant( line : any, e: Event ){
       </tr>
     </thead>
     <tbody>
-      <tr v-for="line in sourceCodeText" @click.shift="e=>toggleConstant(line,e)">
+      <tr v-for="line in sourceCodeText" @focusin="focus" @click.shift="e=>toggleConstant(line,e)">
         <td><input v-model="line.l" type="text" class="long" maxlength="2"></td>
         <template v-if="line.value !== undefined">
           <td colspan="7"><input v-model="line.value" type="text" class="constant"></td>
@@ -81,10 +85,13 @@ function toggleConstant( line : any, e: Event ){
 }
 
 input {
+  display: block;
   margin: 0;
   padding: 0;
   border: none;
   text-align: right;
+  height: 19px;
+  width: 100%;
 }
 
 input:focus {
@@ -99,12 +106,10 @@ input.comment, input.constant {
 }
 
 input.long {
-  width: 2em;
-  padding-right: 2px;
+  padding-right: 13px;
 }
 
 input.short {
-  width: 1em;
-  padding-right: 1px;
+  padding-right: 6px;
 }
 </style>
