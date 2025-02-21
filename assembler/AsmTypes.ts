@@ -31,12 +31,48 @@ export namespace ASM {
         return typeof (o as Instruction).c == "number";
     }
 
+    export function isParsedConstantText( o : Line ): o is ParsedConstantText {
+        return typeof (o as Constant).value == "string";
+    }
+
+    export function isParsedInstructionText( o : Line ): o is ParsedInstructionText {
+        return typeof (o as Instruction).c == "string";
+    }
+
+    
+
     //Every line from an ASM file
     //Including blank, comment, whatever
     export interface Line {
         sourceLineNumber?: number,
         rawText?: string,
     }
+
+
+    export interface ParsedInstructionText extends Line {
+        l: string,
+        s: string,
+        p: string,
+        t: string,
+        n: string,
+        c: string,
+        src: string,
+        dst: string,
+        bp: string,
+        comment?: string
+    }
+
+    export interface ParsedConstantText extends Line {
+        l: string,
+        value: string
+        comment?: string
+    }
+
+    export interface Comment extends Line {
+        comment?: string
+    }
+
+
 
     //Any line with a Location and Comment
     export interface Loc extends Line {
@@ -53,6 +89,7 @@ export namespace ASM {
 
     export type prefixType = " " | "u" | "w";
     export type sType = "." | "s";
+
 
     //A full on instruction in PPR format
     export interface Instruction extends Loc {

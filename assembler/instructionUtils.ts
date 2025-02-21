@@ -1,30 +1,121 @@
-import { type ASM, type Numbers as N } from "./AsmTypes";
+import { ASM, type Numbers as N } from "./AsmTypes";
 import * as convert from "./conversionUtils";
 
 export function parseAsmProgram(sourceCode: string): ASM.Line[] {
     const lines: string[] = sourceCode.split(/\r?\n/); // Split into lines
-    let program: ASM.Line[] = []; //The commands and comments in PROGRM order, not location order
-    let sourceLineNumber = 0;
+
+    //let labels = labelPass(lines);
+
+    //Identify line types, seperate into text fields
+    let parsedLines: (ASM.ParsedConstantText | ASM.ParsedInstructionText | ASM.Comment)[] = [];
+    let line = 0;
     for (const rawText of lines) {
-        let line: ASM.Line = parseAsmLine(rawText);
-        line.sourceLineNumber = sourceLineNumber++;
+        parsedLines.push(parseInstructionText(rawText, line++));
+    }
+
+
+    let program: ASM.Line[] = []; //The commands and comments in PROGRM order, not location order
+    let lastLine;
+    for (const parsed of parsedLines) {
+        let line: ASM.Line = parseAsmLine(parsed/*, lastLine, labels*/);
         program.push(line);
+        if (ASM.isLoc(line)) {
+            lastLine = line.l;
+        }
     }
     return program;
 }
 
+/*
+function labelPass(program: string[]): Map<string, number> {
+    let locations = new Map<string, number>();
+    let lastLine;
+    let label: string | undefined;
+    for (let rawText of program) {
+        if (/^[A-Z][A-Z0-9]:/i.test(rawText)) {
+            label = rawText.substring(0, 2);
+        } else if (rawText.startsWith(".")) {
+            lastLine = g15DecToIntRelative(rawText.substring(1, 3), lastLine, locations);
+            if (label) {
+                locations.set(label, lastLine);
+                label = undefined;
+            }
+        }
+    }
+    return locations;
+}*/
+
+/*
+function g15DecToIntRelative(v: string, base: number | undefined, labels: Map<string, number>): number {
+    if (labels.has(v)) {
+        v = (labels.get(v) as number).toString();
+    }
+    if (v == "  " && base != undefined) {
+        return base + 1;
+    }
+
+    if (v.startsWith("L")) {
+        v = v.replace("L", "+");
+    }
+
+    if (base != undefined && (v.startsWith("+") || v.startsWith("-'"))) {
+        return base + parseInt(v);
+    }
+
+    return convert.g15DecToInt(v as N.g15Dec);
+}*/
+
+
+//Break a instruction into it's textual components.
+//All values are strings, and some may be mnemonics etc!
+function parseInstructionText(line: string, lineNumber: number): ASM.ParsedConstantText | ASM.ParsedInstructionText | ASM.Comment {
+
+    let s = line.substring(4, 5) as ASM.sType;
+    if (s == "." || s == "s") {
+        //An Instruction
+        return {
+            l: line.substring(1, 3),
+            s: line.substring(4, 5),
+            p: line.substring(6, 7),
+            t: line.substring(8, 10),
+            n: line.substring(11, 13),
+            c: line.substring(14, 15),
+            src: line.substring(16, 18),
+            dst: line.substring(19, 21),
+            bp: line.substring(22, 23),
+            comment: line.substring(24),
+            rawText: line,
+            sourceLineNumber: lineNumber
+        }
+    } else if (line.startsWith(".")) {
+        //A Constant
+        return {
+            l: line.substring(1, 3),
+            value: line.substring(4, 20),
+            comment: line.substring(24),
+            rawText: line,
+            sourceLineNumber: lineNumber
+        }
+    } else if (
+            line.trim().startsWith("#")
+            || line.trim().length == 0
+            || line.startsWith("                          ")){
+        return {
+            rawText: line,
+            sourceLineNumber: lineNumber,
+            comment: line
+        };
+    } else {
+        throw `Error parsing line ${lineNumber}: ${line}`;
+    }
+}
+
+
 /**
  * Parse a raw line of assembly input into an ASM.Line object
  */
-export function parseAsmLine(rawText: string): ASM.Line {
+function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText | ASM.Comment/*, previousLine: number | undefined, labels: Map<string, number>*/): ASM.Line {
 
-    //TODO Create ASMLines
-    if (rawText.trim().startsWith("#") || rawText.trim().length == 0) {
-        return {
-            sourceLineNumber: 0,
-            rawText
-        };
-    }
 
     //Each line follows the pattern:
     //  LL S P.TT.NN.C.SS.DD BP
@@ -32,35 +123,23 @@ export function parseAsmLine(rawText: string): ASM.Line {
     //and various published source listings.
 
     //Extract the Location and s columns
-    let l = convert.g15DecToInt(rawText.substring(1, 3) as N.g15Dec);
-    let s = rawText.substring(4, 5) as ASM.sType;
+    if (ASM.isParsedInstructionText(parsed)){
+        //Decode instruction
 
-    if (s == "." || s == "s") {
-        //If s is "." or "s" this is an instruction
+        let l = convert.g15DecToInt(parsed.l as N.g15Dec);//g15DecToIntRelative(parsed.l, previousLine, labels);
 
-        //Extract the rest
-        let p = rawText.substring(6, 7) as ASM.prefixType;
-        let t = rawText.substring(8, 10) as N.g15Dec;
-        let n = rawText.substring(11, 13) as N.g15Dec;
-        let c = rawText.substring(14, 15);
-        let src = rawText.substring(16, 18);
-        let dst = rawText.substring(19, 21);
-        let bp = rawText.substring(22, 23);
-        let comment = rawText.substring(24).trim();
-
-        //Place into an object
         let cmd: ASM.Instruction = {
-            rawText,
-            l,
-            s,
-            p,
-            t: convert.g15DecToInt(t),
-            n: convert.g15DecToInt(n),
-            c: +c,
-            src: +src,
-            dst: +dst,
-            bp: bp.trim().length > 0,
-            comment,
+            rawText: parsed.rawText,
+            l: l,
+            s: parsed.s as ASM.sType,
+            p: parsed.p as ASM.prefixType,
+            t: convert.g15DecToInt(parsed.t as N.g15Dec), //g15DecToIntRelative(parsed.t, l, labels),
+            n: convert.g15DecToInt(parsed.n as N.g15Dec),  //g15DecToIntRelative(parsed.n, l, labels),
+            c: +parsed.c,
+            src: +parsed.src,
+            dst: +parsed.dst,
+            bp: parsed.bp.trim().length > 0,
+            comment: parsed.comment?.trim(),
             word: 0 as N.word
         }
 
@@ -68,12 +147,15 @@ export function parseAsmLine(rawText: string): ASM.Line {
         cmd.word = commandToInstructionWord(cmd);
 
         return cmd;
-    } else {
+    } else if ( ASM.isParsedConstantText(parsed) ){
+        //Decode constant
+
         //TODO: Support double precision constants?
+        let l = convert.g15DecToInt(parsed.l as N.g15Dec); //g15DecToIntRelative(parsed.l, previousLine, labels);
 
         //There was not a "." or "s" in the s column...
         //This is a constant in +/- hex form
-        const valueText: N.signedG15Hex = rawText.substring(4, 20).trim() as N.signedG15Hex;
+        const valueText: N.signedG15Hex = parsed.value.trim() as N.signedG15Hex;
 
         //Separate sign bit from absolute value hex
         let neg = false;
@@ -95,19 +177,19 @@ export function parseAsmLine(rawText: string): ASM.Line {
             word = word | 0x01;
         }
 
-        //Extract the comment
-        let comment = rawText.substring(24).trim();
-
         //Place into an object
         let data: ASM.Constant = {
-            rawText,
+            rawText: parsed.rawText,
             l: l,
             word: word as N.word,
             value: valNum * (neg ? -1 : 1),
             valueText: valueText,
-            comment
+            comment: parsed.comment
         }
         return data;
+    } else {
+        //Just return comment
+        return parsed;
     }
 
 }
