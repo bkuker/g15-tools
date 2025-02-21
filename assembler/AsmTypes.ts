@@ -32,12 +32,17 @@ export namespace ASM {
     }
 
     export function isParsedConstantText( o : Line ): o is ParsedConstantText {
-        return typeof (o as Constant).value == "string";
+        return typeof (o as ParsedConstantText).value == "string";
     }
 
     export function isParsedInstructionText( o : Line ): o is ParsedInstructionText {
-        return typeof (o as Instruction).c == "string";
+        return typeof (o as ParsedInstructionText).c == "string";
     }
+
+    export function isParsedLabel( o : Line ): o is ParsedLabel {
+        return typeof (o as ParsedLabel).label == "string";
+    }
+
 
     
 
@@ -48,6 +53,9 @@ export namespace ASM {
         rawText?: string,
     }
 
+    export interface ParsedLabel extends Line {
+        label: string
+    }
 
     export interface ParsedInstructionText extends Line {
         l: string,
@@ -59,17 +67,23 @@ export namespace ASM {
         src: string,
         dst: string,
         bp: string,
-        comment?: string
+        comment?: string,
+
+        lResolved: number | undefined,
+        nextLoc: number | undefined,
     }
 
     export interface ParsedConstantText extends Line {
         l: string,
         value: string
-        comment?: string
+        comment?: string,
+
+        lResolved: number | undefined,
+        nextLoc: number | undefined,
     }
 
     export interface Comment extends Line {
-        comment?: string
+        comment: string //May be empty string
     }
 
 

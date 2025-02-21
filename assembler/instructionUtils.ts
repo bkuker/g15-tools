@@ -1,3 +1,4 @@
+import { ParsedBuildCommand } from "typescript";
 import { ASM, type Numbers as N } from "./AsmTypes";
 import * as convert from "./conversionUtils";
 
@@ -7,17 +8,66 @@ export function parseAsmProgram(sourceCode: string): ASM.Line[] {
     //let labels = labelPass(lines);
 
     //Identify line types, seperate into text fields
-    let parsedLines: (ASM.ParsedConstantText | ASM.ParsedInstructionText | ASM.Comment)[] = [];
-    let line = 0;
+    let parsedLines: (ASM.ParsedConstantText | ASM.ParsedInstructionText | ASM.Comment | ASM.ParsedLabel )[] = [];
+    let line = 1;
     for (const rawText of lines) {
         parsedLines.push(parseInstructionText(rawText, line++));
     }
 
+    //CALCULATE LOCATIONS
+    //
+    //Any literal is parsed from G15 two digit Decimal
+    //Any blank ("  ") is taken to be consecutive (+1) from the previous
+    //line's location.
+    //TODO Consider +N notation, where "+1" and "  " are the same, but you can do +2 etc?
+    let lastLoc = NaN;
+    for ( const p of parsedLines ){
+        if ( ASM.isParsedConstantText(p) || ASM.isParsedInstructionText(p) ){
+            if ( p.l == "  " ){
+                lastLoc = p.lResolved = lastLoc + 1;
+            } else {
+                lastLoc = p.lResolved = convert.g15DecToInt(p.l as N.g15Dec);
+            }
+        }
+    }
 
-    let program: ASM.Line[] = []; //The commands and comments in PROGRM order, not location order
+    //Find Labels
+    //
+    //Any label refers to the next instruction or constant
+    //in the source.
+    let labels: Map<string, number> = new Map();
+    let lastLabel: ASM.ParsedLabel | undefined;
+    for ( const p of parsedLines ){
+        if ( ASM.isParsedLabel(p) ){
+            if ( lastLabel != undefined ){
+                throw "Two labels in a row at " + p.sourceLineNumber;
+            }
+            lastLabel = p;
+        }
+        if ( lastLabel != undefined && (ASM.isParsedConstantText(p) || ASM.isParsedInstructionText(p)) ){
+            if( p.lResolved == undefined ){
+                throw "Location unresolved for " + p.sourceLineNumber;
+            }
+            labels.set(lastLabel.label, p.lResolved );
+            lastLabel = undefined;
+        }
+    }
+
+    //Set nextLoc
+    let previous : ASM.ParsedConstantText | ASM.ParsedInstructionText | undefined;
+    for ( const p of parsedLines ){
+        if ( ASM.isParsedConstantText(p) || ASM.isParsedInstructionText(p) ){
+            if ( previous != undefined ){
+              previous.nextLoc = p.lResolved;
+            }
+            previous = p;
+        }
+    }
+
+    let program: ASM.Line[] = []; //The commands and comments in PROGRAM order, not location order
     let lastLine;
     for (const parsed of parsedLines) {
-        let line: ASM.Line = parseAsmLine(parsed/*, lastLine, labels*/);
+        let line: ASM.Line = parseAsmLine(parsed, labels);
         program.push(line);
         if (ASM.isLoc(line)) {
             lastLine = line.l;
@@ -26,49 +76,20 @@ export function parseAsmProgram(sourceCode: string): ASM.Line[] {
     return program;
 }
 
-/*
-function labelPass(program: string[]): Map<string, number> {
-    let locations = new Map<string, number>();
-    let lastLine;
-    let label: string | undefined;
-    for (let rawText of program) {
-        if (/^[A-Z][A-Z0-9]:/i.test(rawText)) {
-            label = rawText.substring(0, 2);
-        } else if (rawText.startsWith(".")) {
-            lastLine = g15DecToIntRelative(rawText.substring(1, 3), lastLine, locations);
-            if (label) {
-                locations.set(label, lastLine);
-                label = undefined;
-            }
-        }
-    }
-    return locations;
-}*/
 
-/*
-function g15DecToIntRelative(v: string, base: number | undefined, labels: Map<string, number>): number {
-    if (labels.has(v)) {
-        v = (labels.get(v) as number).toString();
-    }
-    if (v == "  " && base != undefined) {
-        return base + 1;
-    }
-
-    if (v.startsWith("L")) {
-        v = v.replace("L", "+");
-    }
-
-    if (base != undefined && (v.startsWith("+") || v.startsWith("-'"))) {
-        return base + parseInt(v);
-    }
-
-    return convert.g15DecToInt(v as N.g15Dec);
-}*/
 
 
 //Break a instruction into it's textual components.
 //All values are strings, and some may be mnemonics etc!
-function parseInstructionText(line: string, lineNumber: number): ASM.ParsedConstantText | ASM.ParsedInstructionText | ASM.Comment {
+function parseInstructionText(line: string, lineNumber: number): ASM.ParsedConstantText | ASM.ParsedInstructionText | ASM.ParsedLabel | ASM.Comment {
+
+    if (/^[A-Z][A-Z0-9]:/i.test(line)) {
+        return {
+            rawText: line,
+            sourceLineNumber: lineNumber,
+            label: line.substring(0, 2)
+        }
+    }
 
     let s = line.substring(4, 5) as ASM.sType;
     if (s == "." || s == "s") {
@@ -110,11 +131,30 @@ function parseInstructionText(line: string, lineNumber: number): ASM.ParsedConst
     }
 }
 
+function resolveG15DecToInt(v: string, loc: number, nextSlocLoc: number, labels: Map<string, number>): number {
+    if (labels.has(v)) {
+        v = (labels.get(v) as number).toString();
+    }
+
+    //Blank means next SLOC location, useful for T or N
+    if (v == "  " ) {
+        return nextSlocLoc;
+    }
+
+    //L1 = Loc plus 1, like in docs
+    if (v.startsWith("L")) {
+        return loc + parseInt(v.replace("L", ""));
+    }
+
+    //Just a number
+    return convert.g15DecToInt(v as N.g15Dec);
+}
+
 
 /**
  * Parse a raw line of assembly input into an ASM.Line object
  */
-function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText | ASM.Comment/*, previousLine: number | undefined, labels: Map<string, number>*/): ASM.Line {
+function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText | ASM.ParsedLabel | ASM.Comment, labels: Map<string, number>): ASM.Line {
 
 
     //Each line follows the pattern:
@@ -126,15 +166,15 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
     if (ASM.isParsedInstructionText(parsed)){
         //Decode instruction
 
-        let l = convert.g15DecToInt(parsed.l as N.g15Dec);//g15DecToIntRelative(parsed.l, previousLine, labels);
+        //let l = convert.g15DecToInt(parsed.l as N.g15Dec);//g15DecToIntRelative(parsed.l, previousLine, labels);
 
         let cmd: ASM.Instruction = {
             rawText: parsed.rawText,
-            l: l,
+            l: parsed.lResolved as number,
             s: parsed.s as ASM.sType,
             p: parsed.p as ASM.prefixType,
-            t: convert.g15DecToInt(parsed.t as N.g15Dec), //g15DecToIntRelative(parsed.t, l, labels),
-            n: convert.g15DecToInt(parsed.n as N.g15Dec),  //g15DecToIntRelative(parsed.n, l, labels),
+            t: resolveG15DecToInt(parsed.t, parsed.lResolved as number, parsed.nextLoc as number, labels),//convert.g15DecToInt(parsed.t as N.g15Dec),
+            n: resolveG15DecToInt(parsed.n, parsed.lResolved as number, parsed.nextLoc as number, labels),//convert.g15DecToInt(parsed.n as N.g15Dec),
             c: +parsed.c,
             src: +parsed.src,
             dst: +parsed.dst,
@@ -151,7 +191,7 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
         //Decode constant
 
         //TODO: Support double precision constants?
-        let l = convert.g15DecToInt(parsed.l as N.g15Dec); //g15DecToIntRelative(parsed.l, previousLine, labels);
+        //let l = convert.g15DecToInt(parsed.l as N.g15Dec); //g15DecToIntRelative(parsed.l, previousLine, labels);
 
         //There was not a "." or "s" in the s column...
         //This is a constant in +/- hex form
@@ -180,7 +220,7 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
         //Place into an object
         let data: ASM.Constant = {
             rawText: parsed.rawText,
-            l: l,
+            l: parsed.lResolved as number,
             word: word as N.word,
             value: valNum * (neg ? -1 : 1),
             valueText: valueText,
@@ -188,7 +228,7 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
         }
         return data;
     } else {
-        //Just return comment
+        //Just return comment or label
         return parsed;
     }
 

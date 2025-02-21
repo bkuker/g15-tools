@@ -10,22 +10,25 @@
 #Should Blank N go to L+1, or next SLOC?
 #Probably next sloc!
 
-#lp:
+lp:
                           Print value A to typewriter
-.04 .  .30.  .1.00.28     0.30 -> ARc   AR = A
+.04 .  .vA.  .1.00.28     0.30 -> ARc   AR = A
 .   .  .L2.  .0.08.31     Output AR to typewriter
 .   .  .L0.L0.0.28.31     Wait here for IOReady
 
                           C = A + B...
-.   .  .30.  .1.00.28     0.30 -> ARc   AR = A
-.   .  .31.  .2.00.29     0.31 -> AR+   AR += B
-.   .  .32.  .1.28.00     AR -> 00.32   C = A + B
-.   .  .31.  .1.00.28     AR = B
-.   .  .30.  .1.28.00     A = AR
-.   .  .32.  .1.00.28     AR = C
-.   .  .31.lp.1.28.00     B = AR, GOTO 4
+.   .  .vA.  .1.00.28     0.30 -> ARc   AR = A
+.   .  .vB.  .2.00.29     0.31 -> AR+   AR += B
+.   .  .vC.  .1.28.00     AR -> 00.32   C = A + B
+.   .  .vB.  .1.00.28     AR = B
+.   .  .vA.  .1.28.00     A = AR
+.   .  .vC.  .1.00.28     AR = C
+.   .  .vB.lp.1.28.00     B = AR, GOTO 4
 
+vA:
 .30 1                     A
+vB:
 .31 1                     B
+vC:
 .32 0                     C
 
