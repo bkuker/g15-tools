@@ -323,7 +323,7 @@ export default function disassembleWord(loc, word) {
                         dest = "CLEAR MQ/ID/PN/IP:" + op;
                         break;
                     case 3:
-                        dest = `TR PN:${(op % 2)}.2:$op} > ID, PN:${(op % 2)}.2/:${op} > PN`;
+                        dest = `TR PN:${(op % 2)}.2:${op} > ID, PN:${(op % 2)}.2/:${op} > PN`;
                         break;
                     default:
                         dest = `D23:${op} <C=${c} Invalid>`;
