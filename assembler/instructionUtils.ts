@@ -8,7 +8,7 @@ export function parseAsmProgram(sourceCode: string): ASM.Line[] {
     //let labels = labelPass(lines);
 
     //Identify line types, seperate into text fields
-    let parsedLines: (ASM.ParsedConstantText | ASM.ParsedInstructionText | ASM.Comment | ASM.ParsedLabel )[] = [];
+    let parsedLines: (ASM.ParsedConstantText | ASM.ParsedInstructionText | ASM.Comment | ASM.ParsedLabel)[] = [];
     let line = 1;
     for (const rawText of lines) {
         parsedLines.push(parseInstructionText(rawText, line++));
@@ -21,9 +21,9 @@ export function parseAsmProgram(sourceCode: string): ASM.Line[] {
     //line's location.
     //TODO Consider +N notation, where "+1" and "  " are the same, but you can do +2 etc?
     let lastLoc = NaN;
-    for ( const p of parsedLines ){
-        if ( ASM.isParsedConstantText(p) || ASM.isParsedInstructionText(p) ){
-            if ( p.l == "  " ){
+    for (const p of parsedLines) {
+        if (ASM.isParsedConstantText(p) || ASM.isParsedInstructionText(p)) {
+            if (p.l == "  ") {
                 lastLoc = p.lResolved = lastLoc + 1;
             } else {
                 lastLoc = p.lResolved = convert.g15DecToInt(p.l as N.g15Dec);
@@ -37,28 +37,28 @@ export function parseAsmProgram(sourceCode: string): ASM.Line[] {
     //in the source.
     let labels: Map<string, number> = new Map();
     let lastLabel: ASM.ParsedLabel | undefined;
-    for ( const p of parsedLines ){
-        if ( ASM.isParsedLabel(p) ){
-            if ( lastLabel != undefined ){
+    for (const p of parsedLines) {
+        if (ASM.isParsedLabel(p)) {
+            if (lastLabel != undefined) {
                 throw "Two labels in a row at " + p.sourceLineNumber;
             }
             lastLabel = p;
         }
-        if ( lastLabel != undefined && (ASM.isParsedConstantText(p) || ASM.isParsedInstructionText(p)) ){
-            if( p.lResolved == undefined ){
+        if (lastLabel != undefined && (ASM.isParsedConstantText(p) || ASM.isParsedInstructionText(p))) {
+            if (p.lResolved == undefined) {
                 throw "Location unresolved for " + p.sourceLineNumber;
             }
-            labels.set(lastLabel.label, p.lResolved );
+            labels.set(lastLabel.label, p.lResolved);
             lastLabel = undefined;
         }
     }
 
     //Set nextLoc
-    let previous : ASM.ParsedConstantText | ASM.ParsedInstructionText | undefined;
-    for ( const p of parsedLines ){
-        if ( ASM.isParsedConstantText(p) || ASM.isParsedInstructionText(p) ){
-            if ( previous != undefined ){
-              previous.nextLoc = p.lResolved;
+    let previous: ASM.ParsedConstantText | ASM.ParsedInstructionText | undefined;
+    for (const p of parsedLines) {
+        if (ASM.isParsedConstantText(p) || ASM.isParsedInstructionText(p)) {
+            if (previous != undefined) {
+                previous.nextLoc = p.lResolved;
             }
             previous = p;
         }
@@ -92,7 +92,16 @@ function parseInstructionText(line: string, lineNumber: number): ASM.ParsedConst
     }
 
     let s = line.substring(4, 5) as ASM.sType;
-    if (s == "." || s == "s") {
+    if (
+        line.trim().startsWith("#")
+        || line.trim().length == 0
+        || line.startsWith("                          ")) {
+        return {
+            rawText: line,
+            sourceLineNumber: lineNumber,
+            comment: line
+        };
+    } else if (s == "." || s == "s") {
         //An Instruction
         return {
             l: line.substring(1, 3),
@@ -117,15 +126,6 @@ function parseInstructionText(line: string, lineNumber: number): ASM.ParsedConst
             rawText: line,
             sourceLineNumber: lineNumber
         }
-    } else if (
-            line.trim().startsWith("#")
-            || line.trim().length == 0
-            || line.startsWith("                          ")){
-        return {
-            rawText: line,
-            sourceLineNumber: lineNumber,
-            comment: line
-        };
     } else {
         throw `Error parsing line ${lineNumber}: ${line}`;
     }
@@ -137,7 +137,7 @@ function resolveG15DecToInt(v: string, loc: number, nextSlocLoc: number, labels:
     }
 
     //Blank means next SLOC location, useful for T or N
-    if (v == "  " ) {
+    if (v == "  ") {
         return nextSlocLoc;
     }
 
@@ -163,7 +163,7 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
     //and various published source listings.
 
     //Extract the Location and s columns
-    if (ASM.isParsedInstructionText(parsed)){
+    if (ASM.isParsedInstructionText(parsed)) {
         //Decode instruction
 
         //let l = convert.g15DecToInt(parsed.l as N.g15Dec);//g15DecToIntRelative(parsed.l, previousLine, labels);
@@ -187,7 +187,7 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
         cmd.word = commandToInstructionWord(cmd);
 
         return cmd;
-    } else if ( ASM.isParsedConstantText(parsed) ){
+    } else if (ASM.isParsedConstantText(parsed)) {
         //Decode constant
 
         //TODO: Support double precision constants?
