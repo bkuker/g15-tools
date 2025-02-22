@@ -24,7 +24,7 @@ These are @UsagiElectric's notes from Discord
 
 import fs from "fs";
 import * as convert from "./conversionUtils";
-import { parseAsmProgram } from "./instructionUtils";
+import { formatCommand, parseAsmProgram } from "./instructionUtils";
 import * as tape from "./tapeUtils";
 import { ASM, Numbers as N } from "./AsmTypes";
 import { Command } from 'commander';
@@ -40,6 +40,7 @@ if (process.env.INIT_CWD) {
 const commandLine = new Command();
 commandLine
     .option('--words', 'Output words, not pti')
+    .option('--resolved', 'Output resolved code, not pti')
     .option('--bootable', 'Output a number track before the program block')
     .argument('<assembly file name>');
 commandLine.parse();
@@ -66,7 +67,16 @@ for (let l = 0; l < 108; l++) {
 }
 
 //Output
-if (commandLine.opts().words) {
+if (commandLine.opts().resolved) {
+    //Output resolved code
+    for ( let l of program ){
+        if ( ASM.isInstruction(l) ){
+            console.log( formatCommand(l) );
+        } else if ( ASM.isConstant(l) ){
+            console.log( `.${convert.intToG15Dec(l.l)}   ${convert.intToSignedG15Hex(l.value as N.word).padEnd(17," ")}${l.comment}`)
+        }
+    }
+} else if (commandLine.opts().words) {
     //Dump words
     for (let l = 0; l < 108; l++) {
         if (lineWords[l] != 0) {

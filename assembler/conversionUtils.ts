@@ -16,6 +16,16 @@ export function g15SignedHex(w: N.word): N.signedG15Hex {
     return ((sign ? "-" : "") + hex) as N.signedG15Hex;
 }
 
+export function intToSignedG15Hex(v: number){
+    let neg = v < 0;
+    v = Math.abs(v);
+    v = v << 1;
+    if (neg) {
+        v = v | 0x01;
+    }
+    return g15SignedHex(v as N.word);
+}
+
 export function g15Hex(v: N.word): N.g15Hex {
     /**
      * Converts the value "v" to a hexidecimal string using the G-15
