@@ -202,7 +202,7 @@ if (!commandLine.opts().nostatic) {
 }
 
 let out = "#" + fileName + "\n\n";
-out += "#LL S P TT NN C SS DD    Comment\n"
+out += "#LL S P TT NN C SS DD B  Comment\n"
 let last : ASM.Instruction | null = null;
 for (let l of done) {
     if (last && last.n != l)
@@ -217,7 +217,8 @@ for (let l of done) {
 
 if (!commandLine.opts().nostatic) {
     out += "\n\n#Not Reached from Entry Points\n";
-    out += "#LL   ±Hex               Raw       Decimal    Interpretation\n"
+    out += "#                        Comment:             Assembly:\n"
+    out += "#LL   ±Hex               Raw       Decimal     LL S P TT NN C SS DD B    Interpretation\n"
 }
 
 for (let cmd of program) {
@@ -225,7 +226,7 @@ for (let cmd of program) {
         let constant = `.${convert.intToG15Dec(cmd.l)}   ${convert.g15SignedHex(cmd.word).padEnd(19," ")}`;
         let comment = convert.g15Hex(cmd.word) + "  " + convert.wordToDec(cmd.word).toString().padStart(9);
         if (cmd.comment?.indexOf("Invalid") == -1) { 
-            comment += "  " + cmd.comment;
+            comment += "  " + formatCommand(cmd) + "  " + cmd.comment;
         }
         /*
         if (cmd.comment.indexOf("Invalid") != -1) {

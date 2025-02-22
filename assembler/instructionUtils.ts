@@ -95,7 +95,7 @@ function parseInstructionText(line: string, lineNumber: number): ASM.ParsedConst
     if (
         line.trim().startsWith("#")
         || line.trim().length == 0
-        || line.startsWith("                          ")) {
+        || line.startsWith("                         ")) {
         return {
             rawText: line,
             sourceLineNumber: lineNumber,

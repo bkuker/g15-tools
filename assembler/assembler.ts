@@ -73,7 +73,7 @@ if (commandLine.opts().resolved) {
         if ( ASM.isInstruction(l) ){
             console.log( formatCommand(l) );
         } else if ( ASM.isConstant(l) ){
-            console.log( `.${convert.intToG15Dec(l.l)}   ${convert.g15SignedHex(l.word).padEnd(17," ")}${l.comment}`)
+            console.log( `.${convert.intToG15Dec(l.l)}   ${convert.g15SignedHex(l.word).padEnd(18," ")}${l.comment}`)
         } else {
             console.log(l.rawText);
         }
