@@ -4,9 +4,9 @@
 .02 .  .04.42.0.21.31     Execute Line 0 GOTO 0:42 to set formatting
 
 # Variables
-.30 1                     A
-.31 1                     B
-.32 0                     C
+.30 +1                     A
+.31 +1                     B
+.32 +0                     C
 
 # Print value A to typewriter
 .04 .  .30.05.1.00.28     0.30 -> ARc   AR = A

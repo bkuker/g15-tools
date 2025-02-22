@@ -201,7 +201,8 @@ if (!commandLine.opts().nostatic) {
     }
 }
 
-let out = "#" + fileName + "\n";
+let out = "#" + fileName + "\n\n";
+out += "#LL S P TT NN C SS DD    Comment\n"
 let last : ASM.Instruction | null = null;
 for (let l of done) {
     if (last && last.n != l)
@@ -215,16 +216,24 @@ for (let l of done) {
 }
 
 if (!commandLine.opts().nostatic) {
-    out += "\n\n#Not Reached from Entry Points\n\n";
+    out += "\n\n#Not Reached from Entry Points\n";
+    out += "#LL   ±Hex               Raw       Decimal    Interpretation\n"
 }
+
 for (let cmd of program) {
     if (done.indexOf(cmd.l) == -1 && cmd.word != 0) {
-        cmd.comment = convert.g15Hex(cmd.word) + "\t" + convert.wordToDec(cmd.word).toString().padStart(9) + "\t" + cmd.comment;
+        let constant = `.${convert.intToG15Dec(cmd.l)}   ${convert.g15SignedHex(cmd.word).padEnd(19," ")}`;
+        let comment = convert.g15Hex(cmd.word) + "  " + convert.wordToDec(cmd.word).toString().padStart(9);
+        if (cmd.comment?.indexOf("Invalid") == -1) { 
+            comment += "  " + cmd.comment;
+        }
+        /*
         if (cmd.comment.indexOf("Invalid") != -1) {
-            out = out + `.${convert.intToG15Dec(cmd.l)} ${convert.g15SignedHex(cmd.word)}\n`;
+            out = out + `.${convert.intToG15Dec(cmd.l)}   ${convert.g15SignedHex(cmd.word)}\n`;
         } else {
             out = out + formatCommand(cmd) + "\n";
-        }
+        }*/
+       out += constant + comment + "\n";
     }
 }
 

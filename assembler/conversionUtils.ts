@@ -13,9 +13,10 @@ export function g15SignedHex(w: N.word): N.signedG15Hex {
     let sign = w & 1;   //Extract sign bit
     let val = w >> 1;   //Extract absolute value
     let hex = g15Hex(val as N.word);
-    return ((sign ? "-" : "") + hex) as N.signedG15Hex;
+    return ((sign ? "-" : "+") + hex) as N.signedG15Hex;
 }
 
+/*
 export function intToSignedG15Hex(v: number){
     let neg = v < 0;
     v = Math.abs(v);
@@ -24,7 +25,7 @@ export function intToSignedG15Hex(v: number){
         v = v | 0x01;
     }
     return g15SignedHex(v as N.word);
-}
+}*/
 
 export function g15Hex(v: N.word): N.g15Hex {
     /**

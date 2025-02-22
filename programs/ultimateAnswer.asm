@@ -15,6 +15,6 @@
 .11 .  .14.14.0.08.31     Type AR
 .14 .  .16.14.0.16.31     HALT
 
-.20 7                     Constant 6
+.20 +7                    Constant 7
 .21 0                     Answer here
 

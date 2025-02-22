@@ -191,30 +191,32 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
         //Decode constant
 
         //TODO: Support double precision constants?
-        //let l = convert.g15DecToInt(parsed.l as N.g15Dec); //g15DecToIntRelative(parsed.l, previousLine, labels);
+        //TODO Consider Binary and fractional decimal literals
 
-        //There was not a "." or "s" in the s column...
-        //This is a constant in +/- hex form
-        const valueText: N.signedG15Hex = parsed.value.trim() as N.signedG15Hex;
+        const valueText = parsed.value.trim();
+        let word: N.word | undefined;
 
-        //Separate sign bit from absolute value hex
-        let neg = false;
-        let abs: N.g15Hex;
-        if (valueText.startsWith("-")) {
-            abs = valueText.substring(1) as N.g15Hex;
-            neg = true;
+        if ( valueText.startsWith("d") ){
+            //Parse as decimal
+            let v = parseInt(valueText.substring(1));
+            v = v << 1;
+            if ( v < 0 ){
+                v = v | 0x01;
+            }
+            word = v as N.word;
+        } else if ( valueText.startsWith("+") ){
+            //Parse as Positive +/- hex
+            let abs = valueText.substring(1) as N.g15Hex;
+            let valNum = convert.g15HexToDec(abs);
+            word = (Math.abs(valNum) << 1) as N.word;
+        } else if ( valueText.startsWith("-") ){
+            //Parse as Negative +/- hex
+            let abs = valueText.substring(1) as N.g15Hex;
+            let valNum = convert.g15HexToDec(abs);
+            word = ((Math.abs(valNum) << 1) | 0x01) as N.word;
         } else {
-            abs = valueText as string as N.g15Hex;
-        }
-
-        //convert the abs to an integer
-        let valNum = convert.g15HexToDec(abs);
-
-        //Convert that integer and sign into the
-        //raw g15 word
-        let word = Math.abs(valNum) << 1;
-        if (neg) {
-            word = word | 0x01;
+            //Parse as raw 29bit word
+            word = convert.g15HexToDec(valueText as N.g15Hex) as N.word;
         }
 
         //Place into an object
@@ -222,7 +224,6 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
             rawText: parsed.rawText,
             l: parsed.lResolved as number,
             word: word as N.word,
-            value: valNum * (neg ? -1 : 1),
             valueText: valueText,
             comment: parsed.comment
         }

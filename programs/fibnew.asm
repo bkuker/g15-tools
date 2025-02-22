@@ -1,18 +1,17 @@
 #Print the Fibonacci numbers
 
-.00 . u.01.01.0.19.00     Line 19 to Line 0 - Test not set
-.01 .  .03.02.0.21.31     Jump to 0:2
+.00 . u.01.  .0.19.00     Line 19 to Line 0 - Test not set
+.01 .  .03.  .0.21.31     Jump to 0:2
 
+#This code must be here because it copies to 3:3 for formatting
                           Set up formatting
-.02 .  .03.lp.1.0.03      0:3 -> 3:3 Copy format code to line 3, goto 4
+.02 .  .03.lp.1.00.03     0:3 -> 3:3 Copy format code to line 3, goto 4
 .03 0000044               Format code, no sign no decimal, line feed.
 
-#Should Blank N go to L+1, or next SLOC?
-#Probably next sloc!
-
+#This code is mainly relocatiable, so no L or N literals
 lp:
                           Print value A to typewriter
-.04 .  .vA.  .1.00.28     0.30 -> ARc   AR = A
+.   .  .vA.  .1.00.28     0.30 -> ARc   AR = A
 .   .  .L2.  .0.08.31     Output AR to typewriter
 .   .  .L0.L0.0.28.31     Wait here for IOReady
 
@@ -25,10 +24,12 @@ lp:
 .   .  .vC.  .1.00.28     AR = C
 .   .  .vB.lp.1.28.00     B = AR, GOTO 4
 
+#Using labels for variables feels dirty
+#because there is no src / dst check logic
 vA:
-.30 1                     A
+.   d1                     A
 vB:
-.31 1                     B
+.   d1                     B
 vC:
-.32 0                     C
+.   d0                     C
 

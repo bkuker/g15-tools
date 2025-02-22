@@ -24,7 +24,7 @@ export namespace ASM {
     }
 
     export function isConstant( o : Line ): o is Constant {
-        return typeof (o as Constant).value == "number";
+        return typeof (o as Constant).valueText == "string";
     }
 
     export function isInstruction( o : Line ): o is Instruction {
@@ -97,7 +97,7 @@ export namespace ASM {
 
     //A line with a Location, Constant and comment
     export interface Constant extends Loc {
-        value: number,
+        //value: number,
         valueText: string
     }
 

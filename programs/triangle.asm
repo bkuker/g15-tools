@@ -32,11 +32,11 @@
  
 
 #DATA
-.40 1                     one
-.41 0400000               F3 Format code, 1 digit, end
-.42 4400000               F3 Format code, 0 digit, CR end
-.43 8888888               eights!
-.44 5                     ROWS
+.40 +1                    one
+.41 +0400000              F3 Format code, 1 digit, end
+.42 +4400000              F3 Format code, 0 digit, CR end
+.43 +8888888              eights!
+.44 +5                    ROWS
 .45 0                     COLS
 
 #Subroutine Print 8
