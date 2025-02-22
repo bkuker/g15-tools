@@ -1,7 +1,7 @@
 import fs from "fs";
 import assert from "assert";
 import * as convert from "./conversionUtils";
-import {commandToInstructionWord, formatCommand} from "./instructionUtils";
+import { commandToInstructionWord, formatCommand } from "./instructionUtils";
 import disassembleWord from "./PaulDecoder.js";
 import * as tape from "./tapeUtils";
 import { ASM, Numbers as N } from "./AsmTypes";
@@ -148,7 +148,7 @@ for (let l = 0; l < block.length; l++) {
     program[l] = cmd;
 }
 
-let done : number[] = [];
+let done: number[] = [];
 
 //Perform static analysis if enabled
 if (!commandLine.opts().nostatic) {
@@ -203,7 +203,7 @@ if (!commandLine.opts().nostatic) {
 
 let out = "#" + fileName + "\n\n";
 out += "#LL S P TT NN C SS DD B  Comment\n"
-let last : ASM.Instruction | null = null;
+let last: ASM.Instruction | null = null;
 for (let l of done) {
     if (last && last.n != l)
         out += "\n";
@@ -218,23 +218,17 @@ for (let l of done) {
 if (!commandLine.opts().nostatic) {
     out += "\n\n#Not Reached from Entry Points\n";
     out += "#                        Comment:             Assembly:\n"
-    out += "#LL   ±Hex               Raw       Decimal     LL S P TT NN C SS DD B    Interpretation\n"
+    out += "#LL   ±Hex               Raw       Decimal     LL S P TT NN C SS DD B  Interpretation\n"
 }
 
 for (let cmd of program) {
     if (done.indexOf(cmd.l) == -1 && cmd.word != 0) {
-        let constant = `.${convert.intToG15Dec(cmd.l)}   ${convert.g15SignedHex(cmd.word).padEnd(19," ")}`;
+        let constant = `.${convert.intToG15Dec(cmd.l)}   ${convert.g15SignedHex(cmd.word).padEnd(19, " ")}`;
         let comment = convert.g15Hex(cmd.word) + "  " + convert.wordToDec(cmd.word).toString().padStart(9);
-        if (cmd.comment?.indexOf("Invalid") == -1) { 
-            comment += "  " + formatCommand(cmd) + "  " + cmd.comment;
+        if (cmd.comment?.indexOf("Invalid") == -1) {
+            comment += "  " + formatCommand(cmd);
         }
-        /*
-        if (cmd.comment.indexOf("Invalid") != -1) {
-            out = out + `.${convert.intToG15Dec(cmd.l)}   ${convert.g15SignedHex(cmd.word)}\n`;
-        } else {
-            out = out + formatCommand(cmd) + "\n";
-        }*/
-       out += constant + comment + "\n";
+        out += constant + comment + "\n";
     }
 }
 
