@@ -2,7 +2,7 @@ import * as util from "./conversionUtils.js";
 import { type Numbers as N } from "./AsmTypes";
 import assert from "assert";
 
-function lineToTape(lineWords: N.word[]): string {
+function lineToTape(lineWords: N.word[], elideZeros = true): string {
     /**
      * This function takes a 108 long array of integers
      * and converts it to a string in the .pti format
@@ -24,15 +24,21 @@ function lineToTape(lineWords: N.word[]): string {
     let ptiBlock = "";
     const SYM = "0123456789uvwxyz";
     for (let i = 0; i < chunks.length; i++) {
+        let lastChunk = i == chunks.length - 1;
         let out = "";
         let nibbles = chunks[i].match(/.{1,4}/g)!;
         for (let nibble of nibbles) {
             let v = parseInt(nibble, 2);
             out += SYM[v];
         }
+        if ( out == "00000000000000000000000000000" && elideZeros && !lastChunk){
+            continue;
+        } else {
+            elideZeros = false;
+        }
         ptiBlock = ptiBlock + out;
         //Apply the appropriate line ending
-        ptiBlock = ptiBlock + (i == chunks.length - 1 ? "S" : "/\n");
+        ptiBlock = ptiBlock + (lastChunk ? "S" : "/\n");
     }
     return ptiBlock;
 
