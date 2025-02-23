@@ -25,14 +25,61 @@ The `--words` option outputs the program words in G15 hex, not a .pti file.
 
 The `--bootable` option will output the Number Track prior to the program code.
 
+The `--resolved` option will output the program as ASM with all mnemonics resolved.
+
+### Labels
+
+The term SLOC (Source line of code) refers to code in source file order, NOT the order on the drum / tape. Comments & blank lines are ignored.
+
+You may place **two character** labels in your code. They will be resolved to the next SLOC's LL value. In the following example the `ht` label may be used in place of the value 42 in your program.
+
+```
+ht:
+.42 .  .44.42.0.16.31    HALT
+```
+
+### Mnemonics
+
+Most of these mnemonics help you write simple linear code without worrying about LL and NN too much.
+They also make it easier to write "relocatable" code: Code that will work without editing if you change it's location.
+
+* Location:
+    * Auto Increment: Leave LL blank for LL = (Previous SLOC).LL + 1
+    * **TODO**: May add things like `+2`
+    * **TODO**: May add `e!` and `o!` to mean "emit error if not even / odd"
+        * Helpful with certain instructions
+    * **TODO**: May add `n!` where n in 0-3 to mean "emit error if not divisible by n"
+        * Helpful with short lines / 2 word registers
+
+* Time & Next:
+    * Next SLOC: Leave TT or NN blank to get (Next SLOC).LL
+    * Lk: For k = 0-9, resolves to LL + k.
+        * L0 gives you this line's LL value, L1 adds 1, etc
+    * Label: You may use a label in place of TT or NN.
+
+* Source & Dest:
+    * **TODO** May add mnemonics like Ac, A+, ID, etc?
+
+```
+# This code is defined to start at 03, but if you were to
+# change that, the remaining code needn't be edited.
+
+                         Load AR format code to line 3
+.03 .  .L2.  .0.15.31    Read next tape block
+.   .  .L0.L0.0.28.31    Wait for IOReady
+.   . u.  .  .0.19.03    Copy line 19 to Line 3
+
+# This halt command can be pasted anywhere.
+.   .  .L2.L0.0.16.31    HALT
+```
+
+
 ### Example
 
 ```
 C:\Users\bkuker\g15-tools\programs>npm run asm -- fib.asm
 
 # fib.asm
-00000000000000000000000000000/
-...⊘ OUTPUT SKIPPED ⊘...
 00000000000000000000000000000/
 00000004z823w0280390713w1uz00/
 9z0w41w5005vw027w2u0753w12838/
