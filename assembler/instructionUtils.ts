@@ -180,7 +180,8 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
             dst: +parsed.dst,
             bp: parsed.bp.trim().length > 0,
             comment: parsed.comment?.trim(),
-            word: 0 as N.word
+            word: 0 as N.word,
+            sourceLineNumber: parsed.sourceLineNumber
         }
 
         //This is the command's actual binary value as an integer
@@ -225,7 +226,8 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
             l: parsed.lResolved as number,
             word: word as N.word,
             valueText: valueText,
-            comment: parsed.comment
+            comment: parsed.comment,
+            sourceLineNumber: parsed.sourceLineNumber
         }
         return data;
     } else {
