@@ -28,6 +28,11 @@ const lines = data.split(/\r?\n/); // Split into lines
 
 let block = tape.tapeToWords(data);
 
+//Pad block to length
+while (block.length < 108) {
+    block.push(0 as N.word);
+}
+
 function parseWordToRaw(word) {
 
     let value = word >> 1;
