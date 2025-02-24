@@ -27,6 +27,19 @@ The `--bootable` option will output the Number Track prior to the program code.
 
 The `--resolved` option will output the program as ASM with all mnemonics resolved.
 
+### Constants
+Numerical values may be specified at a given location in several formats...
+```
+.01   zzzzzzz            Raw 29 bit word. Sign is LSB
+.02   +56789uv1          Signed 28 bit hex value
+.03   d420               Decimal integer value
+
+#⚠️ Not done yet:
+.04   d.3141562          Decimal fractional value
+                         Binary value perhaps?
+.05   b000 000 000 000 000 000 000 000 000 00
+```
+
 ### Labels
 
 The term SLOC (Source line of code) refers to code in source file order, NOT the order on the drum / tape. Comments & blank lines are ignored.
