@@ -12,6 +12,7 @@
 #       x as decimal in AR
 #
 # https://rbk.delosent.com/allq/Q7621.pdf Page 15
+# http://www.bitsavers.org/pdf/bendix/g-15/G15D_Subroutines.pdf
 # Transcribed: Bill Kuker 2/22/2025
 #
 .61 .  .63.64.0.28.02    Return Link
