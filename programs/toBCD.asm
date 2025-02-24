@@ -1,30 +1,51 @@
-.00 . u.01.01.0.19.02     Line 19 to Line 2 - Test not set
-.01 .  .03.02.2.21.31     Jump to 2:2
+# Copy loaded program from 19 -> 0 and begin execution at 0:03
+.00 . u.01.02.0.19.00    Line 19 to Line 0 - Test not set
+.01 . u.02.02.0.19.00    Line 19 to Line 0 - Test set
+.02 .  .03.03.0.21.31    Execute Line 0 GOTO 0:3
 
-#This code must be here because it copies to 3:3 for formatting
-                          Set up formatting
-.02 .  .03.04.1.02.03     0:3 -> 3:3 Copy format code to line 3, goto 4
-.03 C000044               Format code: period, 6 digits, Linefeed, end
+                         Load AR format code to line 3
+.03 .  .L2.  .0.15.31    Read next tape block
+.   .  .L0.L0.0.28.31    Wait for IOReady
+.   . u.  .  .0.19.03    Line 19 to Line 3
 
-                          Print value A to typewriter
-.04 .  .vA.  .1.02.28     0.30 -> ARc   AR = A
-pr:
-.   .  .L2.  .0.08.31     Output AR to typewriter
-.   .  .L0.L0.0.28.31     Wait here for IOReady
+                         Load BCD routine to line 2
+.   .  .L2.  .0.15.31    Read next tape block
+.   .  .L0.L0.0.28.31    Wait for IOReady
+.   . u.  .  .0.19.02    Line 19 to Line 2
 
-.   .  .vA.64.0.02.25     Load vA -> ID.1
+.   .  .vA.  .1.00.28    Load vA -> AR
 
-.   .  .L2.L0.0.16.31     HALT
+pr:                      Print value A to typewriter
+.   .  .L2.  .0.08.31    Output AR to typewriter
+.   .  .L0.L0.0.28.31    Wait here for IOReady
+
+.   .  .vA.  .0.00.25    Load vA -> ID.1
+.   .  .L1.L2.1.00.28    Load next instruction to AR, skip it
+.   .  .pr.pr.0.20.31    GOTO 0:pr (return instruction)
+.   .  .61.61.2.20.31    GOTO 2:61
+
+.   .  .L2.L0.0.16.31    HALT
 
 vA:
-.99 0x2x3xzy              Decimal value 0.411772724
+.21   +506ww00           Decimal value 0.411772724
+
+<BLOCK>
+
+
+.00   0
+.01   0
+.02   0                  Another decimal place?
+.03   C000044            Format code: period, 6 digits, Linefeed, end
+
+<BLOCK>
 
 # Input-Output Routine - Binary to decimal
-# #1101
-# Prepared by Ed Williams
-# Page 7 of 9
-# Date 1-25-57
-# Line 02
+# Prepared by: Ed Williams #1101
+# Page: 7 of 9
+# Date: 1-25-1957
+# Line: 02
+#   Entry:  61
+#   Exit:   63
 #   Input:
 #       x in Id.1
 #       Return command in AR
@@ -53,9 +74,8 @@ vA:
 .43 .  .06.50.0.24.31    d6
 .50 .  .53.53.3.23.31    
 .53 .  .06.60.0.24.31    d7
-#.60 .  .61.63.0.26.28    |x| +-> AR
-.60 .  .61.pr.0.26.28    |x| +-> AR
-#.63                      Exit...?
+.60 .  .61.63.0.26.28    |x| +-> AR
+.63    0                 Exit
 
 #Data Check format, signed or un?
 .76   +000000x            "Roundoff"?

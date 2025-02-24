@@ -48,49 +48,75 @@ commandLine.parse();
 const fileName = commandLine.args[0];
 const data = fs.readFileSync(fileName, 'utf-8'); // Read file synchronously
 
-let program: ASM.Line[] = parseAsmProgram( data );
-
-//Order the program by location (Constants and Instructions only)
-let line: ASM.Loc[] = [];
-for (let cmd of program.filter((o: any): o is ASM.Loc => typeof o.l === 'number')) {
-    line[cmd.l] = cmd;
-}
-
-//Convert the program to an array of words at the appropriate locations
-let lineWords: N.word[] = [];
-for (let l = 0; l < 108; l++) {
-    if (line[l]) {
-        lineWords[l] = line[l].word;
+//Cut input into blocks
+let blocks: string[] = [""];
+for (let line of data.split(/\r?\n/)) {
+    if (line.startsWith("<BLOCK")) {
+        blocks.push("");
     } else {
-        lineWords[l] = 0 as N.word;
+        blocks[blocks.length - 1] += line + "\n";
     }
 }
 
-//Output
-if (commandLine.opts().resolved) {
-    //Output resolved code
-    for ( let l of program ){
-        if ( ASM.isInstruction(l) ){
-            console.log( formatCommand(l) );
-        } else if ( ASM.isConstant(l) ){
-            console.log( `.${convert.intToG15Dec(l.l)}   ${convert.g15SignedHex(l.word).padEnd(18," ")}${l.comment}`)
-        } else {
-            console.log(l.rawText);
+if (commandLine.opts().bootable) {
+    console.log(numberTrack + "\n\n");
+}
+
+for (let b = 0; b < blocks.length; b++ ) {
+    //TODO Deal with line number
+    let program: ASM.Line[] = parseAsmProgram(blocks[b]);
+
+    //Order the program by location (Constants and Instructions only)
+    let line: ASM.Loc[] = [];
+    for (let cmd of program.filter((o: any): o is ASM.Loc => typeof o.l === 'number')) {
+        if ( line[cmd.l] != undefined ){
+            console.error(`Location ${cmd.l} duplicated. Lines ${line[cmd.l].sourceLineNumber} & ${cmd.sourceLineNumber}`)
         }
+        line[cmd.l] = cmd;
     }
-} else if (commandLine.opts().words) {
-    //Dump words
+
+    //Convert the program to an array of words at the appropriate locations
+    let lineWords: N.word[] = [];
     for (let l = 0; l < 108; l++) {
-        if (lineWords[l] != 0) {
-            console.log(l.toString().padStart(3, " "), convert.g15Hex(lineWords[l]));
+        if (line[l]) {
+            lineWords[l] = line[l].word;
+        } else {
+            lineWords[l] = 0 as N.word;
         }
     }
-} else {
-    //Output PTI Paper tape image
-    let pti = "";
-    if (commandLine.opts().bootable) {
-        pti += numberTrack + "\n\n";
+
+    //Output
+    if (commandLine.opts().resolved) {
+        if ( b != 0 ){
+            console.log("BLOCK:");
+        }
+        //Output resolved code
+        for (let l of program) {
+            if (ASM.isInstruction(l)) {
+                console.log(formatCommand(l));
+            } else if (ASM.isConstant(l)) {
+                console.log(`.${convert.intToG15Dec(l.l)}   ${convert.g15SignedHex(l.word).padEnd(18, " ")}${l.comment}`)
+            } else {
+                console.log(l.rawText);
+            }
+        }
+    } else if (commandLine.opts().words) {
+        if ( b != 0 ){
+            console.log("BLOCK:");
+        }
+        //Dump words
+        for (let l = 0; l < 108; l++) {
+            if (lineWords[l] != 0) {
+                console.log(l.toString().padStart(3, " "), convert.g15Hex(lineWords[l]));
+            }
+        }
+    } else {
+        if ( b != 0 ){
+            console.log("\n");
+        }
+        //Output PTI Paper tape image
+        let pti = "";
+        pti += "# " + fileName + "\n" + tape.lineToTape(lineWords);
+        console.log(pti);
     }
-    pti += "# " + fileName + "\n" + tape.lineToTape(lineWords);
-    console.log(pti);
 }
