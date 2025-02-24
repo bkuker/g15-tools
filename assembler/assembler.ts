@@ -51,8 +51,17 @@ const data = fs.readFileSync(fileName, 'utf-8'); // Read file synchronously
 //Cut input into blocks
 let blocks: string[] = [""];
 for (let line of data.split(/\r?\n/)) {
-    if (line.startsWith("<BLOCK")) {
-        blocks.push("");
+    //TODO Also deal with line numbers
+    const match = line.match( /<INCLUDE\s+src="(.*?)"/);
+    if ( match ){
+        const srcFile = match[1];
+        let src = fs.readFileSync(srcFile, 'utf-8');
+        if ( !src.endsWith("\n") ){
+            src = src + "\n";
+        }
+        blocks[blocks.length - 1] += src;
+    } else if (line.startsWith("<BLOCK")) {
+            blocks.push("");
     } else {
         blocks[blocks.length - 1] += line + "\n";
     }
@@ -88,7 +97,7 @@ for (let b = 0; b < blocks.length; b++ ) {
     //Output
     if (commandLine.opts().resolved) {
         if ( b != 0 ){
-            console.log("BLOCK:");
+            console.log("<BLOCK>");
         }
         //Output resolved code
         for (let l of program) {
@@ -102,7 +111,7 @@ for (let b = 0; b < blocks.length; b++ ) {
         }
     } else if (commandLine.opts().words) {
         if ( b != 0 ){
-            console.log("BLOCK:");
+            console.log("<BLOCK>");
         }
         //Dump words
         for (let l = 0; l < 108; l++) {
