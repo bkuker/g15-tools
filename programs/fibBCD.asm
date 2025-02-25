@@ -1,6 +1,6 @@
 <INCLUDE src="lib/bbl.asm">
 ct:                      Count
-.     +3                 Number of tracks to load
+.     +4                 Load 4 tape blocks into 3,2,1,0
 
 
 <BLOCK>                  Line 3 format
@@ -17,7 +17,7 @@ ct:                      Count
 
 <BLOCK>                  Line 0
 
-#Print the Fibonacci numbers
+# Print the Fibonacci numbers
 # Prepared by: Bill Kuker
 # Date: 2-24-2025
 #
@@ -33,9 +33,9 @@ lp:
 
                          Convert vA to decimal
 .   .  .vA.  .0.00.25    vA -> ID.1 (BCD Routine parameter)
-.   .  .L1.L2.1.00.28    Load next instruction to AR, skip it
+.   .  .L1.L2.1.00.28    Load BCD Return instruction to AR, skip it
 .   .  .ac.ac.0.20.31    GOTO 0:ac (return instruction)
-.   .  .61.61.2.20.31    GOTO 2:61
+.   .  .61.61.2.20.31    GOTO 2:61 (BCD Routine)
 
 ac:                      After Conversion
 .   .  .L2.  .0.08.31    Output AR to typewriter
@@ -53,7 +53,7 @@ ac:                      After Conversion
 #Variables
 vA:
 .   0
-vB:
+vB:                      Values are 1E-4
 .   +00068DB
 vC:
 .   +00068DC

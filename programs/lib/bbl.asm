@@ -13,12 +13,15 @@
 # never get to run it on the real thing.
 # 
 # (BBL Rhymes with nibble)
+#
 # Usage:
 # Include this file, store number of tracks to load at :ct
+# ct = 4 will load 4 tracks into lines 3,2,1,0 and then jump
+# to 00:00
 #
 # <INCLUDE src="bbl.asm">
 # ct:                      Count
-# .     +3                 Number of tracks to load
+# .     +4                 Number of blocks to load
 #
 
 
@@ -41,10 +44,15 @@
 
 
 lp:                      Loop
+                         Clear Line 19
+.   .  .  .  .0.29.28    0 -> AR
+.   . u.L1.  .0.28.19    AR -> Line 19
+
                          Load a block, copy it to Line nr in :ct
 .   .  .L2.  .0.15.31    Read next tape block
 .   .  .L0.L0.0.28.31    Wait for IOReady
-                         Load ct, decrement, store to ct
+
+                         Load & decrement ct, execute copy from AR
 .   .  .ct.  .1.00.28    ct -> ARc
 .   .  .on.  .3.00.29    AR--
 .   .  .ct.  .1.28.00    AR -> ct
@@ -57,8 +65,8 @@ nz:                      New Instruction for location Zero
 .   .  .lp.lp.0.20.31    GOTO 0.lp
 
 cp:                      Copy
-.   . u.L1.00.0.19.01    Copy Instruction: Line 19 to Line 1
-                         Added to AR, which has target line -1
+.   . u.L1.00.0.19.00    Copy Instruction: Line 19 to Line 0
+                         Added to AR, which has target line
 
 on:                      One - Constant
 .     +1
