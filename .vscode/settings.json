@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "*.asm": "plaintext"
+    },
+    "[vue]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[plaintext]": {
+        "editor.rulers": [
+            4,
+            7,
+            25,
+            21
+        ]
+    },
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#333"
+    }
+}
