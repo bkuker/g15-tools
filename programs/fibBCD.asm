@@ -19,7 +19,7 @@ ct:                      Count
 
 #Print the Fibonacci numbers
 # Prepared by: Bill Kuker
-# Date: 2-25-2025
+# Date: 2-24-2025
 #
 
 lp:                      
