@@ -1,17 +1,12 @@
-import { ParsedBuildCommand } from "typescript";
 import { ASM, type Numbers as N } from "./AsmTypes";
 import * as convert from "./conversionUtils";
 
-export function parseAsmProgram(sourceCode: string): ASM.Line[] {
-    const lines: string[] = sourceCode.split(/\r?\n/); // Split into lines
-
-    //let labels = labelPass(lines);
-
+export function parseAsmProgram(sourceCode: ASM.Line[]): ASM.Line[] {
     //Identify line types, seperate into text fields
     let parsedLines: (ASM.ParsedConstantText | ASM.ParsedInstructionText | ASM.Comment | ASM.ParsedLabel)[] = [];
-    let line = 1;
-    for (const rawText of lines) {
-        parsedLines.push(parseInstructionText(rawText, line++));
+
+    for (const line of sourceCode) {
+        parsedLines.push(parseInstructionText(line));
     }
 
     //CALCULATE LOCATIONS
@@ -81,12 +76,14 @@ export function parseAsmProgram(sourceCode: string): ASM.Line[] {
 
 //Break a instruction into it's textual components.
 //All values are strings, and some may be mnemonics etc!
-function parseInstructionText(line: string, lineNumber: number): ASM.ParsedConstantText | ASM.ParsedInstructionText | ASM.ParsedLabel | ASM.Comment {
+function parseInstructionText(lineData: ASM.Line): ASM.ParsedConstantText | ASM.ParsedInstructionText | ASM.ParsedLabel | ASM.Comment {
+    let line = lineData.rawText;
 
     if (/^[A-Z][A-Z0-9]:/i.test(line)) {
         return {
             rawText: line,
-            sourceLineNumber: lineNumber,
+            sourceLineNumber: lineData.sourceLineNumber,
+            sourceFile: lineData.sourceFile,
             label: line.substring(0, 2)
         }
     }
@@ -97,9 +94,10 @@ function parseInstructionText(line: string, lineNumber: number): ASM.ParsedConst
         || line.trim().length == 0
         || line.startsWith("                         ")) {
         return {
+            comment: line,
             rawText: line,
-            sourceLineNumber: lineNumber,
-            comment: line
+            sourceLineNumber: lineData.sourceLineNumber,
+            sourceFile: lineData.sourceFile
         };
     } else if (s == "." || s == "s") {
         //An Instruction
@@ -115,7 +113,8 @@ function parseInstructionText(line: string, lineNumber: number): ASM.ParsedConst
             bp: line.substring(22, 23),
             comment: line.substring(24),
             rawText: line,
-            sourceLineNumber: lineNumber
+            sourceLineNumber: lineData.sourceLineNumber,
+            sourceFile: lineData.sourceFile
         }
     } else if (line.startsWith(".")) {
         //A Constant
@@ -124,10 +123,11 @@ function parseInstructionText(line: string, lineNumber: number): ASM.ParsedConst
             value: line.substring(4, 20),
             comment: line.substring(24),
             rawText: line,
-            sourceLineNumber: lineNumber
+            sourceLineNumber: lineData.sourceLineNumber,
+            sourceFile: lineData.sourceFile,
         }
     } else {
-        throw `Error parsing line ${lineNumber}: ${line}`;
+        throw `Error parsing line ${lineData.sourceFile}:${lineData.sourceLineNumber} ${line}`;
     }
 }
 
@@ -181,7 +181,8 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
             bp: parsed.bp.trim().length > 0,
             comment: parsed.comment?.trim(),
             word: 0 as N.word,
-            sourceLineNumber: parsed.sourceLineNumber
+            sourceLineNumber: parsed.sourceLineNumber,
+            sourceFile: parsed.sourceFile
         }
 
         //This is the command's actual binary value as an integer
@@ -197,20 +198,20 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
         const valueText = parsed.value.trim();
         let word: N.word | undefined;
 
-        if ( valueText.startsWith("d") ){
+        if (valueText.startsWith("d")) {
             //Parse as decimal
             let v = parseInt(valueText.substring(1));
             v = v << 1;
-            if ( v < 0 ){
+            if (v < 0) {
                 v = v | 0x01;
             }
             word = v as N.word;
-        } else if ( valueText.startsWith("+") ){
+        } else if (valueText.startsWith("+")) {
             //Parse as Positive +/- hex
             let abs = valueText.substring(1) as N.g15Hex;
             let valNum = convert.g15HexToDec(abs);
             word = (Math.abs(valNum) << 1) as N.word;
-        } else if ( valueText.startsWith("-") ){
+        } else if (valueText.startsWith("-")) {
             //Parse as Negative +/- hex
             let abs = valueText.substring(1) as N.g15Hex;
             let valNum = convert.g15HexToDec(abs);
@@ -227,7 +228,8 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
             word: word as N.word,
             valueText: valueText,
             comment: parsed.comment,
-            sourceLineNumber: parsed.sourceLineNumber
+            sourceLineNumber: parsed.sourceLineNumber,
+            sourceFile: parsed.sourceFile
         }
         return data;
     } else {

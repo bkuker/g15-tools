@@ -29,6 +29,7 @@ import * as tape from "./tapeUtils";
 import { ASM, Numbers as N } from "./AsmTypes";
 import { Command } from 'commander';
 import numberTrack from './numberTrack';
+import {preprocess, blockChop} from "./Preprocess";
 
 //If running from "npm run" change back
 //to the directory the user ran the program from
@@ -46,26 +47,9 @@ commandLine
 commandLine.parse();
 
 const fileName = commandLine.args[0];
-const data = fs.readFileSync(fileName, 'utf-8'); // Read file synchronously
 
-//Cut input into blocks
-let blocks: string[] = [""];
-for (let line of data.split(/\r?\n/)) {
-    //TODO Also deal with line numbers
-    const match = line.match( /<INCLUDE\s+src="(.*?)"/);
-    if ( match ){
-        const srcFile = match[1];
-        let src = fs.readFileSync(srcFile, 'utf-8');
-        if ( !src.endsWith("\n") ){
-            src = src + "\n";
-        }
-        blocks[blocks.length - 1] += src;
-    } else if (line.startsWith("<BLOCK")) {
-            blocks.push("");
-    } else {
-        blocks[blocks.length - 1] += line + "\n";
-    }
-}
+
+let blocks : ASM.Line[][] = blockChop(preprocess(fileName));
 
 if (commandLine.opts().bootable) {
     console.log(numberTrack + "\n\n");
@@ -125,7 +109,9 @@ for (let b = 0; b < blocks.length; b++ ) {
         }
         //Output PTI Paper tape image
         let pti = "";
-        pti += "# " + fileName + "\n" + tape.lineToTape(lineWords);
+        pti += "# " + program[0].sourceFile + ":" + program[0].sourceLineNumber + "\n";
+        pti += "# Block " + b + "\n";
+        pti +=  tape.lineToTape(lineWords);
         console.log(pti);
     }
 }

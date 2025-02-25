@@ -82,7 +82,10 @@ function rawToCommand(raw) {
         dst: raw.d,
         bp: raw.bp == 1,
         comment: "",
-        word: raw.word
+        word: raw.word,
+        sourceFile: fileName,
+        sourceLineNumber: 0,
+        rawText: ""
     }
 
     assert(raw.word == commandToInstructionWord(cmd));

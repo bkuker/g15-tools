@@ -49,8 +49,9 @@ export namespace ASM {
     //Every line from an ASM file
     //Including blank, comment, whatever
     export interface Line {
-        sourceLineNumber?: number,
-        rawText?: string,
+        sourceFile: string,
+        sourceLineNumber: number,
+        rawText: string,
     }
 
     export interface ParsedLabel extends Line {
