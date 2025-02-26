@@ -27,9 +27,9 @@
 
 # Copy loaded program from 19 -> 0 and begin execution at 0:03
 #
-.00 . u.01.02.0.19.00    Line 19 to Line 0 - Test not set
-.01 . u.02.02.0.19.00    Line 19 to Line 0 - Test set
-.02 .  .03.03.0.21.31    GOTO 0:3
+.00 . u.01.02.0.19.00   Line 19 to Line 0 - Test not set
+.01 . u.02.02.0.19.00   Line 19 to Line 0 - Test set
+.02 .  .03.03.0.21.31   GOTO 0:3
 
 # After each block is copied it goes to 0.
 # The following code replazes the original instruction at zero with a
@@ -38,35 +38,35 @@
 # When the count reaches zero, this program will have been replaced
 # by final block loaded from tape. I feel vaguely clever.
 
-                         Replace instruction a 0.0 with jump to lp:
-.   .  .nz.  .1.00.28    nz -> ARc
-.   .  .00.  .1.28.00    AR -> 00
+                        Replace instruction a 0.0 with jump to lp:
+.   .  .nz.  .1.00.28   nz -> ARc
+.   .  .00.  .1.28.00   AR -> 00
 
 
-lp:                      Loop
-                         Clear Line 19
-.   .  .  .  .0.29.28    0 -> AR
-.   . u.L1.  .0.28.19    AR -> Line 19
+lp:                     Loop
+                        Clear Line 19
+.   .  .  .  .0.29.28   0 -> AR
+.   . u.L1.  .0.28.19   AR -> Line 19
 
-                         Load a block, copy it to Line nr in :ct
-.   .  .L2.  .0.15.31    Read next tape block
-.   .  .L0.L0.0.28.31    Wait for IOReady
+                        Load a block, copy it to Line nr in :ct
+.   .  .L2.  .0.15.31   Read next tape block
+.   .  .L0.L0.0.28.31   Wait for IOReady
 
-                         Load & decrement ct, execute copy from AR
-.   .  .ct.  .1.00.28    ct -> ARc
-.   .  .on.  .3.00.29    AR--
-.   .  .ct.  .1.28.00    AR -> ct
-.   .  .cp.  .1.00.29    Add copy intruction to ct in AR
-.   .  .L2.L2.0.31.31    NCAR
+                        Load & decrement ct, execute copy from AR
+.   .  .ct.  .1.00.28   ct -> ARc
+.   .  .on.  .3.00.29   AR--
+.   .  .ct.  .1.28.00   AR -> ct
+.   .  .cp.  .1.00.29   Add copy intruction to ct in AR
+.   .  .L2.L2.0.31.31   NCAR
 
 #Data
 
-nz:                      New Instruction for location Zero 
-.   .  .lp.lp.0.20.31    GOTO 0.lp
+nz:                     New Instruction for location Zero 
+.   .  .lp.lp.0.20.31   GOTO 0.lp
 
-cp:                      Copy
-.   . u.L1.00.0.19.00    Copy Instruction: Line 19 to Line 0
-                         Added to AR, which has target line
+cp:                     Copy
+.   . u.L1.00.0.19.00   Copy Instruction: Line 19 to Line 0
+                        Added to AR, which has target line
 
-on:                      One - Constant
-.     +1
+on:                     One - Constant
+.   +1

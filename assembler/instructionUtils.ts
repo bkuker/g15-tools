@@ -97,7 +97,7 @@ function parseInstructionText(lineData: ASM.Line): ASM.ParsedConstantText | ASM.
     if (
         line.trim().startsWith("#")
         || line.trim().length == 0
-        || line.startsWith("                         ")) {
+        || line.startsWith(" ".repeat(24))) {
         return {
             comment: line,
             rawText: line,
@@ -249,7 +249,7 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
  * as the input.
  */
 export function formatCommand(c: ASM.Instruction): string {
-    return `.${convert.intToG15Dec(c.l)} ${c.s} ${c.p}.${convert.intToG15Dec(c.t)}.${convert.intToG15Dec(c.n)}.${c.c}.${convert.intToG15Dec(c.src)}.${convert.intToG15Dec(c.dst)} ${c.bp ? "-" : " "}  ${c.comment}`;
+    return `.${convert.intToG15Dec(c.l)} ${c.s} ${c.p}.${convert.intToG15Dec(c.t)}.${convert.intToG15Dec(c.n)}.${c.c}.${convert.intToG15Dec(c.src)}.${convert.intToG15Dec(c.dst)} ${c.bp ? "-" : " "} ${c.comment}`;
 }
 
 /**

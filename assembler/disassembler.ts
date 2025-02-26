@@ -211,7 +211,7 @@ if (!commandLine.opts().nostatic) {
 
 //TODO --nostatic makes EVERYTHING print like a constant :(
 let out = "#" + fileName + "\n\n";
-out += "#LL S P TT NN C SS DD B  Comment\n"
+out += "#LL S P TT NN C SS DD B Comment\n"
 let last: ASM.Instruction | null = null;
 for (let l of done) {
     if (last && last.n != l)
@@ -228,7 +228,7 @@ if (!commandLine.opts().nostatic) {
     //TODO don't include if none
     out += "\n\n#Not Reached from Entry Points\n";
     out += "#                        Comment:             Assembly:\n"
-    out += "#LL   ±Hex               Raw       Decimal     LL S P TT NN C SS DD B  Interpretation\n"
+    out += "#LL   ±Hex               Raw       Decimal     LL S P TT NN C SS DD B Interpretation\n"
 }
 
 for (let cmd of program) {
