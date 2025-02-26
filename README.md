@@ -58,10 +58,11 @@ They also make it easier to write "relocatable" code: Code that will work withou
 
 * Location:
     * Auto Increment: Leave LL blank for LL = (Previous SLOC).LL + 1
-    * **TODO**: May add things like `+2`
-    * **TODO**: May add `e!` and `o!` to mean "emit error if not even / odd"
+    * Use `ev` and `od` to mean "emit error if not even / odd"
         * Helpful with certain instructions
-    * **TODO**: May add `n!` where n in 0-3 to mean "emit error if not divisible by n"
+        * Might be able to automatically fix in some situations
+    * **TODO**: May add things like `+2`
+    * **TODO**: May add `n!` where n in 0-3 to mean "emit error if LL mod 4 != N"
         * Helpful with short lines / 2 word registers
 
 * Time & Next:

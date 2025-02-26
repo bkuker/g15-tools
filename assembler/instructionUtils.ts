@@ -18,8 +18,13 @@ export function parseAsmProgram(sourceCode: ASM.Line[]): ASM.Line[] {
     let lastLoc = NaN;
     for (const p of parsedLines) {
         if (ASM.isParsedConstantText(p) || ASM.isParsedInstructionText(p)) {
-            if (p.l == "  ") {
+            if (p.l.trim() == "" || p.l=="od" || p.l== "ev") {
                 lastLoc = p.lResolved = lastLoc + 1;
+                if (p.l == "ev" && p.lResolved % 2 != 0) {
+                    throw new Error(`Location must even, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
+                } else if (p.l == "od" && p.lResolved % 2 != 1) {
+                    throw new Error(`Location must odd, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
+                }
             } else {
                 lastLoc = p.lResolved = convert.g15DecToInt(p.l as N.g15Dec);
             }

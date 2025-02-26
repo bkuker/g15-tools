@@ -29,8 +29,6 @@ lp:
 .   .  .vC.  .1.00.28    AR = C
 .   .  .vB.  .1.28.00    B = AR
 
-.   .  .00.  .0.00.00    NOP to align next instruction
-
                          Convert vA to decimal
 .   .  .vA.  .0.00.25    vA -> ID.1 (BCD Routine parameter)
 .   .  .L1.L2.1.00.28    Load BCD Return instruction to AR, skip it
@@ -50,9 +48,12 @@ ac:                      After Conversion
 .   .  .lp.lp.0.20.31      if positive GOTO lp
 .   .  .L2.L0.0.16.31      if negative HALT
 
+
+
 #Variables
+.                        Align vA
 vA:
-.   0
+.od 0
 vB:                      Values are 1E-4
 .   +00068DB
 vC:
