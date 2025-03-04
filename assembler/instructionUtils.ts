@@ -18,12 +18,25 @@ export function parseAsmProgram(sourceCode: ASM.Line[]): ASM.Line[] {
     let lastLoc = NaN;
     for (const p of parsedLines) {
         if (ASM.isParsedConstantText(p) || ASM.isParsedInstructionText(p)) {
-            if (p.l.trim() == "" || p.l=="od" || p.l== "ev") {
+            if ( p.l.startsWith("L") ){
+                let n = parseInt(p.l.substring(1));
+                lastLoc = p.lResolved = lastLoc + n;
+            } else if (p.l.trim() == "" || p.l == "od" || p.l == "ev" || p.l.startsWith("%")) {
                 lastLoc = p.lResolved = lastLoc + 1;
                 if (p.l == "ev" && p.lResolved % 2 != 0) {
                     throw new Error(`Location must even, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
                 } else if (p.l == "od" && p.lResolved % 2 != 1) {
                     throw new Error(`Location must odd, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
+                }
+
+                if (p.l == "%0" && p.lResolved % 4 != 0) {
+                    throw new Error(`Location must = 0 mod 4, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
+                } else if (p.l == "%1" && p.lResolved % 4 != 1) {
+                    throw new Error(`Location must = 1 mod 4, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
+                } else if (p.l == "%2" && p.lResolved % 4 != 2) {
+                    throw new Error(`Location must = 2 mod 4, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
+                } else if (p.l == "%3" && p.lResolved % 4 != 3) {
+                    throw new Error(`Location must = 3 mod 4, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
                 }
             } else {
                 lastLoc = p.lResolved = convert.g15DecToInt(p.l as N.g15Dec);
@@ -123,13 +136,25 @@ function parseInstructionText(lineData: ASM.Line): ASM.ParsedConstantText | ASM.
         }
     } else if (line.startsWith(".")) {
         //A Constant
-        return {
-            l: line.substring(1, 3),
-            value: line.substring(4, 20),
-            comment: line.substring(24),
-            rawText: line,
-            sourceLineNumber: lineData.sourceLineNumber,
-            sourceFile: lineData.sourceFile,
+        let value = line.substring(4, 20);
+        if ( value.startsWith("b") ){
+            return {
+                l: line.substring(1, 3),
+                value: line.substring(4),
+                comment: "",
+                rawText: line,
+                sourceLineNumber: lineData.sourceLineNumber,
+                sourceFile: lineData.sourceFile,
+            }
+        } else {
+            return {
+                l: line.substring(1, 3),
+                value: value,
+                comment: line.substring(24),
+                rawText: line,
+                sourceLineNumber: lineData.sourceLineNumber,
+                sourceFile: lineData.sourceFile,
+            }
         }
     } else {
         throw `Error parsing line ${lineData.sourceFile}:${lineData.sourceLineNumber} ${line}`;
@@ -221,6 +246,10 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
             let abs = valueText.substring(1) as N.g15Hex;
             let valNum = convert.g15HexToDec(abs);
             word = ((Math.abs(valNum) << 1) | 0x01) as N.word;
+        } else if ( valueText.startsWith("b") ){
+            let bin = valueText.substring(1);
+            bin = bin.replaceAll(" ", "");
+            word = parseInt(bin,2) as N.word;
         } else {
             //Parse as raw 29bit word
             word = convert.g15HexToDec(valueText as N.g15Hex) as N.word;

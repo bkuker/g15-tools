@@ -1,4 +1,4 @@
-import input from "../assembler/XmasType.trace.json" with { type: 'json' };
+import input from "../programs/videoMusic/AStart.trace.json" with { type: 'json' };
 import cytoscape from 'cytoscape';
 
 //Add IDs

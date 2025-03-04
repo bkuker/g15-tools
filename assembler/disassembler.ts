@@ -189,7 +189,7 @@ if (!commandLine.opts().nostatic) {
             test = true;
         } else if (cmd.src == 22 && cmd.dst == 31 && cmd.c == 0) {
             test = true;
-        } else if (cmd.comment && cmd.comment.indexOf("TEST") != -1) {
+        } else if (cmd.comment && cmd.comment.indexOf("TEST") == 0) {
             test = true;
         }
         //console.log(test);

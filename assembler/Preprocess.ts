@@ -13,7 +13,26 @@ export function blockChop(lines: ASM.Line[]): ASM.Line[][] {
             blocks[blocks.length - 1].push(line);
         }
     }
-    return blocks;
+    return blocks.map(resolveDefines);
+}
+
+export function resolveDefines(block : ASM.Line[]) : ASM.Line[] {
+    let defines : Map<string, string> = new Map();
+    for ( let line of block ){
+        if ( line.rawText.startsWith("#define ") ){
+            let d = line.rawText.substring(8); //Remove #define
+            let dd = d.split(" ", 2);
+            defines.set(dd[0], dd[1]);
+        }
+    }
+    for ( let line of block ){
+        if ( line.rawText.startsWith("#define ") ){
+            //empty
+        } else {
+            defines.forEach((v,k) => line.rawText = line.rawText.replaceAll(k,v));
+        }
+    }
+    return block;
 }
 
 /**
