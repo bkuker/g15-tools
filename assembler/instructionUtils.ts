@@ -250,6 +250,8 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
             let bin = valueText.substring(1);
             bin = bin.replaceAll(" ", "");
             word = parseInt(bin,2) as N.word;
+        } else if (valueText == "" ){
+            word = 0 as N.word;
         } else {
             //Parse as raw 29bit word
             word = convert.g15HexToDec(valueText as N.g15Hex) as N.word;
