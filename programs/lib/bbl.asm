@@ -71,7 +71,7 @@ ok:                     OK Checksum
 .   . u.L4.00.0.19.00   Copy Instruction: Line 19 to Line 0
                         Added to AR, which has target line
 .   .  .L2.L2.0.31.31   NCAR
-                        Coy instruction jumps to 0:0
+                        Copy instruction jumps to 0:0
 
 bc:                     BAD Checksum
 .   .  .  .  .0.17.31   DING
