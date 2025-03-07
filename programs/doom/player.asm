@@ -32,24 +32,24 @@ ml:
 .35 .  .22.  .1.26.31   Shift ID1 right 11 bits
 .58 .  .59.  .1.25.21   Copy ID:1 back to 21:3
 
-                        Play First Note (ID:3)
+                        Play First Note (21:3)
 .60 .  .L1.L2.0.00.28 - Copy note load instr to AR
 .61 . u.a1.a1.0.00.00   Note Load Instruction
 .62 .  .63.  .0.21.29   Add 21:03 to AR TODO MAC
 .64 .  .L2.L2.0.31.31   NCAR
 a1:                     After Note 1
 
-                        Play Second Note (ID:2)
-.65 .  .L1.L2.0.00.28   Copy note load instr to AR
-.66 . u.a2.a2.0.00.00   Note Load Instruction
-.67 .  .70.  .0.21.29   Add 21:02 to AR TODO MAC
+                        Play Second Note (21:2)
+.67 .  .L1.L2.0.00.28   Copy note load instr to AR
+.68 . u.a2.a2.0.00.00   Note Load Instruction
+.69 .  .70.  .0.21.29   Add 21:02 to AR TODO MAC
 .71 .  .L2.L2.0.31.31   NCAR
 
 a2:                     Process Delay
-.72 .  .73.  .0.21.28   Copy delay from ID:1 to AR
+.74 .  .77.  .0.21.28   Copy delay from ID:1 to AR
 dy:
-.74 .  .L1.  .0.28.27   Check AR Zero
-.76 .  .00.nn.0.00.00       if AR == 0 goto nn
+.78 .  .L1.  .0.28.27   Check AR Zero
+.80 .  .00.nn.0.00.00       if AR == 0 goto nn
 .   .  .L1.dy.3.00.29   Decrement delay, goto dy
 .   +00200000           1 shifted to Delay position
 

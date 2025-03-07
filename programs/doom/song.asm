@@ -94,6 +94,7 @@
 .   b Sx ..  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
 .   b Ha A#2 V3 E2  V2 0
+.   b Sx ..  V2 ..  V2 0
 
 #back to zero
 #BLOCK A1
