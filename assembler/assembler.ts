@@ -78,6 +78,27 @@ for (let b = 0; b < blocks.length; b++ ) {
         }
     }
 
+    //Checksum code. Consider putting it at first unused location
+    //for shorter tapes
+    if( lineWords[107] != 0 )
+        console.error(`Can't checksum block ${b}. L=107 has non-zero value.`);
+    function sum(lineWords) : N.word{
+        let sum = 0
+        for ( let word of lineWords ){
+            sum += convert.wordToDec(word);
+        }
+        let s = Math.abs(sum);
+        s = s * 2;
+        if ( sum > 0 )
+            s += 1;
+        s = s & 0b11111111111111111111111111111;
+        return s as N.word;
+    }
+
+    //console.error(sum(lineWords));
+    lineWords[107] = sum(lineWords);
+    //console.error(sum(lineWords));
+
     //Output
     if (commandLine.opts().resolved) {
         if ( b != 0 ){

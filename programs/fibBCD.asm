@@ -8,7 +8,7 @@ ct:                     Count
 #.03   0000044           Format code: 7 digits, LF, END.
 #.03   0001100           Format code: 5 digits, LF, END.
 .03   0008800           Format code: 4 digits, LF, END.
-
+.04   0008801
 
 <BLOCK>                 Line 2, BCD Routine
 <INCLUDE src="lib/bcd.fraction.asm">

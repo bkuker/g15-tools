@@ -52,21 +52,37 @@ lp:                     Loop
 .   .  .L2.  .0.15.31   Read next tape block
 .   .  .L0.L0.0.28.31   Wait for IOReady
 
-                        Load & decrement ct, execute copy from AR
+                        Calculate Checksum
+.   .  .  .  .0.29.28   0 -> AR
+.   . u.L1.  .1.19.29   Sum line 19 to AR
+.   .  .L2.  .0.28.27   If AR == 0
+.   .  .00.ok.0.00.00       goto ok
+                        else
+.   .  .00.bc.0.00.00       got bc
+
+ok:                     OK Checksum
+                        Decrement count
 .   .  .ct.  .1.00.28   ct -> ARc
 .   .  .on.  .3.00.29   AR--
 .   .  .ct.  .1.28.00   AR -> ct
-.   .  .cp.  .1.00.29   Add copy intruction to ct in AR
+
+                        Execute copy instruction
+.   .  .L1.L2.1.00.29   Add copy intruction to ct in AR
+.   . u.L4.00.0.19.00   Copy Instruction: Line 19 to Line 0
+                        Added to AR, which has target line
 .   .  .L2.L2.0.31.31   NCAR
+                        Coy instruction jumps to 0:0
+
+bc:                     BAD Checksum
+.   .  .  .  .0.17.31   DING
+.   .  .L2.00.0.16.31   Halt
 
 #Data
 
 nz:                     New Instruction for location Zero 
 .   .  .lp.lp.0.20.31   GOTO 0.lp
 
-cp:                     Copy
-.   . u.L1.00.0.19.00   Copy Instruction: Line 19 to Line 0
-                        Added to AR, which has target line
+
 
 on:                     One - Constant
 .   +1
