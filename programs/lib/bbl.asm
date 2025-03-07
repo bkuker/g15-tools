@@ -75,7 +75,7 @@ ok:                     OK Checksum
 
 bc:                     BAD Checksum
 .   .  .  .  .0.17.31   DING
-.   .  .L2.00.0.16.31   Halt
+.   .  .L2.ok.0.16.31   Halt
 
 #Data
 
