@@ -68,11 +68,14 @@ for (let b = 0; b < blocks.length; b++ ) {
         line[cmd.l] = cmd;
     }
 
+    let checksumLocation = 0;
+
     //Convert the program to an array of words at the appropriate locations
     let lineWords: N.word[] = [];
     for (let l = 0; l < 108; l++) {
         if (line[l]) {
             lineWords[l] = line[l].word;
+            checksumLocation = l + 1;
         } else {
             lineWords[l] = 0 as N.word;
         }
@@ -80,8 +83,7 @@ for (let b = 0; b < blocks.length; b++ ) {
 
     //Checksum code. Consider putting it at first unused location
     //for shorter tapes
-    if( lineWords[107] != 0 )
-        console.error(`Can't checksum block ${b}. L=107 has non-zero value.`);
+
     function sum(lineWords) : N.word{
         let sum = 0
         for ( let word of lineWords ){
@@ -94,9 +96,10 @@ for (let b = 0; b < blocks.length; b++ ) {
         s = s & 0b11111111111111111111111111111;
         return s as N.word;
     }
-
+    if( checksumLocation > 107 )
+        console.error(`Can't checksum block ${b}, no free space.`);
     //console.error(sum(lineWords));
-    lineWords[107] = sum(lineWords);
+    lineWords[checksumLocation] = sum(lineWords);
     //console.error(sum(lineWords));
 
     //Output
