@@ -1,20 +1,22 @@
-# Copy loaded program from 19 -> 0 and begin execution at 0:03
-#
-.00 . u.01.02.0.19.00   Line 19 to Line 0 - Test not set
-.01 . u.02.02.0.19.00   Line 19 to Line 0 - Test set
-.02 .  .03.03.0.21.31   GOTO 0:3
+.00 . u.L5.07.0.00.20 - Copy next 3 values to 20:1,2,3,0
+# Delay Extractor
+.01 b11111100000000000000000000000
+# Note Extractor
+.02 b00000000000000000111111111110
+.03 b00000011111111111000000000000
+#Next Note Instruction
+.04 .  .00.ml.0.01.28   Music Data Load Instruction
 
-.03 .  .i1.  .0.00.22   Copy Note load to 22:0
-.   .  .de.  .0.00.20   Copy duration extractor to 20:1
-.   .  .ne.nn.4.00.20   Copy note extractors to 20:2,3
+# Arrive at 07 with the NN instruction in 20:0
+# OR
+# Arrive at 09 with the NN instruction in AR.
 
-.
 nn:
-.07 .  .L1.  .0.22.28   Copy Note load instruction to AR
+.07 .  .L1.  .0.20.28   Copy Note load instruction to AR
 .09 .  .L1.11.0.00.29   Increment note load instruction
 .10 +100000             1 shifted to T position
 
-.11 .  .L1.  .0.28.22   Copy incremented load instruction back to 22:0
+.11 .  .L1.  .0.28.20   Copy incremented load instruction back to 22:0
 .13 .  .L2.L2.0.31.31   NCAR
 ml:
 .14 .  .L1.  .0.28.27   Check AR (node data) Zero
@@ -22,9 +24,11 @@ ml:
 
 
 .17 . u.L5.  .0.28.21   4 copies of AR to 21:0-4
-.22 . u.L5.  .0.31.21   Extract parts of notes
+.22 . u.L5.  .0.31.21   Extract parts of notes Line 21 = Line 21 & Line 20
 
-                        ID:1 Delay, ID:3 First note, ID:2 Second note
+                        21:1 Delay, 21:3 First note, 21:2 Second note
+                        Each note is the C, Src and Dst to add to the
+                        note load instruction.
 
                         Shift first note (ID:3) bits down
 .27 .  .31.  .0.21.25   Load 21:3 to ID TODO MAC
@@ -35,30 +39,21 @@ ml:
                         Play First Note (21:3)
 .60 .  .L1.L2.0.00.28 - Copy note load instr to AR
 .61 . u.a1.a1.0.00.00   Note Load Instruction
-.62 .  .63.  .0.21.29   Add 21:03 to AR TODO MAC
+.62 .  .63.  .0.21.29   Add 21:03 to AR
 .64 .  .L2.L2.0.31.31   NCAR
 a1:                     After Note 1
 
                         Play Second Note (21:2)
 .67 .  .L1.L2.0.00.28   Copy note load instr to AR
 .68 . u.a2.a2.0.00.00   Note Load Instruction
-.69 .  .70.  .0.21.29   Add 21:02 to AR TODO MAC
+.69 .  .70.  .0.21.29   Add 21:02 to AR
 .71 .  .L2.L2.0.31.31   NCAR
+a2:                     After Note 2
 
-a2:                     Process Delay
+                        Process Delay
 .74 .  .77.  .0.21.28   Copy delay from ID:1 to AR
 dy:
 .78 .  .L1.  .0.28.27   Check AR Zero
 .80 .  .00.nn.0.00.00       if AR == 0 goto nn
 .   .  .L1.dy.3.00.29   Decrement delay, goto dy
 .   +00200000           1 shifted to Delay position
-
-
-.88                     //Align these constants
-de:
-.%1 b11111100000000000000000000000
-ne:
-.%2 b00000000000000000111111111110
-.%3 b00000011111111111000000000000
-i1:
-.%0 .  .00.ml.0.01.28   Music Data Load Instruction
