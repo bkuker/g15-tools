@@ -1,4 +1,4 @@
-.00 . u.L5.07.0.00.20 - Copy next 3 values to 20:1,2,3,0
+.00 . u.L5.85.0.00.20 - Copy next 3 values to 20:1,2,3,0
 # Delay Extractor
 .01 b11111100000000000000000000000
 # Note Extractor
@@ -6,6 +6,41 @@
 .03 b00000011111111111000000000000
 #Next Note Instruction
 .04 .  .00.ml.0.01.28   Music Data Load Instruction
+
+#Test Conductor Code
+.85 .  .L1.L2.0.00.28   0:86 -> ar
+.   .  .00.ml.0.01.28   Block 1 A
+.   . w.L1.09.0.21.31   GOSUB 09
+
+.   .  .L1.L2.0.00.28   0:86 -> ar
+.   .  .25.ml.0.01.28   Block 1 B
+.   . w.L1.09.0.21.31   GOSUB 09
+
+.   .  .L1.L2.0.00.28   0:86 -> ar
+.   .  .00.ml.0.01.28   Block 1 A
+.   . w.L1.09.0.21.31   GOSUB 09
+
+.   .  .L1.L2.0.00.28   0:86 -> ar
+.   .  .25.ml.0.01.28   Block 1 B
+.   . w.L1.09.0.21.31   GOSUB 09
+
+.   .  .L1.L2.0.00.28   0:86 -> ar
+.   .  .00.ml.0.01.28   Block 1 A
+.   . w.L1.09.0.21.31   GOSUB 09
+
+.   .  .L1.L2.0.00.28   0:86 -> ar
+.   .  .32.ml.0.01.28   Arpeggio 1
+.   . w.L1.09.0.21.31   GOSUB 09
+
+.   .  .L1.L2.0.00.28   0:86 -> ar
+.   .  .40.ml.0.01.28   Block 2
+.   . w.  .09.0.21.31   GOSUB 09
+
+.28 .  .L1.L2.0.00.28   0:86 -> ar
+.   .  .40.ml.0.01.28   Block 2
+.   . w.  .09.0.21.31   GOSUB 09
+
+.   .  .L2.00.0.16.31   HALT
 
 # Arrive at 07 with the NN instruction in 20:0
 # OR
@@ -20,7 +55,8 @@ nn:
 .13 .  .L2.L2.0.31.31   NCAR
 ml:
 .14 .  .L1.  .0.28.27   Check AR (node data) Zero
-.16 .  .L2.00.0.16.31     if AR == 0 HALT
+.16 .  .L2.L1.0.20.31      if AR == 0 RETURN
+#.16 .  .L2.00.0.16.31     if AR == 0 HALT
 
 
 .17 . u.L5.  .0.28.21   4 copies of AR to 21:0-4

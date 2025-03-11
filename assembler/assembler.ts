@@ -63,7 +63,7 @@ for (let b = 0; b < blocks.length; b++ ) {
     let line: ASM.Loc[] = [];
     for (let cmd of program.filter((o: any): o is ASM.Loc => typeof o.l === 'number')) {
         if ( line[cmd.l] != undefined ){
-            console.error(`Location ${cmd.l} duplicated. Lines ${line[cmd.l].sourceLineNumber} & ${cmd.sourceLineNumber}`)
+            throw `Location ${cmd.l} duplicated. Lines ${line[cmd.l].sourceLineNumber} & ${cmd.sourceLineNumber}`;
         }
         line[cmd.l] = cmd;
     }

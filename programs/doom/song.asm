@@ -59,7 +59,7 @@
 #30ms internote delay on one line
 .00 +0
 
-#BLOCK A1
+# Block One Blue
 .   b Sx kk  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
 
@@ -87,46 +87,14 @@
 .   b Sx D3  V3 ..  V2 0
 .   b Sx ..  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
-
-#Skip to Arp one after 3
-#Block A2
+.   0
+# Block One Green
 .   b Sx C3  V3 ..  V2 0
 .   b Sx ..  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
 .   b Ha A#2 V3 E2  V2 0
 .   b Sx ..  V2 ..  V2 0
-
-#back to zero
-#BLOCK A1
-.   b Sx kk  V3 E2  V2 0
-.   b Sx ..  V2 E2  V2 0
-
-.   b Sx E3  V3 ..  V2 0
-.   b Sx ..  V3 E2  V2 0
-.   b Sx ..  V2 E2  V2 0
-.   b Sx D3  V3 ..  V2 0
-.   b Sx ..  V3 E2  V2 0
-.   b Sx ..  V2 E2  V2 0
-.   b Sx C3  V3 ..  V2 0
-.   b Sx ..  V3 E2  V2 0
-.   b Sx ..  V2 E2  V2 0
-.   b Sx A#2 V3 ..  V2 0
-.   b Sx ..  V3 E2  V2 0
-.   b Sx ..  V2 E2  V2 0
-.   b Sx B2  V3 ..  V2 0
-.   b Sx C3  V3 ..  V2 0
-
-.   b Sx ..  V3 E2  V2 0
-.   b Sx ..  V2 E2  V2 0
-.   b Sx E3  V3 ..  V2 0
-.   b Sx ..  V3 E2  V2 0
-.   b Sx ..  V2 E2  V2 0
-.   b Sx D3  V3 ..  V2 0
-.   b Sx ..  V3 E2  V2 0
-.   b Sx ..  V2 E2  V2 0
-
-#Skip to Arp one after 3
-
+.   0
 #Arpeggio One
 .   b Th D#4 V2 C4 V3 0
 .   b Th E4  V2 B3 V3 0
@@ -137,7 +105,8 @@
 .   b Th B4  V2 A4 V3 0
 .   b Th G4  V2 F#4 V3 0
 
-#BLOCK A + Drum
+.   0
+#Block One with Drum Blue
 #0
 .   b Sx kk  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
@@ -176,6 +145,6 @@
 .   b Sx ss  V2 E2  V2 0
 #3 & 4
 .   b Ha A#2 V3 E2  V2 0
-
+.   0
 
 .   b Th ..  V3 ..  V2 0
