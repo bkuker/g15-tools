@@ -59,6 +59,7 @@
 #30ms internote delay on one line
 .00 +0
 # Block 1-B
+#2 & 3
 .   b Sx C3  V3 ..  V2 0
 .   b Sx ..  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
@@ -66,29 +67,32 @@
 .   b Sx ..  V2 ..  V2 0
 
 # Block 1-A
+#0
 .   b Sx kk  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
-
 .   b Sx E3  V3 ..  V2 0
 .   b Sx ..  V3 E2  V2 0
+#1
 .   b Sx ..  V2 E2  V2 0
 .   b Sx D3  V3 ..  V2 0
 .   b Sx ..  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
+#2
 .   b Sx C3  V3 ..  V2 0
 .   b Sx ..  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
 .   b Sx A#2 V3 ..  V2 0
-
+#3
 .   b Sx kk  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
 .   b Sx B2  V3 ..  V2 0
 .   b Sx C3  V3 ..  V2 0
-
+#0
 .   b Sx ..  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
 .   b Sx E3  V3 ..  V2 0
 .   b Sx ..  V3 E2  V2 0
+#1
 .   b Sx ..  V2 E2  V2 0
 .   b Sx D3  V3 ..  V2 0
 .   b Sx ..  V3 E2  V2 0
@@ -97,14 +101,14 @@
 
 # "F4", "E4", "D#4", "F4", "A4", "G4", "F4", "D4", "F4", "G4", "A4", "B4", "A4", "G4", "F4", "D4"]
 # Arpeggio One
-.   b Th F4  V2 E4 V3 0
-.   b Th D#4 V2 F4 V3 0
-.   b Th A4  V2 G4 V3 0
-.   b Th F4  V2 D4 V3 0
-.   b Th F4  V2 G4 V3 0
-.   b Th A4  V2 B4 V3 0
-.   b Th A4  V2 G4 V3 0
-.   b Th F4  V2 D4 V3 0
+.   b Th F4  V2 E4 V2 0
+.   b Th D#4 V2 F4 V2 0
+.   b Th A4  V2 G4 V2 0
+.   b Th F4  V2 D4 V2 0
+.   b Th F4  V2 G4 V2 0
+.   b Th A4  V2 B4 V2 0
+.   b Th A4  V2 G4 V2 0
+.   b Th F4  V2 D4 V2 0
 .   0
 
 
@@ -196,11 +200,11 @@
 
 # Arpeggio 2
 .   b Th B4  V2 G4 V3 0
-.   b Th E4  V2 G4 V3 0
-.   b Th B4  V2 G4 V3 0
-.   b Th B4  V2 C5 V3 0
-.   b Th B4  V2 G4 V3 0
-.   b Th B4  V2 G4 V3 0
-.   b Th B4  V2 C5 V3 0
-.   b Th E5  V2 B5 V3 0
+.   b Th E4  V2 G4 V2 0
+.   b Th B4  V2 G4 V2 0
+.   b Th B4  V2 C5 V2 0
+.   b Th B4  V2 G4 V2 0
+.   b Th B4  V2 G4 V2 0
+.   b Th B4  V2 C5 V2 0
+.   b Th E5  V2 B5 V2 0
 .   0

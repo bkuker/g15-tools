@@ -7,7 +7,12 @@
 #Next Note Instruction
 .04 .  .00.ml.0.01.28   Music Data Load Instruction
 
-#Test Conductor Code
+# Conductor Code
+# Each 3 instruction block loads a new load
+# instruction to AR and then calls the subroutine
+# at 00:09 which plays music data using that loader
+# until it encounters a zero, and then returns.
+
 .85 .  .L1.L2.0.00.28   1A
 .   .  .05.ml.0.01.28   
 .   . w.  .09.0.21.31   
@@ -45,15 +50,20 @@
 .   . w.  .09.0.21.31   
 
 .36 .  .L1.L2.0.00.28   1A
-.   .  .05.ml.0.01.28   
+.   .  .44.ml.0.01.28   
 .   . w.  .09.0.21.31   
 
-.   .  .  .L2.0.00.28   Last little bit at 0:en!
+.   .  .L1.L2.0.00.28   1B 1A
+.   .  .39.ml.0.01.28   
+.   . w.  .09.0.21.31   
+
+.   .  .  .L2.0.00.28   Last little bit is stored on this line!
 .   .  .en.ml.0.00.28   
 .   . w.  .09.0.21.31   
 
 .   .  .L2.00.0.16.31   HALT
 
+# This is the end of the song. No room on line 01.
 en:
 .
 .   +004w1u42
