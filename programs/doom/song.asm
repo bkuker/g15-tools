@@ -95,19 +95,20 @@
 .   b Sx ..  V2 E2  V2 0
 .   0
 
+# "F4", "E4", "D#4", "F4", "A4", "G4", "F4", "D4", "F4", "G4", "A4", "B4", "A4", "G4", "F4", "D4"]
 # Arpeggio One
-.   b Th D#4 V2 C4 V3 0
-.   b Th E4  V2 B3 V3 0
-.   b Th F#4 V2 A4 V3 0
-.   b Th G4  V2 D#4 V3 0
-.   b Th B3  V2 F#4 V3 0
-.   b Th G4  V2 A4 V3 0
-.   b Th B4  V2 A4 V3 0
-.   b Th G4  V2 F#4 V3 0
+.   b Th F4  V2 E4 V3 0
+.   b Th D#4 V2 F4 V3 0
+.   b Th A4  V2 G4 V3 0
+.   b Th F4  V2 D4 V3 0
+.   b Th F4  V2 G4 V3 0
+.   b Th A4  V2 B4 V3 0
+.   b Th A4  V2 G4 V3 0
+.   b Th F4  V2 D4 V3 0
 .   0
 
 
-#Block 2-B
+# Block 2-B
 #2
 .   b Sx C3  V3 kk  V2 0
 .   b Sx ..  V3 E2  V2 0
@@ -183,11 +184,23 @@
 .   b Sx ss  V3 A2  V2 0
 .   b Sx ..  V2 A2  V2 0
 
-#Block 3-B
+# Block 3-B
 #2
 .   b Sx F3  V3 kk  V2 0
 .   b Sx ..  V3 A2  V2 0
 .   b Sx ss  V2 A2  V2 0
 #3 & 4
 .   b Ha D#3 V3 A2  V2 0
+.   0
+
+
+# Arpeggio 2
+.   b Th B4  V2 G4 V3 0
+.   b Th E4  V2 G4 V3 0
+.   b Th B4  V2 G4 V3 0
+.   b Th B4  V2 C5 V3 0
+.   b Th B4  V2 G4 V3 0
+.   b Th B4  V2 G4 V3 0
+.   b Th B4  V2 C5 V3 0
+.   b Th E5  V2 B5 V3 0
 .   0
