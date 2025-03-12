@@ -58,8 +58,14 @@
 
 #30ms internote delay on one line
 .00 +0
+# Block 1-B
+.   b Sx C3  V3 ..  V2 0
+.   b Sx ..  V3 E2  V2 0
+.   b Sx ..  V2 E2  V2 0
+.   b Ha A#2 V3 E2  V2 0
+.   b Sx ..  V2 ..  V2 0
 
-# Block One Blue
+# Block 1-A
 .   b Sx kk  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
 
@@ -88,14 +94,8 @@
 .   b Sx ..  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
 .   0
-# Block One Green
-.   b Sx C3  V3 ..  V2 0
-.   b Sx ..  V3 E2  V2 0
-.   b Sx ..  V2 E2  V2 0
-.   b Ha A#2 V3 E2  V2 0
-.   b Sx ..  V2 ..  V2 0
-.   0
-#Arpeggio One
+
+# Arpeggio One
 .   b Th D#4 V2 C4 V3 0
 .   b Th E4  V2 B3 V3 0
 .   b Th F#4 V2 A4 V3 0
@@ -104,9 +104,18 @@
 .   b Th G4  V2 A4 V3 0
 .   b Th B4  V2 A4 V3 0
 .   b Th G4  V2 F#4 V3 0
-
 .   0
-#Block One with Drum Blue
+
+
+#Block 2-B
+#2
+.   b Sx C3  V3 kk  V2 0
+.   b Sx ..  V3 E2  V2 0
+.   b Sx ss  V2 E2  V2 0
+#3 & 4
+.   b Ha A#2 V3 E2  V2 0
+
+# Block 2-A
 #0
 .   b Sx kk  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
@@ -138,13 +147,47 @@
 .   b Sx D3  V3 ..  V2 0
 .   b Sx ss  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
-
-#2
-.   b Sx C3  V3 kk  V2 0
-.   b Sx ..  V3 E2  V2 0
-.   b Sx ss  V2 E2  V2 0
-#3 & 4
-.   b Ha A#2 V3 E2  V2 0
 .   0
 
-.   b Th ..  V3 ..  V2 0
+
+# Block 3-A
+#0
+.   b Sx kk  V3 A2  V2 0
+.   b Sx ..  V2 A2  V2 0
+.   b Sx A3  V3 ss  V2 0
+.   b Sx ..  V3 A2  V2 0
+#1
+.   b Sx kk  V2 A2  V2 0
+.   b Sx G3  V3 kk  V2 0
+.   b Sx ss  V3 A2  V2 0
+.   b Sx ..  V2 A2  V2 0
+#2
+.   b Sx F3  V3 kk  V2 0
+.   b Sx ..  V3 A2  V2 0
+.   b Sx ss  V2 A2  V2 0
+.   b Sx D#3 V3 ..  V2 0
+#3
+.   b Sx kk  V3 A2  V2 0
+.   b Sx ..  V2 A2  V2 0
+.   b Sx E3  V3 kk  V2 0
+.   b Sx F3  V3 ..  V2 0
+
+#0
+.   b Sx kk  V3 A2  V2 0
+.   b Sx ..  V2 A2  V2 0
+.   b Sx A3  V3 ss  V2 0
+.   b Sx ..  V3 A2  V2 0
+#1
+.   b Sx kk  V2 A2  V2 0
+.   b Sx G3  V3 ..  V2 0
+.   b Sx ss  V3 A2  V2 0
+.   b Sx ..  V2 A2  V2 0
+
+#Block 3-B
+#2
+.   b Sx F3  V3 kk  V2 0
+.   b Sx ..  V3 A2  V2 0
+.   b Sx ss  V2 A2  V2 0
+#3 & 4
+.   b Ha D#3 V3 A2  V2 0
+.   0
