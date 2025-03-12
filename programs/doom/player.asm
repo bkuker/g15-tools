@@ -66,11 +66,10 @@
 # This is the end of the song. No room on line 01.
 en:
 .
-.   +004w1u42
+.   +004w1882
 .   +00521902
-.   +00521102
+.   +00641102
 .   +020z1902
-.   +00521242
 .   +00121243           Silence
 .   0                   End Song
 
