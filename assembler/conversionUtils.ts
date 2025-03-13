@@ -16,6 +16,30 @@ export function g15SignedHex(w: N.word): N.signedG15Hex {
     return ((sign ? "-" : "+") + hex) as N.signedG15Hex;
 }
 
+export function wordToFractionalDec( w : N.word ): number {
+    let sign = w & 1;   //Extract sign bit
+    let val = w >> 1;   //Extract absolute value
+    if ( sign )
+        val = val * -1;
+    val = val / (1<<28);
+    return val;
+    
+}
+
+export function fractionalDecToWord( w: number ): N.word {
+    if ( w <= -1 || w >= 1 ){
+        throw "Fractional decimals must be in the range (-1, 1): " + w;
+    }
+    w = w * (1<<28);
+    w = Math.round(w);
+    w = w * 2;
+    if ( w < 0 ){
+        w = Math.abs(w);
+        w = w | 1;
+    }
+    return w as N.word;
+}
+
 /*
 export function intToSignedG15Hex(v: number){
     let neg = v < 0;
