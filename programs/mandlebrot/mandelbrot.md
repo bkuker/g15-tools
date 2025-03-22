@@ -30,6 +30,7 @@ Take care in chosing these so that the width does not exeed your printer's plate
 23:
     0:          Ci imaginary part of C
     1:          Cr real part of C
+    2:          ct Iteration Count
 
 MP,PN,ID:       CM working registers
 

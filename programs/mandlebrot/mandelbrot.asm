@@ -72,7 +72,7 @@ nc:                     Next Character loop start
                         Clear count
 .   .  .L1.L2.0.00.28   0 -> AR
 .   0
-.   .  .ct.  .0.28.00   AR -> ct
+.   .  .02.  .0.28.23   AR -> ct
 
                         Initialize Z
                         Load 23:0,1 (Ci,Cr) -> 20:0,1 (Zi,Zr)
@@ -131,10 +131,10 @@ rt:
                         else continue on
 
                         ct = ct + 1
-.   .  .ct.  .1.00.28   ct -> AR
+.   .  .02.  .1.23.28   ct -> AR
 .   .  .L1.L2.1.00.29   AR += 1
 .   +1
-.   .  .ct.  .1.28.00   AR -> ct
+.   .  .02.  .1.28.23   AR -> ct
 
                         if ct > limit goto in
 .   .  .L1.L2.3.00.29   Subtract limit
@@ -169,8 +169,3 @@ tp:                     Print out value in AR
 .   .  .L2.  .1.22.31   Test AR sign
 .   .  .L1.nl.0.00.00   if AR >= 0 goto nl
 .   .  .L1.nc.0.00.00   else goto nc
-
-
-
-ct:                     Count - the iteration counter
-.   0
