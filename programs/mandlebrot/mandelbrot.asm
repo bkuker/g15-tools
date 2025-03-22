@@ -63,7 +63,7 @@ nc:                     Next Character loop start
 
 ########## BEGIN FRACTAL CODE
 
-                        //Clear count
+                        Clear count
 .   .  .L1.L2.0.00.28   0 -> AR
 .   0
 .   .  .ct.  .0.28.00   AR -> ct
@@ -128,7 +128,7 @@ rt:
 
                         if ct > limit goto in
 .   .  .L1.L2.3.00.29   Subtract limit
-.   +10                  Limit 10
+.   +10                 Limit 10
 .   .  .L2.  .1.22.31 - Test AR sign
 .   .  .L1.in.0.00.00   if AR >= 0 goto in
 .   .  .L1.lp.0.00.00   else loop
