@@ -1,0 +1,54 @@
+## Scaling
+
+Values are scaled by 10^-2. This was chosen by the author of
+the complex multiplication routine. It costs some precision
+but I am not planning to re-write that.
+
+2.0 for example would be d0.02000
+
+## Constants
+
+RLOW, RSTEP and RHIGH determine the range of the output graphics on the real (left/right) axis. The Ixxx constants do the same on the imaginary (vertical) axis.
+
+Take care in chosing these so that the width does not exeed your printer's platen.
+
+## Line Usage
+
+00: Mandelbrot Progran
+01: Complex Multiplication (CM)
+03: Print AR format code
+
+20:
+    0,1:        CM return value
+    2,3:        CM working registers
+21:
+    2,3:        CM return instructions
+22:
+    0,1,2,3:    CM input
+
+23:
+    0:          Ci imaginary part of C
+    1:          Cr real part of C
+
+MP,PN,ID:       CM working registers
+
+## Fractal code notes
+
+Clear count
+
+Load C -> Z
+
+Load Z -> 22.0,1,2,3
+
+Call Complex Mult
+    Z^2 in 20.1,0
+
+Z = Z^2 + C
+
+if |zr| > 2 goto ot
+
+if |zi| > 2 goto ot
+
+ct = ct + 1
+
+if ct > limit goto in

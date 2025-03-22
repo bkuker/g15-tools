@@ -18,7 +18,7 @@ ct:                     Count
                         Reset Imaginary Position
 .00 .  .L1.L2.1.00.28   Imaginary Start -> AR
 .   ILOW                Imaginary Start Position
-.   .  .ci.  .1.28.00   AR -> Imaginary Position
+.   .  .00.  .1.28.23   AR -> Ci
 
 nl:                     Loop start for a new line
 
@@ -35,13 +35,13 @@ nl:                     Loop start for a new line
 .   .  .03.  .1.28.03   03:03 = AR
 
                         ci = ci + ISTEP
-.   .  .ci.  .1.00.28   Imaginary Position -> AR
+.   .  .00.  .1.23.28   Ci -> AR
 .   .  .L1.L2.1.00.29   AR += Step
 .   ISTEP               Imaginary Step
-.   .  .ci.  .1.28.00   AR -> Imaginary Position
+.   .  .00.  .1.28.23   AR -> Imaginary Position
 
                         if ci > IHIGH then HALT
-.   .  .ci.  .1.00.28   Imaginary Position -> AR
+.   .  .00.  .1.23.28   ci -> AR
 .   .  .L1.L2.3.00.29   Subtract end point
 .   IHIGH               Imaginary End Position
 .   .  .L2.  .1.22.31   Test AR sign
@@ -51,15 +51,21 @@ nl:                     Loop start for a new line
                         Reset Real Position
 .   .  .L1.L2.1.00.28   Real Start -> AR
 .   RLOW                Real Start Position
-.   .  .cr.  .1.28.00   AR -> Real Position
+.   .  .01.  .1.28.23   AR -> Cr
 
 nc:                     Next Character loop start
                         
-                        cr = cr + RSTEP
-.   .  .cr.  .1.00.28   Real Position -> AR
+                        Cr = Cr + RSTEP
+.   .  .01.  .1.23.28   Cr -> AR
 .   .  .L1.L2.1.00.29   AR += Step
-.   RSTEP               Real Step   TODO .00035
-.   .  .cr.  .1.28.00   AR -> Real Position
+.   RSTEP               Real Step
+.   .  .01.  .1.28.23   AR -> Cr
+
+
+############################
+###### SKIP FRACTAL CODE
+#.   .  .L1.in.0.00.00   
+
 
 ########## BEGIN FRACTAL CODE
 
@@ -69,9 +75,9 @@ nc:                     Next Character loop start
 .   .  .ct.  .0.28.00   AR -> ct
 
                         Initialize z
-.   .  .cr.  .0.00.28   Real Position -> AR
+.   .  .01.  .0.23.28   Cr -> AR
 .   .  .zr.  .0.28.00   AR -> zr
-.   .  .ci.  .0.00.28   Imaginary Position -> AR
+.   .  .00.  .0.23.28   Ci -> AR
 .   .  .zi.  .0.28.00   AR -> zi
 
 lp:
@@ -94,13 +100,13 @@ sq:
 
                         Add position to Z^2
 rt:
-                        zr = rr + cr
-.   .  .cr.  .1.00.28   Real Position -> AR
+                        zr = rr + Cr
+.   .  .01.  .1.23.28   Real Position -> AR
 .   .  .01.  .1.20.29   AR += 20.01 (Result real)
 .   .  .zr.  .1.28.00   AR -> zr
 
                         zi = ri + ci
-.   .  .ci.  .1.00.28   Imaginary Position -> AR
+.   .  .00.  .1.23.28   Imaginary Position -> AR
 .   .  .00.  .1.20.29   AR += 20.00 (Result imaginary)
 .   .  .zi.  .1.28.00   AR -> zi
 
@@ -149,11 +155,11 @@ tp:                     Print out value in AR
 .   .  .L2.  .0.08.31   Output AR to typewriter
 .   .  .L0.L0.0.28.31   Wait for IOReady
 
-                        If cr > RHIGH
+                        If Cr > RHIGH
                             goto nl - Next Line
                         else
                             goto nc - Next Character
-.   .  .cr.  .1.00.28   Real Position -> AR
+.   .  .01.  .1.23.28   Cr -> AR
 .   .  .L1.L2.3.00.29   Subtract end point
 .   RHIGH               Real End Position
 .   .  .L2.  .1.22.31   Test AR sign
@@ -162,10 +168,10 @@ tp:                     Print out value in AR
 
 
                         C - The complex coordinate on the screen
-cr:
-.   0                   
-ci:
-.   0
+#cr:
+#.   0                   
+#ci:
+#.   0
                         
 zr:                     Z - The complex iterated point
 .   0
