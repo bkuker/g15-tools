@@ -228,7 +228,7 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
         const valueText = parsed.value.trim();
         let word: N.word | undefined;
 
-        if ( valueText.startsWith("d0.") || valueText.startsWith("d.") ){
+        if ( valueText.startsWith("d0.") || valueText.startsWith("d.") || valueText.startsWith("d-") ){
             //Parse as fractional decimal
             let v = parseFloat(valueText.substring(1));
             word = convert.fractionalDecToWord(v);
