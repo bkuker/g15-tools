@@ -10,7 +10,7 @@ ct:                     Count
 
                         Reset Imaginary Position
 .00 .  .L1.L2.1.00.28   Imaginary Start -> AR
-.   d-0.02              Imaginary Start Position
+.   d-0.01              Imaginary Start Position
 .   .  .ip.  .1.28.00   AR -> Imaginary Position
 
 nl:
@@ -30,12 +30,12 @@ nl:
                         Increment Imaginary Position by one step
 .   .  .ip.  .1.00.28   Imaginary Position -> AR
 .   .  .L1.L2.1.00.29   AR += Step
-.   d0.001              Imaginary Step TODO .001
+.   d0.0005              Imaginary Step TODO .001
 .   .  .ip.  .1.28.00   AR -> Imaginary Position
 
 .   .  .ip.  .1.00.28   Imaginary Position -> AR
 .   .  .L1.L2.3.00.29   Subtract end point
-.   d0.02               Imaginary End Position
+.   d0.01               Imaginary End Position
 .   .  .L2.  .1.22.31   Test AR sign
 .   .  .L2.00.0.16.31   if AR >= 0 HALT
                         else continue on
@@ -49,7 +49,7 @@ nc:
                         Increment Real Position by one step
 .   .  .rp.  .1.00.28   Real Position -> AR
 .   .  .L1.L2.1.00.29   AR += Step
-.   d0.00035            Real Step   TODO .00035
+.   d0.0002            Real Step   TODO .00035
 .   .  .rp.  .1.28.00   AR -> Real Position
 
 #TODO Something Useful
@@ -148,7 +148,7 @@ tp:
 
 .   .  .rp.  .1.00.28   Real Position -> AR
 .   .  .L1.L2.3.00.29   Subtract end point
-.   d0.02               Real End Position
+.   d0.005               Real End Position
 .   .  .L2.  .1.22.31   Test AR sign
 .   .  .L1.nl.0.00.00   if AR >= 0 goto nl
 .   .  .L1.nc.0.00.00   else goto nc
