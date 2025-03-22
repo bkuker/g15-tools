@@ -7,14 +7,21 @@ ct:                     Count
 <INCLUDE src="../lib/complex.mult.div.asm">
 
 <BLOCK>                 Block 0
+#define ILOW d-0.01
+#define IHIGH d0.01
+#define ISTEP d0.0005
+
+#define RLOW d-0.02
+#define RHIGH d0.005
+#define RSTEP d0.0002
 
                         Reset Imaginary Position
 .00 .  .L1.L2.1.00.28   Imaginary Start -> AR
-.   d-0.01              Imaginary Start Position
-.   .  .ip.  .1.28.00   AR -> Imaginary Position
+.   ILOW                Imaginary Start Position
+.   .  .ci.  .1.28.00   AR -> Imaginary Position
 
-nl:
-#TODO Halt when ip too high
+nl:                     Loop start for a new line
+
                         Print a newline
 .   .  .L1.L2.1.00.28   AR = Format Newline
 .   +4400000            F3 Format code, 0 digit, CR end
@@ -27,32 +34,34 @@ nl:
 .   +0400000            Format code, 1 digit, end
 .   .  .03.  .1.28.03   03:03 = AR
 
-                        Increment Imaginary Position by one step
-.   .  .ip.  .1.00.28   Imaginary Position -> AR
+                        ci = ci + ISTEP
+.   .  .ci.  .1.00.28   Imaginary Position -> AR
 .   .  .L1.L2.1.00.29   AR += Step
-.   d0.0005              Imaginary Step TODO .001
-.   .  .ip.  .1.28.00   AR -> Imaginary Position
+.   ISTEP               Imaginary Step
+.   .  .ci.  .1.28.00   AR -> Imaginary Position
 
-.   .  .ip.  .1.00.28   Imaginary Position -> AR
+                        if ci > IHIGH then HALT
+.   .  .ci.  .1.00.28   Imaginary Position -> AR
 .   .  .L1.L2.3.00.29   Subtract end point
-.   d0.01               Imaginary End Position
+.   IHIGH               Imaginary End Position
 .   .  .L2.  .1.22.31   Test AR sign
 .   .  .L2.00.0.16.31   if AR >= 0 HALT
                         else continue on
 
                         Reset Real Position
 .   .  .L1.L2.1.00.28   Real Start -> AR
-.   d-0.02              Real Start Position
-.   .  .rp.  .1.28.00   AR -> Real Position
+.   RLOW                Real Start Position
+.   .  .cr.  .1.28.00   AR -> Real Position
 
-nc:
-                        Increment Real Position by one step
-.   .  .rp.  .1.00.28   Real Position -> AR
+nc:                     Next Character loop start
+                        
+                        cr = cr + RSTEP
+.   .  .cr.  .1.00.28   Real Position -> AR
 .   .  .L1.L2.1.00.29   AR += Step
-.   d0.0002            Real Step   TODO .00035
-.   .  .rp.  .1.28.00   AR -> Real Position
+.   RSTEP               Real Step   TODO .00035
+.   .  .cr.  .1.28.00   AR -> Real Position
 
-#TODO Something Useful
+########## BEGIN FRACTAL CODE
 
                         //Clear count
 .   .  .L1.L2.0.00.28   0 -> AR
@@ -60,9 +69,9 @@ nc:
 .   .  .ct.  .0.28.00   AR -> ct
 
                         Initialize z
-.   .  .rp.  .0.00.28   Real Position -> AR
+.   .  .cr.  .0.00.28   Real Position -> AR
 .   .  .zr.  .0.28.00   AR -> zr
-.   .  .ip.  .0.00.28   Imaginary Position -> AR
+.   .  .ci.  .0.00.28   Imaginary Position -> AR
 .   .  .zi.  .0.28.00   AR -> zi
 
 lp:
@@ -81,26 +90,26 @@ lp:
 .%2 .  .rt.rt.0.20.31   command for normal return
 .   .  .rt.rt.0.20.31   command for overflow return
 sq:
-.   .  .40.40.1.20.31   "goto" 01.40 (complex multiply)
+.   .  .40.40.1.20.31   "goto" 01.40 (complex multcily)
 
                         Add position to Z^2
 rt:
-                        zr = rr + rp
-.   .  .rp.  .1.00.28   Real Position -> AR
+                        zr = rr + cr
+.   .  .cr.  .1.00.28   Real Position -> AR
 .   .  .01.  .1.20.29   AR += 20.01 (Result real)
 .   .  .zr.  .1.28.00   AR -> zr
 
-                        zi = ri + ip
-.   .  .ip.  .1.00.28   Imaginary Position -> AR
+                        zi = ri + ci
+.   .  .ci.  .1.00.28   Imaginary Position -> AR
 .   .  .00.  .1.20.29   AR += 20.00 (Result imaginary)
-.   .  .zi.  .1.28.00   ar -> zi
+.   .  .zi.  .1.28.00   AR -> zi
 
                         if |zr| > 2 goto ot
 .   .  .zr.  .2.00.28   |zr| -> AR
 .   .  .L1.L2.3.00.29   Subtract two
 .   d0.02               Two shifted
 .   .  .L2.  .1.22.31   Test AR sign
-.   .  .L1.o1.0.00.00   if AR >= 0 goto ot
+.   .  .L1.ot.0.00.00   if AR >= 0 goto ot
                         else continue on
 
                         if |zi| > 2 goto ot
@@ -108,14 +117,14 @@ rt:
 .   .  .L1.L2.3.00.29   Subtract two
 .   d0.02               Two shifted
 .   .  .L2.  .1.22.31   Test AR sign
-.   .  .L1.o2.0.00.00   if AR >= 0 goto ot
+.   .  .L1.ot.0.00.00   if AR >= 0 goto ot
                         else continue on
 
                         ct = ct + 1
-.   .  .ct.  .1.00.28   Load ct to AR
-.   .  .L1.L2.1.00.29   Increment AR
+.   .  .ct.  .1.00.28   ct -> AR
+.   .  .L1.L2.1.00.29   AR += 1
 .   +1
-.   .  .ct.  .1.28.00   Save ar to ct
+.   .  .ct.  .1.28.00   AR -> ct
 
                         if ct > limit goto in
 .   .  .L1.L2.3.00.29   Subtract limit
@@ -125,42 +134,43 @@ rt:
 .   .  .L1.lp.0.00.00   else loop
 
 
-in:
-.   .  .L1.tp.0.00.28
+in:                     Point is IN
+.   .  .L1.tp.0.00.28   Eights -> AR; GOTO tp
 .   +8888888
 
-o1:
-.   .  .L1.tp.0.00.28
+ot:                     Point is OUT
+.   .  .L1.tp.0.00.28   Zero -> AR; GOTO tp
 .   +0 
 
-o2:
-.   .  .L1.tp.0.00.28
-.   +0 
 
-o3:
-.   .  .L1.tp.0.00.28
-.   +0 
+###############END FRACTAL CODE
 
-tp:
-
+tp:                     Print out value in AR
 .   .  .L2.  .0.08.31   Output AR to typewriter
 .   .  .L0.L0.0.28.31   Wait for IOReady
 
-.   .  .rp.  .1.00.28   Real Position -> AR
+                        If cr > RHIGH
+                            goto nl - Next Line
+                        else
+                            goto nc - Next Character
+.   .  .cr.  .1.00.28   Real Position -> AR
 .   .  .L1.L2.3.00.29   Subtract end point
-.   d0.005               Real End Position
+.   RHIGH               Real End Position
 .   .  .L2.  .1.22.31   Test AR sign
 .   .  .L1.nl.0.00.00   if AR >= 0 goto nl
 .   .  .L1.nc.0.00.00   else goto nc
 
 
-rp:
-.   0                   Real position
-ip:
-.   0                   Imaginary position
-zr:
+                        C - The complex coordinate on the screen
+cr:
+.   0                   
+ci:
+.   0
+                        
+zr:                     Z - The complex iterated point
 .   0
 zi:
 .   0
-ct:
+
+ct:                     Count - the iteration counter
 .   0
