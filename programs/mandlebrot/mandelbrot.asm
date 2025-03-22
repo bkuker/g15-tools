@@ -17,7 +17,7 @@ ct:                     Count
 
                         Reset Imaginary Position
 .00 .  .L1.L2.1.00.28   Imaginary Start -> AR
-.   ILOW                Imaginary Start Position
+.   ILOW                
 .   .  .00.  .1.28.23   AR -> Ci
 
 nl:                     Loop start for a new line
@@ -38,19 +38,19 @@ nl:                     Loop start for a new line
 .   .  .00.  .1.23.28   Ci -> AR
 .   .  .L1.L2.1.00.29   AR += Step
 .   ISTEP               Imaginary Step
-.   .  .00.  .1.28.23   AR -> Imaginary Position
+.   .  .00.  .1.28.23   AR -> Ci
 
                         if ci > IHIGH then HALT
-.   .  .00.  .1.23.28   ci -> AR
+.   .  .00.  .1.23.28   Ci -> AR
 .   .  .L1.L2.3.00.29   Subtract end point
-.   IHIGH               Imaginary End Position
+.   IHIGH               
 .   .  .L2.  .1.22.31   Test AR sign
 .   .  .L2.00.0.16.31   if AR >= 0 HALT
                         else continue on
 
                         Reset Real Position
 .   .  .L1.L2.1.00.28   Real Start -> AR
-.   RLOW                Real Start Position
+.   RLOW                
 .   .  .01.  .1.28.23   AR -> Cr
 
 nc:                     Next Character loop start
@@ -58,7 +58,7 @@ nc:                     Next Character loop start
                         Cr = Cr + RSTEP
 .   .  .01.  .1.23.28   Cr -> AR
 .   .  .L1.L2.1.00.29   AR += Step
-.   RSTEP               Real Step
+.   RSTEP               
 .   .  .01.  .1.28.23   AR -> Cr
 
 
@@ -101,12 +101,12 @@ sq:
                         Add position to Z^2
 rt:
                         zr = rr + Cr
-.   .  .01.  .1.23.28   Real Position -> AR
+.   .  .01.  .1.23.28   Cr -> AR
 .   .  .01.  .1.20.29   AR += 20.01 (Result real)
 .   .  .zr.  .1.28.00   AR -> zr
 
                         zi = ri + ci
-.   .  .00.  .1.23.28   Imaginary Position -> AR
+.   .  .00.  .1.23.28   Ci -> AR
 .   .  .00.  .1.20.29   AR += 20.00 (Result imaginary)
 .   .  .zi.  .1.28.00   AR -> zi
 
@@ -161,7 +161,7 @@ tp:                     Print out value in AR
                             goto nc - Next Character
 .   .  .01.  .1.23.28   Cr -> AR
 .   .  .L1.L2.3.00.29   Subtract end point
-.   RHIGH               Real End Position
+.   RHIGH               
 .   .  .L2.  .1.22.31   Test AR sign
 .   .  .L1.nl.0.00.00   if AR >= 0 goto nl
 .   .  .L1.nc.0.00.00   else goto nc
