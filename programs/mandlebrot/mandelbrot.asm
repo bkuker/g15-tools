@@ -74,21 +74,25 @@ nc:                     Next Character loop start
 .   0
 .   .  .ct.  .0.28.00   AR -> ct
 
-                        Initialize z
-.   .  .01.  .0.23.28   Cr -> AR
-.   .  .zr.  .0.28.00   AR -> zr
-.   .  .00.  .0.23.28   Ci -> AR
-.   .  .zi.  .0.28.00   AR -> zi
+                        Initialize Z
+                        Load 23:0,1 (Ci,Cr) -> 20:0,1 (Zi,Zr)
+.   .  .00.  .0.23.20   Ci -> Zi
+.   .  .01.  .0.23.20   Cr -> Zr
+
 
 lp:
-                        Put Z into line 22 as complex mult param
-.   .  .zr.  .0.00.28   zr -> AR
-.   .  .03.  .0.28.22   zr -> 22.03 (a)
-.   .  .01.  .0.28.22   zr -> 22.01 (c)
-.   .  .zi.  .0.00.28   zi -> AR
-.   .  .02.  .0.28.22   zi -> 22.02 (b)
-.   .  .00.  .0.28.22   zi -> 22.00 (d)
+                        Put Z into line 22 as complex mult params
+                        Copy 20:0,1 (Zi,Zr) to...
+.   .  .00.  .0.20.28   Zi -> AR
+.   .  .00.  .0.28.22   AR -> P2i
+.   .  .02.  .0.28.22   AR -> P1i
 
+.   .  .01.  .0.20.28   Zr -> AR
+.   .  .01.  .0.28.22   AR -> P2r
+.   .  .03.  .0.28.22   AR -> P1r
+
+.   .  .00.  .0.00.00   Alignment
+.   .  .00.  .0.00.00   Alignment
 .   .  .00.  .0.00.00   Alignment
 
                         Square Z
@@ -100,26 +104,26 @@ sq:
 
                         Add position to Z^2
 rt:
-                        zr = rr + Cr
+                        Zr = Zr + Cr
 .   .  .01.  .1.23.28   Cr -> AR
-.   .  .01.  .1.20.29   AR += 20.01 (Result real)
-.   .  .zr.  .1.28.00   AR -> zr
+.   .  .01.  .1.20.29   AR += 20.01 (ResultR / Zr)
+.   .  .01.  .1.28.20   AR -> 20.01
 
-                        zi = ri + ci
+                        Zi = Zi + Ci
 .   .  .00.  .1.23.28   Ci -> AR
-.   .  .00.  .1.20.29   AR += 20.00 (Result imaginary)
-.   .  .zi.  .1.28.00   AR -> zi
+.   .  .00.  .1.20.29   AR += 20.00 (ResultI / Zi)
+.   .  .00.  .1.28.20   AR -> 20.00
 
-                        if |zr| > 2 goto ot
-.   .  .zr.  .2.00.28   |zr| -> AR
+                        if |Zr| > 2 goto ot
+.   .  .00.  .2.20.28   |Zr| -> AR
 .   .  .L1.L2.3.00.29   Subtract two
 .   d0.02               Two shifted
 .   .  .L2.  .1.22.31   Test AR sign
 .   .  .L1.ot.0.00.00   if AR >= 0 goto ot
                         else continue on
 
-                        if |zi| > 2 goto ot
-.   .  .zi.  .2.00.28   |zi| -> AR
+                        if |Zi| > 2 goto ot
+.   .  .01.  .2.20.28   |Zi| -> AR
 .   .  .L1.L2.3.00.29   Subtract two
 .   d0.02               Two shifted
 .   .  .L2.  .1.22.31   Test AR sign
@@ -167,16 +171,6 @@ tp:                     Print out value in AR
 .   .  .L1.nc.0.00.00   else goto nc
 
 
-                        C - The complex coordinate on the screen
-#cr:
-#.   0                   
-#ci:
-#.   0
-                        
-zr:                     Z - The complex iterated point
-.   0
-zi:
-.   0
 
 ct:                     Count - the iteration counter
 .   0

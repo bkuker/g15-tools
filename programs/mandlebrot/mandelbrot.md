@@ -19,7 +19,8 @@ Take care in chosing these so that the width does not exeed your printer's plate
 03: Print AR format code
 
 20:
-    0,1:        CM return value
+    0:          CM Imainary return value / Zi
+    1:          CM Real return value / Zr
     2,3:        CM working registers
 21:
     2,3:        CM return instructions
@@ -34,21 +35,35 @@ MP,PN,ID:       CM working registers
 
 ## Fractal code notes
 
+Old
+
 Clear count
-
 Load C -> Z
-
 Load Z -> 22.0,1,2,3
-
 Call Complex Mult
     Z^2 in 20.1,0
-
 Z = Z^2 + C
+if |zr| > 2 goto ot
+if |zi| > 2 goto ot
+ct = ct + 1
+if ct > limit goto in
+else goto lp
+
+New
+
+Clear count
+Load 23:0,1 (Ci,Cr) -> 20:0,1 (Zi,Zr)
+lp:
+Copy 20:0,1 (Zi,Zr) to
+    22:0,1 (P2i,P2r)
+    22:2,3 (P1i,P1r)
+Call CM
+    20:0,1 (Zi,Zr) = Z^2
+Zi = Zi + Ci
+Zr = Zr + Zr
 
 if |zr| > 2 goto ot
-
 if |zi| > 2 goto ot
-
 ct = ct + 1
-
 if ct > limit goto in
+else goto lp
