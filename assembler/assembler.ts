@@ -30,6 +30,7 @@ import { ASM, Numbers as N } from "./AsmTypes";
 import { Command } from 'commander';
 import numberTrack from './numberTrack';
 import {preprocess, blockChop} from "./Preprocess";
+import analyze from "./analyzer";
 
 //If running from "npm run" change back
 //to the directory the user ran the program from
@@ -42,6 +43,7 @@ const commandLine = new Command();
 commandLine
     .option('--words', 'Output words, not pti')
     .option('--resolved', 'Output resolved code, not pti')
+    .option('--time', 'Analyze time')
     .option('--bootable', 'Output a number track before the program block')
     .argument('<assembly file name>');
 commandLine.parse();
@@ -103,7 +105,12 @@ for (let b = 0; b < blocks.length; b++ ) {
     //console.error(sum(lineWords));
 
     //Output
-    if (commandLine.opts().resolved) {
+    if ( commandLine.opts().time ){
+        if ( b != 0 ){
+            console.log("<BLOCK>");
+        }
+        analyze(program);
+    } else if (commandLine.opts().resolved) {
         if ( b != 0 ){
             console.log("<BLOCK>");
         }

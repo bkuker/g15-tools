@@ -12,6 +12,7 @@
     "wtf": "tsx assembler/wtf.js"
   },
   "dependencies": {
+    "colors": "^1.4.0",
     "commander": "^13.1.0",
     "cytoscape": "^3.31.0",
     "vue": "^3.5.13"
