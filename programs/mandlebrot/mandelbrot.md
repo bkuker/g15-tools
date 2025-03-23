@@ -76,3 +76,6 @@ Old:
 Move return copy out of loop:
                 Number of instructions executed:  2673925
                      Number of drum revolutions:  3475527
+Tiny optimization at beginning of nc: using % mnemonic:
+                Number of instructions executed:  2673925
+                     Number of drum revolutions:  3470574

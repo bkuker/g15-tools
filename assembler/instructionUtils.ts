@@ -1,5 +1,6 @@
 import { ASM, type Numbers as N } from "./AsmTypes";
 import * as convert from "./conversionUtils";
+import assert from "assert";
 
 export function parseAsmProgram(sourceCode: ASM.Line[]): ASM.Line[] {
     //Identify line types, seperate into text fields
@@ -18,9 +19,11 @@ export function parseAsmProgram(sourceCode: ASM.Line[]): ASM.Line[] {
     let lastLoc = NaN;
     for (const p of parsedLines) {
         if (ASM.isParsedConstantText(p) || ASM.isParsedInstructionText(p)) {
-            if ( p.l.startsWith("L") ){
+            if (p.l.startsWith("L")) {
                 let n = parseInt(p.l.substring(1));
                 lastLoc = p.lResolved = lastLoc + n;
+            } else if ( p.l.startsWith("%") ){
+                lastLoc = p.lResolved = parseInt(resolveMod(p.l, lastLoc));
             } else if (p.l.trim() == "" || p.l == "od" || p.l == "ev" || p.l.startsWith("%")) {
                 lastLoc = p.lResolved = lastLoc + 1;
                 if (p.l == "ev" && p.lResolved % 2 != 0) {
@@ -29,6 +32,7 @@ export function parseAsmProgram(sourceCode: ASM.Line[]): ASM.Line[] {
                     throw new Error(`Location must odd, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
                 }
 
+                //TODO NO Longer needed?
                 if (p.l == "%0" && p.lResolved % 4 != 0) {
                     throw new Error(`Location must = 0 mod 4, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
                 } else if (p.l == "%1" && p.lResolved % 4 != 1) {
@@ -137,7 +141,7 @@ function parseInstructionText(lineData: ASM.Line): ASM.ParsedConstantText | ASM.
     } else if (line.startsWith(".")) {
         //A Constant
         let value = line.substring(4, 20);
-        if ( value.startsWith("b") ){
+        if (value.startsWith("b")) {
             return {
                 l: line.substring(1, 3),
                 value: line.substring(4),
@@ -180,6 +184,18 @@ function resolveG15DecToInt(v: string, loc: number, nextSlocLoc: number, labels:
     return convert.g15DecToInt(v as N.g15Dec);
 }
 
+function resolveMod(v: string, l: number): string {
+    if (!v.startsWith("%")) {
+        return v;
+    }
+    let m: number = parseInt(v.substring(1));
+    let ret = l;
+    assert(m >= 0 && m < 4, "Invalid mod value");
+    do {
+        ret = ret + 1;
+    } while (ret % 4 != m);
+    return ret.toString();
+}
 
 /**
  * Parse a raw line of assembly input into an ASM.Line object
@@ -203,8 +219,8 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
             l: parsed.lResolved as number,
             s: parsed.s as ASM.sType,
             p: parsed.p as ASM.prefixType,
-            t: resolveG15DecToInt(parsed.t, parsed.lResolved as number, parsed.nextLoc as number, labels),//convert.g15DecToInt(parsed.t as N.g15Dec),
-            n: resolveG15DecToInt(parsed.n, parsed.lResolved as number, parsed.nextLoc as number, labels),//convert.g15DecToInt(parsed.n as N.g15Dec),
+            t: resolveG15DecToInt(resolveMod(parsed.t, parsed.lResolved as number), parsed.lResolved as number, parsed.nextLoc as number, labels),//convert.g15DecToInt(parsed.t as N.g15Dec),
+            n: resolveG15DecToInt(resolveMod(parsed.n, parsed.lResolved as number), parsed.lResolved as number, parsed.nextLoc as number, labels),//convert.g15DecToInt(parsed.n as N.g15Dec),
             c: +parsed.c,
             src: +parsed.src,
             dst: +parsed.dst,
@@ -228,7 +244,7 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
         const valueText = parsed.value.trim();
         let word: N.word | undefined;
 
-        if ( valueText.startsWith("d0.") || valueText.startsWith("d.") || valueText.startsWith("d-") ){
+        if (valueText.startsWith("d0.") || valueText.startsWith("d.") || valueText.startsWith("d-")) {
             //Parse as fractional decimal
             let v = parseFloat(valueText.substring(1));
             word = convert.fractionalDecToWord(v);
@@ -250,11 +266,11 @@ function parseAsmLine(parsed: ASM.ParsedConstantText | ASM.ParsedInstructionText
             let abs = valueText.substring(1) as N.g15Hex;
             let valNum = convert.g15HexToDec(abs);
             word = ((Math.abs(valNum) << 1) | 0x01) as N.word;
-        } else if ( valueText.startsWith("b") ){
+        } else if (valueText.startsWith("b")) {
             let bin = valueText.substring(1);
             bin = bin.replaceAll(" ", "");
-            word = parseInt(bin,2) as N.word;
-        } else if (valueText == "" ){
+            word = parseInt(bin, 2) as N.word;
+        } else if (valueText == "") {
             word = 0 as N.word;
         } else {
             //Parse as raw 29bit word

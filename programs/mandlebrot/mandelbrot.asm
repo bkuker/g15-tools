@@ -64,10 +64,10 @@ nl:                     Loop start for a new line
 nc:                     Next Character loop start
                         
                         Cr = Cr + RSTEP
-.   .  .01.  .1.23.28   Cr -> AR
-.   .  .L1.L2.1.00.29   AR += Step
+.   .  .%1.%2.1.23.28   Cr -> AR
+.%2 .  .L1.L2.1.00.29   AR += Step
 .   RSTEP               
-.   .  .01.  .1.28.23   AR -> Cr
+.   .  .%1.%2.1.28.23   AR -> Cr
 
 
 ############################
@@ -78,7 +78,7 @@ nc:                     Next Character loop start
 ########## BEGIN FRACTAL CODE
 
                         Clear count
-.   .  .L1.L2.0.00.28   0 -> AR
+.%2 .  .L1.L2.0.00.28   0 -> AR
 .   0
 .   .  .02.  .0.28.23   AR -> ct
 
