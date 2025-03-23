@@ -18,7 +18,15 @@ ct:                     Count
                         Reset Imaginary Position
 .00 .  .L1.L2.1.00.28   Imaginary Start -> AR
 .   ILOW                
-.   .  .00.  .1.28.23   AR -> Ci
+.   .  .00.rs.1.28.23   AR -> Ci
+
+
+rs:                     Return Setup
+.   .  .L3.nl.4.00.21   DP Copy return commands to line 20
+.                       Alignment
+.                       Alignment
+.%2 .  .rt.rt.0.20.31   command for normal return
+.   .  .rt.rt.0.20.31   command for overflow return
 
 nl:                     Loop start for a new line
 
@@ -91,15 +99,7 @@ lp:
 .   .  .01.  .0.28.22   AR -> P2r
 .   .  .03.  .0.28.22   AR -> P1r
 
-.   .  .00.  .0.00.00   Alignment
-.   .  .00.  .0.00.00   Alignment
-.   .  .00.  .0.00.00   Alignment
 
-                        Square Z
-.   .  .L1.sq.4.00.21   DP Copy return commands to line 20
-.%2 .  .rt.rt.0.20.31   command for normal return
-.   .  .rt.rt.0.20.31   command for overflow return
-sq:
 .   .  .40.40.1.20.31   "goto" 01.40 (complex multcily)
 
                         Add position to Z^2

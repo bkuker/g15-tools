@@ -68,3 +68,11 @@ if |zi| > 2 goto ot
 ct = ct + 1
 if ct > limit goto in
 else goto lp
+
+## Performance:
+Old:
+                Number of instructions executed:  2841720
+                     Number of drum revolutions:  3811118
+Move return copy out of loop:
+                Number of instructions executed:  2673925
+                     Number of drum revolutions:  3475527
