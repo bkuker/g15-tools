@@ -82,3 +82,10 @@ Tiny optimization at beginning of nc: using % mnemonic:
 2 line version
                 Number of instructions executed:  2693595
                      Number of drum revolutions:  2933326
+
+Starting Point:
+                114,364,221 WT
+Current:
+                 30,625,248 WT
+Remove extra return copies
+    30,280,823
