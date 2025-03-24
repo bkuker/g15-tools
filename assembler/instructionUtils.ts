@@ -16,34 +16,43 @@ export function parseAsmProgram(sourceCode: ASM.Line[]): ASM.Line[] {
     //Any blank ("  ") is taken to be consecutive (+1) from the previous
     //line's location.
     //TODO Consider +N notation, where "+1" and "  " are the same, but you can do +2 etc?
+    let used = new Set<number>();
     let lastLoc = NaN;
     for (const p of parsedLines) {
         if (ASM.isParsedConstantText(p) || ASM.isParsedInstructionText(p)) {
             if (p.l.startsWith("L")) {
                 let n = parseInt(p.l.substring(1));
-                lastLoc = p.lResolved = lastLoc + n;
+                lastLoc = p.lResolved = (lastLoc + n);// % 107;
             } else if ( p.l.startsWith("%") ){
                 lastLoc = p.lResolved = parseInt(resolveMod(p.l, lastLoc));
-            } else if (p.l.trim() == "" || p.l == "od" || p.l == "ev" || p.l.startsWith("%")) {
-                lastLoc = p.lResolved = lastLoc + 1;
-                if (p.l == "ev" && p.lResolved % 2 != 0) {
-                    throw new Error(`Location must even, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
-                } else if (p.l == "od" && p.lResolved % 2 != 1) {
-                    throw new Error(`Location must odd, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
+            } else if (p.l.trim() == "" || p.l == "od" || p.l == "ev") {
+                let l = lastLoc;
+                while(true){
+                    l++;
+                    l = l;// % 107;
+                    if ( !used.has(l) )
+                        break;
                 }
-
-                //TODO NO Longer needed?
-                if (p.l == "%0" && p.lResolved % 4 != 0) {
-                    throw new Error(`Location must = 0 mod 4, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
-                } else if (p.l == "%1" && p.lResolved % 4 != 1) {
-                    throw new Error(`Location must = 1 mod 4, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
-                } else if (p.l == "%2" && p.lResolved % 4 != 2) {
-                    throw new Error(`Location must = 2 mod 4, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
-                } else if (p.l == "%3" && p.lResolved % 4 != 3) {
-                    throw new Error(`Location must = 3 mod 4, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
-                }
+                lastLoc = p.lResolved = l;
             } else {
                 lastLoc = p.lResolved = convert.g15DecToInt(p.l as N.g15Dec);
+            }
+
+            //Is it already used?
+            if ( used.has(p.lResolved) ){
+                throw `Location ${p.lResolved} Duplicated at ${p.sourceFile}:${p.sourceLineNumber}`;
+            }
+            used.add(p.lResolved);
+
+            //Post check even and Odd
+            if (p.l == "ev" && p.lResolved % 2 != 0) {
+                throw new Error(`Location must even, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
+            } else if (p.l == "od" && p.lResolved % 2 != 1) {
+                throw new Error(`Location must odd, but is ${p.lResolved} at ${p.sourceFile}:${p.sourceLineNumber}`);
+            }
+
+            if ( p.lResolved > 107 ){
+                console.error(`Hit end of drum at at ${p.sourceFile}:${p.sourceLineNumber}`);
             }
         }
     }
@@ -177,11 +186,11 @@ function resolveG15DecToInt(v: string, loc: number, nextSlocLoc: number, labels:
 
     //L1 = Loc plus 1, like in docs
     if (v.startsWith("L")) {
-        return loc + parseInt(v.replace("L", ""));
+        return (loc + parseInt(v.replace("L", ""))) % 107;
     }
 
     //Just a number
-    return convert.g15DecToInt(v as N.g15Dec);
+    return convert.g15DecToInt(v as N.g15Dec) % 107;
 }
 
 function resolveMod(v: string, l: number): string {
