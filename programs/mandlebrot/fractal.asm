@@ -11,14 +11,14 @@ rs:                     Return Setup
 .   .  .00.  .0.28.02   AR -> 2:0
 
                         Clear count
-.07 .  .L1.L2.0.02.28   0 -> AR
-.   0
+.07 .  .L1.L2.0.02.28   1 -> AR
+.   2
 .   .  .%2.  .0.28.23   AR -> ct
 
                         Initialize Z
                         Load 23:0,1 (Ci,Cr) -> 20:0,1 (Zi,Zr)
 .L2 .  .%0.  .0.23.20   Ci -> Zi
-.%1 .  .%1.  .0.23.20 - Cr -> Zr
+.%1 .  .%1.  .0.23.20   Cr -> Zr
 
 
 lp:
@@ -72,19 +72,20 @@ rt:
 
                         if ct > limit goto in
 .%3 .  .L1.L2.3.02.29   Subtract limit
-.   +10                 Limit 10
-.   .  .L2.  .1.22.31 - Test AR sign
+.   +11                  Limit 12
+.   .  .L2.  .1.22.31   Test AR sign
 .L3 .  .L1.in.0.00.00   if AR >= 0 goto in
 .   .  .L1.lp.0.00.00   else loop
 
 
 in:                     Point is IN
 .   .  .L1.tp.0.02.28   Eights -> AR; GOTO tp
-.   +8888888
+.   +0000000
 
 ot:                     Point is OUT
-.   .  .L1.tp.0.02.28   Zero -> AR; GOTO tp
-.   +0 
+.   .  .%2.  .6.23.25 - Ct -> ID1
+.%3 .  .10.  .1.26.31   Shift R 4
+.14 .  .%0.tp.0.25.28   ID0 -> AR
 
 tp:
-.   .  .L2.L1.0.20.31   RETURN
+.17 .  .L2.L1.0.20.31   RETURN

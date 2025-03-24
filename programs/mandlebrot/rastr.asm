@@ -1,9 +1,9 @@
-#define ILOW d-0.01
-#define IHIGH d0.01
+#define ILOW d-0.0110
+#define IHIGH d0.0110
 #define ISTEP d0.0005
 
-#define RLOW d-0.02
-#define RHIGH d0.005
+#define RLOW d-0.021
+#define RHIGH d0.0052
 #define RSTEP d0.0002
 
                         Reset Imaginary Position
