@@ -1,7 +1,13 @@
 import {type Numbers as N } from "./AsmTypes";
 import assert from "assert";
 
+function validateWord( w : N.word ){
+    assert( w >= 0, "Words can't be negative " + w);
+    assert( w <= 0x1FFFFFFF, "Words limited to 29 bits");
+}
+
 export function wordToDec(w: N.word): number {
+    validateWord(w);
     let sign = w & 1;   //Extract sign bit
     let val = w >> 1;   //Extract absolute value
     if (sign)
@@ -10,9 +16,12 @@ export function wordToDec(w: N.word): number {
 }
 
 export function g15SignedHex(w: N.word): N.signedG15Hex {
+    validateWord(w);
     let sign = w & 1;   //Extract sign bit
     let val = w >> 1;   //Extract absolute value
     let hex = g15Hex(val as N.word);
+    assert(hex.startsWith("0"));
+    hex = hex.substring(1) as N.g15Hex;
     return ((sign ? "-" : "+") + hex) as N.signedG15Hex;
 }
 
@@ -23,7 +32,7 @@ export function wordToFractionalDec( w : N.word ): number {
         val = val * -1;
     val = val / (1<<28);
     return val;
-    
+    validateWord(w);
 }
 
 export function fractionalDecToWord( w: number ): N.word {
@@ -37,6 +46,7 @@ export function fractionalDecToWord( w: number ): N.word {
         w = Math.abs(w);
         w = w | 1;
     }
+    validateWord(w as N.word);
     return w as N.word;
 }
 
@@ -52,6 +62,7 @@ export function intToSignedG15Hex(v: number){
 }*/
 
 export function g15Hex(v: N.word): N.g15Hex {
+    validateWord(v);
     /**
      * Converts the value "v" to a hexidecimal string using the G-15
      */
