@@ -29,8 +29,9 @@ import * as tape from "./tapeUtils";
 import { ASM, Numbers as N } from "./AsmTypes";
 import { Command } from 'commander';
 import numberTrack from './numberTrack';
-import {preprocess, blockChop} from "./Preprocess";
+import { preprocess, blockChop } from "./Preprocess";
 import analyze from "./analyzer";
+import { MinimalAdder } from "./MinimalAdder";
 
 //If running from "npm run" change back
 //to the directory the user ran the program from
@@ -51,20 +52,20 @@ commandLine.parse();
 const fileName = commandLine.args[0];
 
 
-let blocks : ASM.Line[][] = blockChop(preprocess(fileName));
+let blocks: ASM.Line[][] = blockChop(preprocess(fileName));
 
 if (commandLine.opts().bootable) {
     console.log(numberTrack + "\n\n");
 }
 
-for (let b = 0; b < blocks.length; b++ ) {
+for (let b = 0; b < blocks.length; b++) {
     //TODO Deal with line number
     let program: ASM.Line[] = parseAsmProgram(blocks[b]);
 
     //Order the program by location (Constants and Instructions only)
     let line: ASM.Loc[] = [];
     for (let cmd of program.filter((o: any): o is ASM.Loc => typeof o.l === 'number')) {
-        if ( line[cmd.l] != undefined ){
+        if (line[cmd.l] != undefined) {
             throw `Location ${cmd.l} duplicated. Lines ${line[cmd.l].sourceLineNumber} & ${cmd.sourceLineNumber}`;
         }
         line[cmd.l] = cmd;
@@ -73,6 +74,8 @@ for (let b = 0; b < blocks.length; b++ ) {
     let checksumLocation = 0;
 
     //Convert the program to an array of words at the appropriate locations
+    //Also find the last unused location to store the checksum in.
+    //(Not just using u7 can mean shorter tapes)
     let lineWords: N.word[] = [];
     for (let l = 0; l < 108; l++) {
         if (line[l]) {
@@ -83,35 +86,42 @@ for (let b = 0; b < blocks.length; b++ ) {
         }
     }
 
-    //Checksum code. Consider putting it at first unused location
-    //for shorter tapes
+    //Sum the words, and return that sum, negated
+    //as a word.
+    //
+    //When inserted back into the line at a location
+    //that was previously zero, the new sum of the 
+    //entire line should be zero.
+    function sum(lineWords): N.word {
+        const adder = new MinimalAdder();
 
-    function sum(lineWords) : N.word{
-        let sum = 0
-        for ( let word of lineWords ){
-            sum += convert.wordToDec(word);
+        adder.transferToAR(0, MinimalAdder.chAD); // initialize the checksum
+        for (let word of lineWords) {
+            adder.addToAR(word, MinimalAdder.chAD); //add
         }
-        let s = Math.abs(sum);
-        s = s * 2;
-        if ( sum > 0 )
-            s += 1;
-        s = s & 0b11111111111111111111111111111;
-        return s as N.word;
+        adder.transferToAR(adder.AR, MinimalAdder.chAD); //Decomplement
+        let sum = adder.AR;
+
+        if (sum != 0)
+            sum = sum ^ 0x01;
+
+        return sum as N.word;
     }
-    if( checksumLocation > 107 )
+
+    if (checksumLocation > 107)
         console.error(`Can't checksum block ${b}, no free space.`);
-    //console.error(sum(lineWords));
+
     lineWords[checksumLocation] = sum(lineWords);
-    //console.error(sum(lineWords));
+
 
     //Output
-    if ( commandLine.opts().time ){
-        if ( b != 0 ){
+    if (commandLine.opts().time) {
+        if (b != 0) {
             console.log("<BLOCK>");
         }
         analyze(program);
     } else if (commandLine.opts().resolved) {
-        if ( b != 0 ){
+        if (b != 0) {
             console.log("<BLOCK>");
         }
         //Output resolved code
@@ -125,7 +135,7 @@ for (let b = 0; b < blocks.length; b++ ) {
             }
         }
     } else if (commandLine.opts().words) {
-        if ( b != 0 ){
+        if (b != 0) {
             console.log("<BLOCK>");
         }
         //Dump words
@@ -135,14 +145,14 @@ for (let b = 0; b < blocks.length; b++ ) {
             }
         }
     } else {
-        if ( b != 0 ){
+        if (b != 0) {
             console.log("\n");
         }
         //Output PTI Paper tape image
         let pti = "";
         pti += "# " + program[0].sourceFile + ":" + program[0].sourceLineNumber + "\n";
         pti += "# Block " + b + "\n";
-        pti +=  tape.lineToTape(lineWords);
+        pti += tape.lineToTape(lineWords);
         console.log(pti);
     }
 }
