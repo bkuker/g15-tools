@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>G-15 Mandelbrot Set</title>
+<!--
+/***********************************************************************
+* retro-g15 Mandelbrot-Demo.html
+************************************************************************
+* Copyright (c) 2025, Paul Kimpel.
+* Licensed under the MIT License, see
+*       http://www.opensource.org/licenses/mit-license.php
+************************************************************************
+* Mandelbrot Set demo script.
+************************************************************************
+* 2025-04-01  P.Kimpel
+*   Original version, cloned from retro-g15/software/tools/
+*   Paper-Tape-Checksum.html.
+***********************************************************************/
+-->
+<meta name="Author" content="Paul Kimpel">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+
+<style>
+HTML {
+    height:             100%}
+
+BODY {
+    position:           relative;
+    background-color:   #FFC;
+    font-family:        Arial, Helvetica, sans-serif;
+    height:             calc(100% - 3ex);
+    margin:             1ex}
+
+DIV.heading {
+    margin-top:         12px;
+    margin-bottom:      6px;
+    width:              640px;
+    font-weight:        bold}
+
+LABEL {
+    font-size:          smaller}
+
+#OptionsDiv {
+    width:              calc(100% - 8px)}
+
+#TapeReaderPanel {
+    color:              white;
+    background-color:   #666;
+    width:              calc(100% - 8px);
+    border:             1px solid black;
+    border-radius:      8px;
+    font-size:          smaller;
+    padding:            8px}
+
+#TapeReaderTable {
+    border-spacing:     0;
+    border-collapse:    collapse;
+    table-layout:       fixed;
+    width:              calc(100% - 8px)}
+#TapeReaderCol1 {
+    width:              18ex}
+#TapeReaderTable TD {
+    vertical-align:     middle;
+    padding-top:        1px;
+    padding-bottom:     1px;
+    padding-left:       2px;
+    padding-right:      2px}
+
+#TextPanel {
+    position:           absolute;
+    left:               0;
+    top:                96px; /* initially */
+    bottom:             0px;
+    width:              calc(100% - 8px);
+    white-space:        pre;
+    overflow:           scroll;
+    padding:            4px;
+    border:             1px solid black;
+    color:              black;
+    background-color:   white;
+    font-family:        DejaVu Sans Mono, Consolas, Courier, monospace;
+    font-size:          8pt;
+    font-weight:        normal}
+
+.center {
+    text-align:         center}
+.floatRight {
+    float:              right}
+.rj {
+    text-align:         right}
+</style>
+</head>
+
+<body>
+<div class=heading>
+    Mandelbrot Set Demo
+</div>
+
+<div id=OptionsDiv>
+    <div id=TapeReaderPanel>
+        <table id=TapeReaderTable>
+        <colgroup><col id=TapeReaderCol1><col><col></colgroup>
+        <tr><td>
+            <td>
+            <td class=rj>
+                <button id=ExtractListing type=button>Extract Listing</button>
+        </table>
+    </div>
+</div>
+
+<div id=TextPanel></div>  <!-- Don't add any whitespace inside the div! -->
+
+
+<script type="module">
+
+window.addEventListener("load", function() {
+
+    const hexRex = /[abcdefABCDEF]/g;   // standard hex characters
+
+    const panel = $$("TextPanel");
+
+
+    /*******************************************************************
+    * Miscellaneous Utility Functions                                  *
+    *******************************************************************/
+
+    /**************************************/
+    function $$(id) {
+        return document.getElementById(id);
+    }
+
+    /**************************************/
+    function g15Hex(v) {
+        /* Converts the value "v" to a hexidecimal string using the G-15
+        convention. This is not a particularly efficient way to do this */
+        const sign = (v & wordSignMask) ? "-" : " ";
+
+        return (v >> 1).toString(16).toLowerCase().replace(hexRex, (c) => {
+            switch (c) {
+            case "a":
+                return "u";
+            case "b":
+                return "v";
+            case "c":
+                return "w";
+            case "d":
+                return "x";
+            case "e":
+                return "y";
+            case "f":
+                return "z";
+            default:
+                return "?";
+            }
+        }).padStart(7, "0") + sign;
+    }
+
+
+    /*******************************************************************
+    * Listing Utilities                                                *
+    *******************************************************************/
+
+    /**************************************/
+    function clearPanel() {
+        /* Clears the text panel */
+
+        panel.textContent = "";
+    }
+
+    /**************************************/
+    function printLine(text) {
+        /* Appends "text"+NL as a new text node to the panel DOM element */
+        let e = document.createTextNode(text + "\n");
+
+        panel.appendChild(e);
+        panel.scrollTop = panel.scrollHeight;   // scroll line into view
+    }
+
+    /**************************************/
+    function extractListing(ev) {
+        /* Copies the text contents of the "paper" area of the output listing,
+        opens a new temporary window, and pastes that text into the window so it
+        can be copied or saved by the user */
+        let doc = null;                 // temp window document object
+        let text = panel.textContent;
+        let title = "G15-Output-Listing";
+        let win = window.open("../../webUI/FramePaper.html", "G15-Output",
+                "scrollbars,resizable,width=600,height=500");
+
+        function copyText(ev) {
+            let doc = ev.target;
+            let win = doc.defaultView;
+
+            win.removeEventListener("load", copyText, false);
+            doc = win.document;
+            doc.title = title;
+            doc.getElementById("Paper").textContent = text;
+        }
+
+        win.addEventListener("load", copyText, false);
+        win.moveTo((screen.availWidth-win.outerWidth)/2, (screen.availHeight-win.outerHeight)/2);
+        ev.preventDefault();
+        ev.stopPropagation();
+    }
+
+
+    /*******************************************************************
+    *  Mandelbrot Set Generation                                       *
+    *******************************************************************/
+ /*   #define ILOW d-0.0110
+#define IHIGH d0.0110
+#define ISTEP d0.0005
+
+#define RLOW d-0.021
+#define RHIGH d0.0052
+#define RSTEP d0.0002*/
+
+    /**************************************/
+    function mandelbrot() {
+        /* Generates and displays the set */
+        const pxMax = 133;
+        const pyMax = 43;
+        const xMin = -2.10;
+        const xMax = 0.52;
+        const xInc = (xMax-xMin)/(pxMax-1);
+        const yMin = -1.1;
+        const yMax = 1.1;
+        const yInc = (yMax-yMin)/(pyMax-1);
+        const maxCount = 15;            // max iterations
+        const colors = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "u", "v", "w", "x", "y", " "];
+
+        for (let py=0; py<pyMax; ++py) {
+            let line = "";
+
+            for (let px=0; px<pxMax; ++px) {
+                let x0 = xInc*px + xMin;
+                let y0 = yInc*py + yMin;
+                let x = 0;
+                let y = 0;
+                let count = 0;
+
+                while (Math.abs(x) < 2 && Math.abs(y) < 2 && count < maxCount) {
+                //while (x*x + y*y <= 2*2 && count < maxCount) {
+                    [x, y] = [x*x - y*y + x0, 2*x*y + y0];
+                    ++count;
+                }
+
+                line += colors[count];
+            }
+
+            printLine(line);
+        }
+
+        /********** from: https://en.wikipedia.org/wiki/Mandelbrot_set **********
+        for each pixel (Px, Py) on the screen do
+            x0 := scaled x coordinate of pixel (scaled to lie in the Mandelbrot X scale (-2.00, 0.47))
+            y0 := scaled y coordinate of pixel (scaled to lie in the Mandelbrot Y scale (-1.12, 1.12))
+            x := 0.0
+            y := 0.0
+            iteration := 0
+            max_iteration := 1000
+            while (x^2 + y^2 ≤ 2^2 AND iteration < max_iteration) do
+                xtemp := x^2 - y^2 + x0
+                y := 2*x*y + y0
+                x := xtemp
+                iteration := iteration + 1
+
+            color := palette[iteration]
+            plot(Px, Py, color)
+        ******************************************************************/
+    }
+
+
+    /*******************************************************************
+    * Initialization and Termination                                   *
+    *******************************************************************/
+
+    /**************************************/
+    function repositionTextPanel() {
+        /* Repositions and resizes the #TextPanel element so that it fills the
+        bottom portion of the window */
+        let opts = $$("OptionsDiv");
+        let panel = $$("TextPanel");
+
+        panel.style.top = (opts.offsetTop + opts.offsetHeight + 8).toFixed() + "px";
+    }
+
+    /******************** Start of window.onload() ********************/
+    repositionTextPanel();
+    $$("ExtractListing").addEventListener("click", extractListing);
+    clearPanel();
+    mandelbrot();
+}, {once: true});
+</script>
+
+</body>
+</html>

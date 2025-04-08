@@ -1,0 +1,152 @@
+
+G15 CPU Status:
+        Dc Power is: ON
+          IO status:  Ready
+           IO Ready:  16
+                 AR:   028z5w3
+          acc_carry:  0  OvrFlow:  0
+             DA1_GO:  0
+               HALT:  0
+            CmdLine:  1 (1) N: 93
+*** TURN ON DISASSEMBLY OF NEXT INSTRUCTION
+
+                Number of instructions executed:  97
+                     Number of drum revolutions:  129
+        Number of unknown instructions executed:  0
+
+        Number of Bell Rings:  0
+entering exec instr
+    97  01.93: u.10.03.0.24.31    Multiply
+                Number of instructions executed:  97
+instruction= {'instr': 20997694, 'cmd_line': 1, 'n': 3, 'next_cmd_word_time': 3, 'next_cmd_line': 1, 'next_cmd_acc': 0, 'cmd_acc': 0, 'time_end_last': 89, 'loc': 93, 'd31_print_flag': 0, 'sign': 0, 'dp': 0, 'd': 31, 's': 24, 'ch': 0, 'bp': 0, 't': 10, 'deferred': 0, 'sspecial': 'MQ', 'dspecial': 'Multiply', 'divide': False, 'ts': True, 'cmd_type': 1, 'disassembly': '01.93: u.10.03.0.24.31    Multiply', 'time_start': 94, 'time_end': 103, 'word_time': 89}
+word times: start= 94  end= 103
+               early_bus =   w800000
+                late_bus =  -w800000
+bw= 0  viaar= 0  ts= True
+    97                          write 31.103: -w800000
+    
+G15 CPU Status:
+        Dc Power is: ON
+          IO status:  Ready
+           IO Ready:  16
+                 AR:   028z5w3
+          acc_carry:  0  OvrFlow:  0
+             DA1_GO:  0
+               HALT:  0
+            CmdLine:  1 (1) N: 03
+*** TURN ON DISASSEMBLY OF NEXT INSTRUCTION
+
+                Number of instructions executed:  98
+                     Number of drum revolutions:  130
+        Number of unknown instructions executed:  0
+
+        Number of Bell Rings:  0
+entering exec instr
+    98  01.03: u.18.20.6.26.30    PN+
+                Number of instructions executed:  98
+instruction= {'instr': 37918397, 'cmd_line': 1, 'n': 20, 'next_cmd_word_time': 20, 'next_cmd_line': 1, 'next_cmd_acc': 0, 'cmd_acc': 0, 'time_end_last': 103, 'loc': 3, 'd31_print_flag': 0, 'sign': 1, 'dp': 1, 'd': 30, 's': 26, 'ch': 6, 'bp': 0, 't': 18, 'deferred': 
+0, 'sspecial': 'PN', 'dspecial': 'PN+', 'divide': False, 'ts': False, 'cmd_type': 8, 'disassembly': '01.03: u.18.20.6.26.30    PN+', 'time_start': 4, 'time_end': 17, 'word_time': 103}
+word times: start= 4  end= 17
+        ts= 4  te= 17 / 17
+               early_bus =   3y8z5w1
+                late_bus =   3y8z5w1
+bw= 0  viaar= 0  ts= True
+    98                          write 30.4:  3y8z5w1
+               early_bus =   w7zyv85
+                late_bus =   w7zyv85
+bw= 0  viaar= 0  ts= False
+    98                          write 30.5:  w7zyv85
+               early_bus =  -7x1yv82
+                late_bus =   7x1yv82
+bw= 0  viaar= 0  ts= True
+    98                          write 30.6:  7x1yv82
+               early_bus =   8zzx70u
+                late_bus =   8zzx70u
+bw= 0  viaar= 0  ts= False
+    98                          write 30.7:  8zzx70u
+               early_bus =   zu3x704
+                late_bus =   zu3x704
+bw= 0  viaar= 0  ts= True
+    98                          write 30.8:  zu3x704
+               early_bus =   1zzuy14
+                late_bus =   1zzuy14
+bw= 0  viaar= 0  ts= False
+    98                          write 30.9:  1zzuy14
+               early_bus =   z47uy08
+                late_bus =   z47uy08
+bw= 0  viaar= 0  ts= True
+    98                          write 30.10:  z47uy08
+               early_bus =  -3zz5w28
+                late_bus =  -3zz5w28
+bw= 0  viaar= 0  ts= False
+    98                          write 30.11: -3zz5w28
+               early_bus =   y8z5w10
+                late_bus =   y8z5w10
+bw= 0  viaar= 0  ts= True
+    98                          write 30.12:  y8z5w10
+               early_bus =  -7zyv851
+                late_bus =  -7zyv851
+bw= 0  viaar= 0  ts= False
+    98                          write 30.13: -7zyv851
+               early_bus =   x1yv820
+                late_bus =   x1yv820
+bw= 0  viaar= 0  ts= True
+    98                          write 30.14:  x1yv820
+               early_bus =  -zzx70u3
+                late_bus =  -zzx70u3
+bw= 0  viaar= 0  ts= False
+    98                          write 30.15: -zzx70u3
+               early_bus =  -u3x7040
+                late_bus =   u3x7040
+bw= 0  viaar= 0  ts= True
+    98                          write 30.16:  u3x7040
+               early_bus =  -zzuy147
+                late_bus =  -zzuy147
+bw= 0  viaar= 0  ts= False
+    98                          write 30.17: -zzuy147
+
+G15 CPU Status:
+        Dc Power is: ON
+          IO status:  Ready
+           IO Ready:  16
+                 AR:   028z5w3
+          acc_carry:  0  OvrFlow:  1
+             DA1_GO:  0
+               HALT:  0
+            CmdLine:  1 (1) N: 20
+*** TURN ON DISASSEMBLY OF NEXT INSTRUCTION
+
+                Number of instructions executed:  99
+                     Number of drum revolutions:  132
+        Number of unknown instructions executed:  0
+
+        Number of Bell Rings:  0
+entering exec instr
+    99  01.20: u.22.24.0.26.20    PN
+                Number of instructions executed:  99
+instruction= {'instr': 46335656, 'cmd_line': 1, 'n': 24, 'next_cmd_word_time': 24, 'next_cmd_line': 1, 'next_cmd_acc': 0, 'cmd_acc': 0, 'time_end_last': 17, 'loc': 20, 'd31_print_flag': 0, 'sign': 0, 'dp': 0, 'd': 20, 's': 26, 'ch': 0, 'bp': 0, 't': 22, 'deferred': 
+0, 'sspecial': 'PN', 'dspecial': '', 'divide': False, 'ts': True, 'cmd_type': 1, 'disassembly': '01.20: u.22.24.0.26.20    PN', 'time_start': 21, 'time_end': 21, 'word_time': 17}
+word times: start= 21  end= 21
+        ts= 21  te= 21 / 21
+               early_bus =  -zz5w28z
+                late_bus =  -zz5w28z
+bw= 0  viaar= 0  ts= True
+late_bus write:, dest= 20  wt= 21  val=1feb851f
+    99                          write 20.21: -zz5w28z
+
+G15 CPU Status:
+        Dc Power is: ON
+          IO status:  Ready
+           IO Ready:  16
+                 AR:   028z5w3
+          acc_carry:  0  OvrFlow:  1
+             DA1_GO:  0
+               HALT:  0
+            CmdLine:  1 (1) N: 24
+*** TURN ON DISASSEMBLY OF NEXT INSTRUCTION
+
+                Number of instructions executed:  100
+                     Number of drum revolutions:  133
+        Number of unknown instructions executed:  0
+
+        Number of Bell Rings:  0
