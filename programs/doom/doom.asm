@@ -1,6 +1,9 @@
 <INCLUDE src="../lib/bbl.asm">
 ct:                     Count
-.   d17                 Load 17 blocks
+.   d18                 Load 18 blocks
+
+<BLOCK>                 17
+<INCLUDE src="notes/kk.asm">
 
 <BLOCK>                 16
 <INCLUDE src="notes/A2_A3.asm">
@@ -39,7 +42,7 @@ ct:                     Count
 <INCLUDE src="notes/G3_G4.asm">
 
 <BLOCK>                 4
-<INCLUDE src="notes/kk_ss.asm">
+<INCLUDE src="notes/ss.asm">
 
 <BLOCK>                 Line 3 Empty
 
