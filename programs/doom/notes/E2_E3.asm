@@ -1,6 +1,5 @@
 
 #E2 / E3
-.00 +fffffff
 .01 +fffffff
 .02 +fffffff
 .03 +fffffff
@@ -42,7 +41,7 @@
 .39 +0000000
 .40 +0000000
 .41 +000000f
-.42 +zzzz5w8
+.42 +fffffff
 .43 +fffffff
 .44 +fffffff
 .45 +fffffff

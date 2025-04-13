@@ -1,6 +1,5 @@
 
 #A2 / A3
-.00 +fffffff
 .01 +fffffff
 .02 +fffffff
 .03 +fffffff
@@ -93,7 +92,7 @@
 .90 +0000000
 .91 +0000000
 .92 +0000000
-.93 -00601y5
+.93 +0000000
 .94 +7ffffff
 .95 +fffffff
 .96 +fffffff

@@ -1,6 +1,5 @@
 
 #E4 / E5
-.00 +fffffff
 .01 +fffffff
 .02 +fffffff
 .03 -fffffff
@@ -75,7 +74,7 @@
 .72 +0000000
 .73 +0ffffff
 .74 +fffffff
-.75 +xu8yxz1
+.75 +fffffff
 .76 -fffffff
 .77 -fffffff
 .78 -ffe0000

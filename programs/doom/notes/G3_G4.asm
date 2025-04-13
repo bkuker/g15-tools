@@ -1,6 +1,5 @@
 
 #G3 / G4
-.00 +fffffff
 .01 +fffffff
 .02 +fffffff
 .03 +fffffff
@@ -38,7 +37,7 @@
 .35 +07fffff
 .36 +fffffff
 .37 +fffffff
-.38 +y79w73x
+.38 +fffffff
 .39 +fffffff
 .40 -fffffff
 .41 -fffffff

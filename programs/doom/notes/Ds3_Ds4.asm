@@ -1,12 +1,11 @@
 
 #D#3 / D#4
-.00 +fffffff
 .01 +fffffff
 .02 +fffffff
 .03 +fffffff
 .04 +fffffff
 .05 +fffffff
-.06 -1ffffff
+.06 -fffffff
 .07 -fffffff
 .08 -fffffff
 .09 -fffffff
@@ -66,7 +65,7 @@
 .63 +0000000
 .64 +0000000
 .65 +0000000
-.66 +0006fff
+.66 +0001fff
 .67 +fffffff
 .68 +fffffff
 .69 +fffffff
@@ -93,13 +92,13 @@
 .90 +fffffff
 .91 +fffffff
 .92 +fffffff
-.93 +z6v0uzy
+.93 +fffffff
 .94 -fffffff
 .95 -fffffff
 .96 -fffffff
 .97 -fffffff
 .98 -fffffff
-.99 -fffffe1
+.99 -fffffe0
 .u0 -0000001
 .u1 -0000001
 .u2 -0000001

@@ -1,6 +1,5 @@
 
 #B4 / B5
-.00 +fffffff
 .01 +fffffff
 .02 -fffffff
 .03 -fffc000
@@ -103,7 +102,7 @@
 .u0 -fffffff
 .u1 -0000001
 .u2 -0000001
-.u3 +zzzw022
+.u3 +0000000
 .u4 +0003fff
 .u5 +fffffff
 .u6 -fffffff

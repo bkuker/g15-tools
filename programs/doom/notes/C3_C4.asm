@@ -1,6 +1,5 @@
 
 #C3 / C4
-.00 +fffffff
 .01 +fffffff
 .02 +fffffff
 .03 +fffffff
@@ -78,7 +77,7 @@
 .75 +0000000
 .76 +0000000
 .77 +0000000
-.78 +739xz17
+.78 +0000000
 .79 +7ffffff
 .80 +fffffff
 .81 +fffffff

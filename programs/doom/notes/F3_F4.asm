@@ -1,6 +1,5 @@
 
 #F3 / F4
-.00 +fffffff
 .01 +fffffff
 .02 +fffffff
 .03 +fffffff
@@ -44,7 +43,7 @@
 .41 +fffffff
 .42 +fffffff
 .43 +fffffff
-.44 -8912248
+.44 -fffffff
 .45 -fffffff
 .46 -fffffff
 .47 -fffffff

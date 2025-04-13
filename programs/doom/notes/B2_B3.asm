@@ -1,6 +1,5 @@
 
 #B2 / B3
-.00 +fffffff
 .01 +fffffff
 .02 +fffffff
 .03 +fffffff
@@ -70,7 +69,7 @@
 .67 -fffffff
 .68 -fffffff
 .69 -ffffff0
-.70 -000005x
+.70 -0000001
 .71 -0000001
 .72 -0000001
 .73 -0000001

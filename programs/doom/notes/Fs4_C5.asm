@@ -1,6 +1,5 @@
 
 #F#4 / C5
-.00 +fffffff
 .01 +fffffff
 .02 +fffffff
 .03 -fffffff
@@ -98,7 +97,7 @@
 .95 +fffffff
 .96 -fffffff
 .97 -fffffc0
-.98 -6173y4w
+.98 +0000000
 .99 -0000001
 .u0 -0000001
 .u1 -0000001

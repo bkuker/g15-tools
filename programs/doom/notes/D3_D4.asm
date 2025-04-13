@@ -1,6 +1,5 @@
 
 #D3 / D4
-.00 +fffffff
 .01 +fffffff
 .02 +fffffff
 .03 +fffffff
@@ -81,7 +80,7 @@
 .78 -fffffff
 .79 -fffffff
 .80 -fffffff
-.81 -060w1u5
+.81 -fffffff
 .82 -fc00000
 .83 -0000001
 .84 -0000001
