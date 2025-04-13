@@ -2,6 +2,10 @@
 ct:                     Count
 .   d18                 Load 18 blocks
 
+#Line 19 is used for loading
+
+#Line 18 is used as silence!
+
 <BLOCK>                 17
 <INCLUDE src="notes/kk.asm">
 
