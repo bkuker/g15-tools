@@ -71,7 +71,7 @@ for (let b = 0; b < blocks.length; b++) {
         line[cmd.l] = cmd;
     }
 
-    let checksumLocation = 0;
+    let checksumLocation = -1;
 
     //Convert the program to an array of words at the appropriate locations
     //Also find the last unused location to store the checksum in.
@@ -80,9 +80,10 @@ for (let b = 0; b < blocks.length; b++) {
     for (let l = 0; l < 108; l++) {
         if (line[l]) {
             lineWords[l] = line[l].word;
-            checksumLocation = l + 1;
         } else {
             lineWords[l] = 0 as N.word;
+            if ( checksumLocation == -1 )
+                checksumLocation = l;
         }
     }
 
@@ -109,7 +110,7 @@ for (let b = 0; b < blocks.length; b++) {
     }
 
     let checksum = sum(lineWords);
-    if (checksumLocation > 107){
+    if (checksumLocation == -1 ){
         console.error(`Can't checksum block ${b}, no free space. ${convert.g15SignedHex(checksum)}`);
     } else {
         lineWords[checksumLocation] = checksum;
