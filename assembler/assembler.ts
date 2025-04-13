@@ -108,11 +108,12 @@ for (let b = 0; b < blocks.length; b++) {
         return sum as N.word;
     }
 
-    if (checksumLocation > 107)
-        console.error(`Can't checksum block ${b}, no free space.`);
-
-    lineWords[checksumLocation] = sum(lineWords);
-
+    let checksum = sum(lineWords);
+    if (checksumLocation > 107){
+        console.error(`Can't checksum block ${b}, no free space. ${convert.g15SignedHex(checksum)}`);
+    } else {
+        lineWords[checksumLocation] = checksum;
+    }
 
     //Output
     if (commandLine.opts().time) {
