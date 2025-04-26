@@ -22,7 +22,8 @@ These are @UsagiElectric's notes from Discord
       BP  1 > Break Point, CPU pause on - here and switch in BP
 */
 
-import fs from "fs";
+import path from "path";
+import os from "os";
 import * as convert from "./conversionUtils";
 import { formatCommand, parseAsmProgram } from "./instructionUtils";
 import * as tape from "./tapeUtils";
@@ -44,6 +45,7 @@ const commandLine = new Command();
 commandLine
     .option('--words', 'Output words, not pti')
     .option('--resolved', 'Output resolved code, not pti')
+    .option('--ptr', "Output Paper Tape Reversed (PTR) binary")
     .option('--time', 'Analyze time')
     .option('--bootable', 'Output a number track before the program block')
     .argument('<assembly file name>');
@@ -54,9 +56,7 @@ const fileName = commandLine.args[0];
 
 let blocks: ASM.Line[][] = blockChop(preprocess(fileName));
 
-if (commandLine.opts().bootable) {
-    console.log(numberTrack + "\n\n");
-}
+let pti = "";
 
 for (let b = 0; b < blocks.length; b++) {
     //TODO Deal with line number
@@ -147,14 +147,30 @@ for (let b = 0; b < blocks.length; b++) {
             }
         }
     } else {
-        if (b != 0) {
-            console.log("\n");
-        }
-        //Output PTI Paper tape image
-        let pti = "";
+        //Build PTI Paper tape image
+        pti += "\n";
         pti += "# " + program[0].sourceFile + ":" + program[0].sourceLineNumber + "\n";
         pti += "# Block " + b + "\n";
         pti += tape.lineToTape(lineWords);
+        pti += "\n";
+    }
+}
+
+if ( pti ){
+    let header = "";
+    header += `# File:\t${path.resolve(fileName)}\n`;
+    header += `# User:\t${os.userInfo().username}\n`;
+    header += `# Host:\t${os.hostname()}\n`;
+    header += `# Date:\t${new Date()}\n`;
+
+    pti = header + pti;
+    if (commandLine.opts().bootable) {
+        pti = numberTrack + "\n\n" + pti;
+    }
+    
+    if ( commandLine.opts().ptr ){
+        process.stdout.write(new Uint8Array(tape.ptiToPtr(pti)));
+    } else {
         console.log(pti);
     }
 }

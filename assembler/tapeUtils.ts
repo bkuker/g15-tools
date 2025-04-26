@@ -31,7 +31,7 @@ function lineToTape(lineWords: N.word[], elideZeros = true): string {
             let v = parseInt(nibble, 2);
             out += SYM[v];
         }
-        if ( out == "00000000000000000000000000000" && elideZeros && !lastChunk){
+        if (out == "00000000000000000000000000000" && elideZeros && !lastChunk) {
             continue;
         } else {
             elideZeros = false;
@@ -87,4 +87,70 @@ function tapeToWords(tapeBlock: string): N.word[] {
     return block;
 }
 
-export { lineToTape, tapeToWords }
+function ptiToPtr(pti: string) {
+    //A mapping of PTI Characters to their numeric value
+    let ptiChars = {
+        " ": 0,
+        "-": 1,
+        "C": 2, "D": 2,
+        "T": 3,
+        "S": 4,
+        "/": 5, "R": 5,
+        ".": 6, "P": 6,
+        "W": 7,
+        "i": 15,
+        "0": 16, "1": 17, "2": 18, "3": 19, "4": 20,
+        "5": 21, "6": 22, "7": 23, "8": 24, "9": 25,
+        "u": 26, "v": 27, "w": 28, "x": 29, "y": 30, "z": 31
+    };
+
+    //This function converts the number to 5 bit binary,
+    //reverses those bits, and then returns the resulting
+    //number
+    function reverse(n: number): number {
+        let bin = n.toString(2);
+        bin = bin.padStart(5, "0");
+        assert(bin.length == 5);
+        bin = bin.split("").reverse().join("");
+        let v = parseInt(bin, 2);
+        return v;
+    }
+
+    const out: number[] = [];
+
+    //12" Leader
+    for (let i = 0; i < 120; i++)
+        out.push(0);
+
+    for (let line of pti.split(/\r?\n/)) {
+        line = line.trim();
+
+        if (line.length == 0)
+            continue; //Ignore empty lines
+
+        if (line.startsWith("#"))
+            continue; //Ignore comments
+        
+        for (let char of line) {
+            let s = ptiChars[char];
+            s = reverse(s);
+            out.push(s);
+            if (char == '/') {
+                //One extra space after each reload
+                out.push(0);
+            }
+            if (char == 'S') {
+                //6" between blocks
+                for (let i = 0; i < 60; i++)
+                    out.push(0);
+            }
+        }
+    }
+
+    //12" Trailer
+    for (let i = 0; i < 120; i++)
+        out.push(0);
+
+    return out;
+}
+export { lineToTape, tapeToWords, ptiToPtr }
