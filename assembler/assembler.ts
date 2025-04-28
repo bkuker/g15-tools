@@ -163,10 +163,11 @@ if ( pti ){
     header += `# Host:\t${os.hostname()}\n`;
     header += `# Date:\t${new Date()}\n`;
 
-    pti = header + pti;
     if (commandLine.opts().bootable) {
         pti = numberTrack + "\n\n" + pti;
     }
+
+    pti = header + pti;
     
     if ( commandLine.opts().ptr ){
         process.stdout.write(new Uint8Array(tape.ptiToPtr(pti)));
