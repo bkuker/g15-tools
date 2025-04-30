@@ -186,11 +186,11 @@ function resolveG15DecToInt(v: string, loc: number, nextSlocLoc: number, labels:
 
     //L1 = Loc plus 1, like in docs
     if (v.startsWith("L")) {
-        return (loc + parseInt(v.replace("L", ""))) % 107;
+        return (loc + parseInt(v.replace("L", ""))) % 108;
     }
 
     //Just a number
-    return convert.g15DecToInt(v as N.g15Dec) % 107;
+    return convert.g15DecToInt(v as N.g15Dec) % 108;
 }
 
 function resolveMod(v: string, l: number): string {
