@@ -47,7 +47,7 @@ export function preprocess(sourceFile: string, sourceFileRaw: string | undefined
 
     for (let rawText of data.split(/\r?\n/)) {
         sourceLineNumber++;
-        const match = rawText.match(/^<INCLUDE\s+src="(.*?)"/);
+        const match = rawText.match(/^#include\s+"(.*?)"/);
         if (match) {
             const includeFileRaw = match[1];
             const includeFileName = path.resolve(path.dirname(sourceFile), includeFileRaw);

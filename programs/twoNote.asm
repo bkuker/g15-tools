@@ -1,4 +1,4 @@
-<INCLUDE src="lib/bbl.asm">
+#include "lib/bbl.asm"
 ct:                     Count
 .     +4                Load 4 tape blocks into 3,2,1,0
 

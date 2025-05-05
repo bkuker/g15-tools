@@ -1,4 +1,4 @@
-<INCLUDE src="../lib/bbl.asm">
+#include "../lib/bbl.asm"
 ct:                     Count
 .   d4
 
@@ -7,10 +7,10 @@ ct:                     Count
 .03 b100 011 000 000 000 000 000 000 000 01
 
 <BLOCK>                 Block 2 Fractal Code
-<INCLUDE src="fractalwhat.asm">
+#include "fractalwhat.asm"
 
 <BLOCK>                 Block 1 Complex Multiplication
-<INCLUDE src="../lib/complex.mult.div.asm">
+#include "../lib/complex.mult.div.asm"
 
 <BLOCK>                 Block 0 test code
 #define TEST_I d0.000

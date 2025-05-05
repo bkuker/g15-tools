@@ -1,4 +1,4 @@
-<INCLUDE src="../lib/bbl.asm">
+#include "../lib/bbl.asm"
 ct:                     Count
 .   d4                  Load 4 blocks
 
@@ -9,7 +9,7 @@ ct:                     Count
 <BLOCK>                 Line 2 Blank
 
 <BLOCK>                 Block 1
-<INCLUDE src="../lib/complex.mult.div.asm">
+#include "../lib/complex.mult.div.asm"
 
 <BLOCK>                 Block 0
 
