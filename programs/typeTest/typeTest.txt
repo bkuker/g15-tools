@@ -1,0 +1,17 @@
+verbosity drum 0
+verbosity cpu 0
+
+
+button dc off
+switch enable off
+switch tape off
+switch compute off
+
+ptr mount typeTest.pti
+button dc on
+
+
+run -1
+
+
+quit
