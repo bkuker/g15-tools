@@ -2,9 +2,9 @@
   "name": "g15-tools",
   "version": "1.0.0",
   "scripts": {
-    "asm": "ts-node assembler/assembler.ts",
-    "dasm": "ts-node assembler/disassembler.ts",
-    "wtf": "ts-node assembler/wtf.ts"
+    "asm": "ts-node src/assembler.ts",
+    "dasm": "ts-node src/disassembler.ts",
+    "wtf": "ts-node src/wtf.ts"
   },
   "keywords": [],
   "author": "Bill Kuker <bkuker@billkuker.com>",
