@@ -1,8 +1,6 @@
 import fs from "fs";
 import path from "path";
 import { ASM } from "./AsmTypes";
-import { ssrRenderAttr } from "vue/server-renderer";
-
 
 export function blockChop(lines: ASM.Line[]): ASM.Line[][] {
     let blocks: ASM.Line[][] = [[]];

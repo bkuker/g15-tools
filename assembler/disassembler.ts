@@ -2,10 +2,22 @@ import fs from "fs";
 import assert from "assert";
 import * as convert from "./conversionUtils";
 import { commandToInstructionWord, formatCommand } from "./instructionUtils";
-import disassembleWord from "./PaulDecoder.js";
+import disassembleWord from "./PaulDecoder";
 import * as tape from "./tapeUtils";
 import { ASM, Numbers as N } from "./AsmTypes";
 import { Command } from 'commander';
+
+interface Raw {
+    p: number,
+    t: number,
+    n: number,
+    c: number,
+    s: number,
+    d: number,
+    bp: number,
+    dp: number,
+    word: N.word
+}
 
 //If running from "npm run" change back
 //to the directory the user ran the program from
@@ -33,7 +45,7 @@ while (block.length < 108) {
     block.push(0 as N.word);
 }
 
-function parseWordToRaw(word) {
+function parseWordToRaw(word : N.word) {
 
     let value = word >> 1;
     let sign = word & 1;
@@ -57,7 +69,7 @@ function parseWordToRaw(word) {
     return raw;
 }
 
-function rawToString(raw) {
+function rawToString(raw : Raw) {
     return ("id").at(raw.p) +
         raw.t.toString().padStart(4, " ") +
         raw.n.toString().padStart(4, " ") +
@@ -68,7 +80,7 @@ function rawToString(raw) {
         (raw.bp ? "b" : "").padStart(3, " ");
 }
 
-function rawToCommand(raw) {
+function rawToCommand(raw : Raw): ASM.Instruction {
     //U - Immediate
     //W - Deferred
     let cmd: ASM.Instruction = {
@@ -93,7 +105,7 @@ function rawToCommand(raw) {
     return cmd;
 }
 
-function normalizeCmd(cmd) {
+function normalizeCmd(cmd: ASM.Instruction) {
     /**
      * Undo the Deferred to Immediate translation done when
      * T = L1. The reversal is ambiguous, but for now I assume
@@ -110,7 +122,7 @@ function normalizeCmd(cmd) {
 
     //If removeing the prefix has no effect, remove the
     //prefix
-    let cpy = { ...cmd, p: " " };
+    let cpy: ASM.Instruction = { ...cmd, p: " " };
     if (commandToInstructionWord(cpy) == inWord) {
         return cpy;
     }
@@ -164,7 +176,7 @@ if (!commandLine.opts().nostatic) {
     //Initialize TODO with list of entrypoints from command
     //line, or with just a zero.
     let todo = commandLine.opts().entrypoints || "0";
-    todo = todo.split(",").map(e => +e);
+    todo = todo.split(",").map((e:string) => +e);
 
     while (todo.length) {
         //console.log(todo);
@@ -216,7 +228,7 @@ let last: ASM.Instruction | null = null;
 for (let l of done) {
     if (last && last.n != l)
         out += "\n";
-    let cmd = program[l];
+    let cmd: ASM.Instruction = program[l];
     out = out + formatCommand(cmd) + "\n";
     if (cmd.src == 31 && cmd.dst == 31 && cmd.c == 0) {
         out = out + "#AR";

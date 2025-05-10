@@ -29,7 +29,7 @@ import { formatCommand, parseAsmProgram } from "./instructionUtils";
 import * as tape from "./tapeUtils";
 import { ASM, Numbers as N } from "./AsmTypes";
 import { Command } from 'commander';
-import numberTrack from './numberTrack';
+import numberTrack from './numberTrack.js';
 import { preprocess, blockChop } from "./Preprocess";
 import analyze from "./analyzer";
 import { MinimalAdder } from "./MinimalAdder";
@@ -93,7 +93,7 @@ for (let b = 0; b < blocks.length; b++) {
     //When inserted back into the line at a location
     //that was previously zero, the new sum of the 
     //entire line should be zero.
-    function sum(lineWords): N.word {
+    function sum(lineWords : N.word[]): N.word {
         const adder = new MinimalAdder();
 
         adder.transferToAR(0, MinimalAdder.chAD); // initialize the checksum

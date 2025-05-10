@@ -21,13 +21,13 @@ w = w * 2;
 if ( w < 0 ){
     w = Math.abs(w) + 1;
 }
-dump(w);
+dump(w as N.word);
 
 console.log("=== Interpreted as Decimal ===");
-dump(parseInt(input));
+dump(parseInt(input) as N.word);
 
 
-function dump(word) {
+function dump(word : N.word) {
     console.log("As Raw Hex:\t", convert.g15Hex(word));
     console.log("As ± Hex:\t", convert.g15SignedHex(word));
     console.log("As Decimal: \t", word);

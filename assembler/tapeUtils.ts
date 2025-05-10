@@ -1,4 +1,4 @@
-import * as util from "./conversionUtils.js";
+import * as util from "./conversionUtils";
 import { type Numbers as N } from "./AsmTypes";
 import assert from "assert";
 
@@ -132,7 +132,7 @@ function ptiToPtr(pti: string) {
             continue; //Ignore comments
         
         for (let char of line) {
-            let s = ptiChars[char];
+            let s = ptiChars[char as keyof typeof ptiChars];
             s = reverse(s);
             out.push(s);
             if (char == '/') {
