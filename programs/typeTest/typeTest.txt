@@ -11,7 +11,10 @@ ptr mount typeTest.pti
 button dc on
 
 
-run -1
+run 12000
 
+type -6666666ts
+
+run 12000
 
 quit
