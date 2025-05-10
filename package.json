@@ -1,6 +1,10 @@
 {
   "name": "g15-tools",
   "version": "1.0.0",
+  "bin": {
+    "g15asm": "./bin/g15asm.js",
+    "g15dasm": "./bin/g15dasm.js"
+  },
   "scripts": {
     "asm": "ts-node src/assembler.ts",
     "dasm": "ts-node src/disassembler.ts",
@@ -10,13 +14,11 @@
   "author": "Bill Kuker <bkuker@billkuker.com>",
   "license": "MIT",
   "description": "Tools for writing code for the Bendix G15",
-  "devDependencies": {
+  "dependencies": {
+    "colors": "^1.4.0",
+    "commander": "^13.1.0",
     "@types/node": "^22.15.17",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
-  },
-  "dependencies": {
-    "colors": "^1.4.0",
-    "commander": "^13.1.0"
   }
 }

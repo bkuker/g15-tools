@@ -15,6 +15,8 @@ Also because huge inspiration and help came from Paul's web based emulator, and 
 
 You will need to install npm to use them on the command line, and then `npm ci` to install the required libraries.
 
+Run `npm link` to make the commands `g15asm` and `g15dasm` available globally, otherwise you have to `npm run asm -- <args>`
+
 **⚠️ WARNING:** Windows users, powerShell seems do output redirection in UTF-16 or something terrible. Use `cmd.exe`.
 
 ## Assembler
