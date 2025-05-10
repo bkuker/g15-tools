@@ -105,7 +105,7 @@ C:\Users\bkuker\g15-tools\programs>npm run asm -- fib.asm
 
 The disassembler converts a .pti tape image file to an assembly program.
 
-**⚠️ WARNING:** This only works on .pti files containing a single block of code, no number track.
+**⚠️ WARNING:** This only works on .pti files containing a single block of code, in PPR format, no number track.
 
 By default it will perform a rudimentary static analysis, reordering code locations to match the order in which they are executed. It inserts a blank line after any line of code that does not simply jump to the next line. Continuous blocks of code are therefor output, making manual interpretation easier. You will likely still need to perform some rearraingement of these blocks to make source code organized and logical.
 
