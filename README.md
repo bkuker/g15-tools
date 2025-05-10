@@ -2,10 +2,17 @@
 
 Assembler, disassembler and assorted tools for the Bendix G15.
 
-Assembler is too strong a word, it encodes programs written in the G15 decimal format (similar to the paper programming problem worksheet) into binary words and then outputs them as a [.pti file](https://github.com/retro-software/G15-software/).
+So you want to write code for this thing? Read these:
 
-You can run the programs on Paul Kimpel's [Bendix g15 Emulator](https://www.phkimpel.us/Bendix-G15/).
+* [Programmers Reference Manual](http://www.bitsavers.org/pdf/bendix/g-15/G15D_Programmers_Ref_Man.pdf)
+* [Theory of Operation](http://www.bitsavers.org/pdf/bendix/g-15/60121600_G15_Theory_Of_Operation_Nov64.pdf)
+* [Operating Manual](http://www.bitsavers.org/pdf/bendix/g-15/G15_Operating_Man_Jul59.pdf)
 
+The Programmer's Reference is enough to get you started, and will be your main reference, but each of these documents contain details not discussed in the others, so you'll come back to all of them at some point. Maybe pop into an appropriate Discord.
+
+You can run the programs interactively on Paul Kimpel's [Bendix g15 Emulator](https://www.phkimpel.us/Bendix-G15/).
+
+There is also a command line based emulator written in Python which may become available soon.
 
 ## Getting Started
 
@@ -35,10 +42,9 @@ Numerical values may be specified at a given location in several formats...
 .01   zzzzzzz            Raw 29 bit word. Sign is LSB
 .02   +56789uv1          Signed 28 bit hex value
 .03   d420               Decimal integer value
-
-#⚠️ Not done yet:
 .04   d.3141562          Decimal fractional value
-                         Binary value perhaps?
+                         29 bit binary value
+                         (spaces ignored, no comment allowed)
 .05   b000 000 000 000 000 000 000 000 000 00
 ```
 
@@ -46,7 +52,7 @@ Numerical values may be specified at a given location in several formats...
 
 The term SLOC (Source line of code) refers to code in source file order, NOT the order on the drum / tape. Comments & blank lines are ignored.
 
-You may place **two character** labels in your code. They will be resolved to the next SLOC's LL value. In the following example the `ht` label may be used in place of the value 42 in your program.
+You may place **two character** labels in your code. The first character must be a letter, the second may be a number. They will be resolved to the next SLOC's LL value. In the following example the `ht` label may be used in place of the value 42 in your program.
 
 ```
 ht:
@@ -58,13 +64,15 @@ ht:
 Most of these mnemonics help you write simple linear code without worrying about LL and NN too much.
 They also make it easier to write "relocatable" code: Code that will work without editing if you change it's location.
 
+You know what? These are not well thought out, you might be better off not using these. YMMV.
+
 * Location:
     * Auto Increment: Leave LL blank for LL = (Previous SLOC).LL + 1
     * Use `ev` and `od` to mean "emit error if not even / odd"
         * Helpful with certain instructions
         * Might be able to automatically fix in some situations
-    * **TODO**: May add things like `+2`
-    * **TODO**: May add `n!` where n in 0-3 to mean "emit error if LL mod 4 != N"
+    * `Lk` means add k to previous SLOC's L
+    * %n where n in 0-3 to mean "emit error if LL mod 4 != N"
         * Helpful with short lines / 2 word registers
 
 * Time & Next:
@@ -76,11 +84,11 @@ They also make it easier to write "relocatable" code: Code that will work withou
 * Source & Dest:
     * **TODO** May add mnemonics like Ac, A+, ID, etc?
 
+Mostly you can use these to create small snippits of code that do not depend on their location in the line.
 ```
 # This code is defined to start at 03, but if you were to
 # change that, the remaining code needn't be edited.
 
-                         Load AR format code to line 3
 .03 .  .L2.  .0.15.31    Read next tape block
 .   .  .L0.L0.0.28.31    Wait for IOReady
 .   . u.  .  .0.19.03    Copy line 19 to Line 3
@@ -93,7 +101,7 @@ They also make it easier to write "relocatable" code: Code that will work withou
 ### Example
 
 ```
-C:\Users\bkuker\g15-tools\programs>npm run asm -- fib.asm
+C:\Users\bkuker\g15-tools\programs>g15asm fib.asm
 
 # fib.asm
 00000000000000000000000000000/
@@ -132,14 +140,3 @@ C:\Users\bkuker\g15-tools\programs\music>npm run dasm -- m1.pti --entrypoints 0,
 
 ...⊘ OUTPUT TRUNCATED ⊘...
 ```
-## Bendix G-15 Programming Workdsheet UI
-
-This project also contains a vue/vite project implementing a UI similar to the programming form that was used to write down code for the G15.
-
-It's for fun, and for super casual hacking, but use the command line versions if you want to get anything done!
-
-It should be available [here](https://www.billkuker.com/g15-tools/).
-
-## Tracer
-This is a work in progress :)
-
