@@ -32,7 +32,7 @@ function dump(word : N.word) {
     console.log("As ± Hex:\t", convert.g15SignedHex(word));
     console.log("As Decimal: \t", word);
     console.log("As ± Decimal:\t", convert.wordToDec(word));
-    console.log("As Binary:\t", word.toString(2));
+    console.log("As Binary:\t", word.toString(2).padStart(29,"0"));
     //console.log("As Instruction:\t", TODO)
     console.log("As Fractional Decimal:", convert.wordToFractionalDec(word));
     console.log();
