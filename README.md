@@ -24,6 +24,8 @@ You will need to install npm to use them on the command line, and then `npm ci` 
 
 Run `npm link` to make the commands `g15asm` and `g15dasm` available globally, otherwise you have to `npm run asm -- <args>`
 
+**⚠️ WARNING:** If you don't use `npm link` note the extra double dashes: `npm run asm -- --bootable foo.asm` they serve to separate npm args from program args.
+
 **⚠️ WARNING:** Windows users, powerShell seems do output redirection in UTF-16 or something terrible. Use `cmd.exe`.
 
 ## Assembler
