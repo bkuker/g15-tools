@@ -1,0 +1,1 @@
+python ..\..\..\BendixG15\emulators\python\g15d\g15d.py plot.txt
