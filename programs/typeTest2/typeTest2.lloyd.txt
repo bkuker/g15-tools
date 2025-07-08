@@ -1,0 +1,51 @@
+PTR: Reading next tape block # 1  into M19
+
+###### LOOP 1, S ONLY
+
+TypeAR, numeric mode
+TYPEOUT:  -.0123456
+
+TypeAR, numeric mode
+TYPEOUT:  -.0123456
+
+activate numeric type-in
+G15> type s
+
+TypeAR, numeric mode
+TYPEOUT:  -.0123456
+
+###### LOOP 2, A VALUE IS ENTERED
+
+TypeAR, numeric mode
+TYPEOUT:  -.0123456
+
+TypeAR, numeric mode
+TYPEOUT:  -.0123456
+
+activate numeric type-in
+G15> type 7654321ts
+
+TypeAR, numeric mode
+TYPEOUT:   .7654321
+
+###### LOOP 3, JUST S AGAIN
+
+TypeAR, numeric mode
+TYPEOUT:  -.0123456
+
+TypeAR, numeric mode
+TYPEOUT:  -.0123456
+
+activate numeric type-in
+G15> type s
+TypeAR, numeric mode
+TYPEOUT:  -.0123456
+
+TypeAR, numeric mode
+TYPEOUT:  -.0123456
+
+TypeAR, numeric mode
+TYPEOUT:  -.0123456
+
+activate numeric type-in
+G15> quit
