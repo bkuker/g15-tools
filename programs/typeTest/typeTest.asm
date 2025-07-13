@@ -81,6 +81,11 @@ vv:
 .   .  .L2.  .0.12.31   Enable Type In
 .   .  .L0.L0.0.28.31   Wait for IOReady
 
+##### At least three cycles after Input...
+.   .  .L2.  .0.00.00
+.   .  .L2.  .0.00.00
+.   .  .L2.  .0.00.00
+.   .  .L2.  .0.00.00
 
 
 #Print a CR
