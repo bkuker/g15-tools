@@ -37,4 +37,10 @@ lp:
 .25 .  .27.27.0.08.31   Output AR to typewriter
 .27 .  .27.27.0.28.31   Wait for IOReady
 
-.28 .  .29.03.0.00.00   GOTO lp
+##### At least three cycles after Input...
+.28 .  .30.29.0.00.00   
+.29 .  .31.30.0.00.00   
+.30 .  .32.31.0.00.00   
+.31 .  .33.32.0.00.00   
+
+.32 .  .33.03.0.00.00   GOTO lp
