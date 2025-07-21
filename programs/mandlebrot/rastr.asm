@@ -1,10 +1,10 @@
 #define ILOW d-0.0110
 #define IHIGH d0.0110
-#define ISTEP d0.0005
+#define ISTEP d0.0040
 
 #define RLOW d-0.021
 #define RHIGH d0.0052
-#define RSTEP d0.0002
+#define RSTEP d0.0016
 
                         Reset Imaginary Position
 .00 .  .L1.L2.1.00.28   Imaginary Start -> AR
@@ -28,7 +28,8 @@ nl:                     Loop start for a new line
                         ci = ci + ISTEP
 .   .  .00.  .1.23.28   Ci -> AR
 .   .  .L1.L2.1.00.29   AR += Step
-.   ISTEP               Imaginary Step
+is:
+.od ISTEP               Imaginary Step
 .   .  .00.  .1.28.23   AR -> Ci
 
                         if ci > IHIGH then HALT
@@ -36,7 +37,7 @@ nl:                     Loop start for a new line
 .   .  .L1.L2.3.00.29   Subtract end point
 .   IHIGH               
 .   .  .L2.  .1.22.31   Test AR sign
-.   .  .L2.00.0.16.31   if AR >= 0 HALT
+.   .  .L2.bg.0.16.31   if AR >= 0 HALT
                         else continue on
 
                         Reset Real Position
@@ -49,7 +50,8 @@ nc:                     Next Character loop start
                         Cr = Cr + RSTEP
 .   .  .%1.  .1.23.28   Cr -> AR
 .%2 .  .L1.L2.1.00.29   AR += Step
-.   RSTEP               
+rs:
+.od RSTEP               
 .   .  .%1.  .1.28.23   AR -> Cr
 
 
@@ -73,3 +75,12 @@ tp:                     Print out value in AR
 .   .  .L2.  .1.22.31   Test AR sign
 .L3 .  .L1.nl.0.00.00   if AR >= 0 goto nl
 .L1 .  .L1.nc.0.00.00   else goto nc
+
+bg:                     MAKE IT BIGGER  
+.%0 .  .is.  .0.00.25   is -> ID
+.od .  .02.  .1.26.31   Shift ID 1 bit right
+.   .  .is.L2.0.25.00   ID -> is
+
+.L2 .  .rs.  .0.00.25   is -> ir
+.od .  .02.  .1.26.31   Shift ID 1 bit right
+.   .  .rs.00.0.25.00   ID -> ir
