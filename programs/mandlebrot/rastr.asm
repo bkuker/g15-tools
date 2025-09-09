@@ -36,7 +36,7 @@ is:
 .   .  .00.  .1.23.28   Ci -> AR
 .   .  .L1.L2.3.00.29   Subtract end point
 .   IHIGH               
-.   .  .L2.  .1.22.31   Test AR sign
+.   .  .L2.  .0.22.31   Test AR sign
 .   .  .L2.bg.0.16.31   if AR >= 0 HALT
                         else continue on
 
@@ -72,7 +72,7 @@ tp:                     Print out value in AR
 .   .  .%1.  .1.23.28   Cr -> AR
 .%2 .  .L1.L2.3.00.29   Subtract end point
 .   RHIGH               
-.   .  .L2.  .1.22.31   Test AR sign
+.   .  .L2.  .0.22.31   Test AR sign
 .L3 .  .L1.nl.0.00.00   if AR >= 0 goto nl
 .L1 .  .L1.nc.0.00.00   else goto nc
 
