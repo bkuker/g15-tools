@@ -1,0 +1,23 @@
+verbosity drum 0
+verbosity cpu 0
+
+
+button dc off
+switch enable off
+switch tape off
+switch compute off
+
+ptr mount julia.ptr
+button dc on
+
+status cpu
+
+
+run -1
+run -1
+run -1
+run -1
+
+status cpu
+
+quit
