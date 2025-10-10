@@ -1,5 +1,5 @@
-verbosity drum 0
-verbosity cpu 0
+#verbosity drum 0
+#verbosity cpu 0
 
 
 button dc off
