@@ -1,17 +1,17 @@
 rs:                     Return Setup
-.00 .  .L1.L2.1.02.28   Copy return command to A
-.   .  .rt.rt.2.20.31   Return Command
+.00 .  .L1.L2.0.04.28   Copy return command to A
+.   .  .rt.rt.4.20.31   Return Command
 .   .  .02.  .0.28.21   command for normal return
 .   .  .03.  .0.28.21   command for overflow return
 
                         Skip the above code after the
                         first call to this fractal code
-.   .  .L1.L2.0.02.28   Skip command to AR
+.   .  .L1.L2.0.04.28   Skip command to AR
 .   .  .01.07.0.00.00   
 .   .  .00.  .0.28.02   AR -> 2:0
 
                         Clear count
-.07 .  .L1.L2.0.02.28   1 -> AR
+.07 .  .L1.L2.0.04.28   1 -> AR
 .   2
 .   .  .%2.  .0.28.23   AR -> ct
 
@@ -39,20 +39,20 @@ lp:
                         Add position to Z^2
 rt:
                         Zr = Zr + Cr
-.40 .  .L1.L2.1.02.28   Cr -> AR
+.40 .  .L1.L2.1.04.28   Cr -> AR
 .   d-0.014
 .%2 .  .%1.  .1.20.29   AR += 20.01 (ResultR / Zr)
 .%2 .  .%1.  .1.28.20   AR -> 20.01
 
                         Zi = Zi + Ci
-.51 .  .L1.L2.1.02.28   Ci -> AR
+.51 .  .L1.L2.1.04.28   Ci -> AR
 .   d0.00156
 .%1 .  .%0.  .1.20.29   AR += 20.00 (ResultI / Zi)
 .%1 .  .%0.  .1.28.20   AR -> 20.00
 
                         if |Zi| > 2 goto ot
 .%1 .  .%0.  .2.20.28   |Zi| -> AR
-.%1 .  .L1.L2.3.02.29   Subtract two
+.%1 .  .L1.L2.3.04.29   Subtract two
 .   d0.02               Two shifted
 .   .  .L2.  .0.22.31   Test AR sign
 .L3 .  .L1.ot.0.00.00   if AR >= 0 goto ot
@@ -60,7 +60,7 @@ rt:
 
                         if |Zr| > 2 goto ot
 .   .  .%1.  .2.20.28   |Zr| -> AR
-.%2 .  .L1.L2.3.02.29   Subtract two
+.%2 .  .L1.L2.3.04.29   Subtract two
 .   d0.02               Two shifted
 .   .  .L2.  .0.22.31   Test AR sign
 .L3 .  .L1.ot.0.00.00   if AR >= 0 goto ot
@@ -68,12 +68,12 @@ rt:
 
                         ct = ct + 1
 .   .  .%2.  .1.23.28   ct -> AR
-.%3 .  .L1.L2.1.02.29   AR += 1
+.%3 .  .L1.L2.1.04.29   AR += 1
 .   +1
 .   .  .%2.  .1.28.23   AR -> ct
 
                         if ct > limit goto in
-.%3 .  .L1.L2.3.02.29   Subtract limit
+.%3 .  .L1.L2.3.04.29   Subtract limit
 .   +11                  Limit 12
 .   .  .L2.  .0.22.31   Test AR sign
 .L3 .  .L1.in.0.00.00   if AR >= 0 goto in
@@ -81,7 +81,7 @@ rt:
 
 
 in:                     Point is IN
-.   .  .L1.tp.0.02.28   Eights -> AR; GOTO tp
+.   .  .L1.tp.0.04.28   Eights -> AR; GOTO tp
 .   +0000000
 
 ot:                     Point is OUT
@@ -90,4 +90,4 @@ ot:                     Point is OUT
 .14 .  .%0.tp.0.25.28   ID0 -> AR
 
 tp:
-.17 .  .L2.L1.0.20.31   RETURN
+.17 .  .L2.L1.3.20.31   RETURN
