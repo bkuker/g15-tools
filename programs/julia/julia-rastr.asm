@@ -6,8 +6,11 @@
 #define RHIGH d0.021
 #define RSTEP d0.0004
 
-.00 .  .L1.04.0.00.00   GOTO 4
+.00 .  .L1.rt.0.00.00   GOTO RESET
 
+#Leave room for formatting codes
+
+st:                     Start
                         Reset Imaginary Position
 .04 .  .L1.L2.1.03.28   Imaginary Start -> AR
 .   ILOW                
@@ -78,8 +81,35 @@ tp:                     Print out value in AR
 .L3 .  .L1.nl.0.00.00   if AR >= 0 goto nl
 .L1 .  .L1.nc.0.00.00   else goto nc
 
+
+#define CR 41
+#define CI 52
 bg:                     
-.   .  .41.  .1.04.28   Cr -> AR
+
+# add a little to CI
+.   .  .CI.  .1.04.28   Ci -> AR
 .   .  .L1.L2.1.03.29   AR +=
-.   d0.001
-.   .  .41.00.1.28.04   AR -> Cr
+.   d0.0003
+.   .  .CI.  .1.28.04   AR -> Ci
+
+# Add a little to CR
+.   .  .CR.  .1.04.28   Cr -> AR
+.   .  .L1.L2.1.03.29   AR +=
+.   d0.0007
+.   .  .CR.  .1.28.04   AR -> Cr
+
+#If CR is big, do a thing
+.   .  .L1.L2.1.03.29   AR -= following value
+.   d-0.003
+.   .  .L2.  .0.22.31   Test AR sign
+.   .  .L2.rt.0.16.31   if AR >= 0 HALT goto reset
+.   .  .00.st.0.00.00   Else goto Start
+
+rt:                     RESET
+.   .  .L1.L2.1.03.28   Initial Cr -> AR
+.   d-0.014             Initial Cr
+.   .  .CR.  .1.28.04   AR -> Cr
+
+.   .  .L1.L2.1.03.28   Initial Ci -> AR
+.   d0.000
+.   .  .CI.st.1.28.04   AR -> Ci

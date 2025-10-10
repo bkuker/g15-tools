@@ -40,13 +40,13 @@ lp:
 rt:
                         Zr = Zr + Cr
 .40 .  .L1.L2.1.04.28   Cr -> AR
-.   d-0.014
+.   d0                  Cr ( Set by rastr )
 .%2 .  .%1.  .1.20.29   AR += 20.01 (ResultR / Zr)
 .%2 .  .%1.  .1.28.20   AR -> 20.01
 
                         Zi = Zi + Ci
 .51 .  .L1.L2.1.04.28   Ci -> AR
-.   d0.00156
+.   d0                  Ci ( Set by rastr)
 .%1 .  .%0.  .1.20.29   AR += 20.00 (ResultI / Zi)
 .%1 .  .%0.  .1.28.20   AR -> 20.00
 
