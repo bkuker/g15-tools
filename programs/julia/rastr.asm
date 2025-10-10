@@ -36,7 +36,7 @@ is:
 .   .  .00.  .1.23.28   Ci -> AR
 .   .  .L1.L2.3.00.29   Subtract end point
 .   IHIGH               
-.   .  .L2.  .1.22.31   Test AR sign
+.   .  .L2.  .0.22.31   Test AR sign
 .   .  .L2.bg.0.00.00   if AR >= 0 HALT
                         else continue on
 

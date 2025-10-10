@@ -54,7 +54,7 @@ rt:
 .%1 .  .%0.  .2.20.28   |Zi| -> AR
 .%1 .  .L1.L2.3.02.29   Subtract two
 .   d0.02               Two shifted
-.   .  .L2.  .1.22.31   Test AR sign
+.   .  .L2.  .0.22.31   Test AR sign
 .L3 .  .L1.ot.0.00.00   if AR >= 0 goto ot
                         else continue on
 
@@ -62,7 +62,7 @@ rt:
 .   .  .%1.  .2.20.28   |Zr| -> AR
 .%2 .  .L1.L2.3.02.29   Subtract two
 .   d0.02               Two shifted
-.   .  .L2.  .1.22.31   Test AR sign
+.   .  .L2.  .0.22.31   Test AR sign
 .L3 .  .L1.ot.0.00.00   if AR >= 0 goto ot
                         else continue on
 
@@ -75,7 +75,7 @@ rt:
                         if ct > limit goto in
 .%3 .  .L1.L2.3.02.29   Subtract limit
 .   +11                  Limit 12
-.   .  .L2.  .1.22.31   Test AR sign
+.   .  .L2.  .0.22.31   Test AR sign
 .L3 .  .L1.in.0.00.00   if AR >= 0 goto in
 .   .  .L1.lp.0.00.00   else loop
 
