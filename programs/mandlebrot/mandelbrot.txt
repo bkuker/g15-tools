@@ -14,8 +14,13 @@ status cpu
 
 
 run -1
+type 0000000ts
+
 run -1
+type 0000001ts
+
 run -1
+type 0000002ts
 
 status cpu
 

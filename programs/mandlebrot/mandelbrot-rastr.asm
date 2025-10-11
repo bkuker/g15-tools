@@ -6,8 +6,11 @@
 #define RHIGH d0.0052
 #define RSTEP d0.0016
 
+.00 .  .01.sz.0.00.00   GOTO sz
+
+st:                     Start
                         Reset Imaginary Position
-.00 .  .L1.L2.1.00.28   Imaginary Start -> AR
+.04 .  .L1.L2.1.00.28   Imaginary Start -> AR
 .   ILOW                
 .   .  .00.  .1.28.23   AR -> Ci
 
@@ -37,7 +40,7 @@ is:
 .   .  .L1.L2.3.00.29   Subtract end point
 .   IHIGH               
 .   .  .L2.  .0.22.31   Test AR sign
-.   .  .L2.bg.0.16.31   if AR >= 0 HALT
+.   .  .L2.st.0.00.00   if AR >= 0 GOTO SZ
                         else continue on
 
                         Reset Real Position
@@ -76,11 +79,58 @@ tp:                     Print out value in AR
 .L3 .  .L1.nl.0.00.00   if AR >= 0 goto nl
 .L1 .  .L1.nc.0.00.00   else goto nc
 
-bg:                     MAKE IT BIGGER  
-.%0 .  .is.  .0.00.25   is -> ID
-.od .  .02.  .1.26.31   Shift ID 1 bit right
-.   .  .is.L2.0.25.00   ID -> is
+sz:
+.   .  .ze.  .0.00.28   AR = 0
+.   .  .00.  .0.28.23   AR -> 23:0
+.   .  .L2.  .0.12.31   Enable Type in
+.L2 .  .L0.L0.0.28.31   Wait for IOReady
+.   .  .00.  .0.23.28   23:0 -> AR Load typed value into AR
+.   .  .  .  .0.28.27   Ar == 0?
+.   .  .  .sm.0.00.00   Goto Small
+.   .  .un.  .3.00.29   AR--
+.   .  .  .  .0.28.27   Ar == 0?
+.   .  .  .md.0.00.00   Goto Medium
+.   .  .un.  .3.00.29   AR--
+.   .  .  .  .0.28.27   Ar == 0?
+.   .  .  .lg.0.00.00   Goto Large
+.   .  .un.  .3.00.29   AR--
+.   .  .  .  .0.28.27   Ar == 0?
+.   .  .  .hg.0.00.00   Goto Huge
 
-.L2 .  .rs.  .0.00.25   is -> ir
-.od .  .02.  .1.26.31   Shift ID 1 bit right
-.   .  .rs.00.0.25.00   ID -> ir
+.   .  .  .sm.0.00.00   Default Small
+
+un:
+.   d1
+ze:
+.   d0
+sm:                     SMALL
+.   .  .L1.L2.0.00.28   Load to AR
+.   d0.0040
+.   .  .is.  .0.28.00   Save to is
+.   .  .L1.L2.0.00.28   Load to AR
+.   d0.0016
+.   .  .rs.st.0.28.00   Save to rs
+
+md:                     MEDIUM
+.   .  .L1.L2.0.00.28   Load to AR
+.   d0.0020
+.   .  .is.  .0.28.00   Save to is
+.   .  .L1.L2.0.00.28   Load to AR
+.   d0.0008
+.   .  .rs.st.0.28.00   Save to rs
+
+lg:                     LARGE
+.   .  .L1.L2.0.00.28   Load to AR
+.   d0.0010
+.   .  .is.  .0.28.00   Save to is
+.   .  .L1.L2.0.00.28   Load to AR
+.   d0.0004
+.   .  .rs.st.0.28.00   Save to rs
+
+hg:                     HUGE
+.   .  .L1.L2.0.00.28   Load to AR
+.   d0.0005
+.   .  .is.  .0.28.00   Save to is
+.   .  .L1.L2.0.00.28   Load to AR
+.   d0.0002
+.   .  .rs.st.0.28.00   Save to rs
