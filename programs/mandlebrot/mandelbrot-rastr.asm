@@ -40,7 +40,7 @@ is:
 .   .  .L1.L2.3.00.29   Subtract end point
 .   IHIGH               
 .   .  .L2.  .0.22.31   Test AR sign
-.   .  .L2.st.0.00.00   if AR >= 0 GOTO SZ
+.   .  .L2.st.0.00.00 - if AR >= 0 GOTO START
                         else continue on
 
                         Reset Real Position

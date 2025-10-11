@@ -92,7 +92,7 @@ in:                     Point is IN
 ot:                     Point is OUT
                         Copy the lowest nibble of the count into
                         the highest nibble of AR.
-.   .  .%2.  .6.23.25 - Ct -> ID1
+.   .  .%2.  .6.23.25   Ct -> ID1
 .%3 .  .10.  .1.26.31   Shift R 4
 .14 .  .%0.tp.0.25.28   ID0 -> AR
 
