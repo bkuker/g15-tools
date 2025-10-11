@@ -102,7 +102,7 @@ bg:
 .   .  .L1.L2.1.03.29   AR -= following value
 .   d-0.003
 .   .  .L2.  .0.22.31   Test AR sign
-.   .  .L2.rt.0.16.31   if AR >= 0 HALT goto reset
+.   .  .L2.rt.0.16.31 - if AR >= 0 HALT goto reset
 .   .  .00.st.0.00.00   Else goto Start
 
 rt:                     RESET
@@ -113,3 +113,4 @@ rt:                     RESET
 .   .  .L1.L2.1.03.28   Initial Ci -> AR
 .   d0.000
 .   .  .CI.st.1.28.04   AR -> Ci
+
