@@ -80,14 +80,13 @@ rt:
 .   .  .L1.lp.0.00.00   else loop
 
 
-in:                     Point is IN
-.   .  .L1.tp.0.04.28   Eights -> AR; GOTO tp
+ot:                     Point is OUT
+.   .  .L1.tp.0.04.28   0 -> AR; GOTO tp
 .   +0000000
 
-ot:                     Point is OUT
-.   .  .%2.  .6.23.25   Ct -> ID1
-.%3 .  .10.  .1.26.31   Shift R 4
-.14 .  .%0.tp.0.25.28   ID0 -> AR
+in:                     Point is IN
+.   .  .L1.tp.0.04.28   0 -> AR; GOTO tp
+.   +x000000
 
 tp:
 .17 .  .L2.L1.3.20.31   RETURN

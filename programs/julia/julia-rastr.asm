@@ -1,18 +1,24 @@
 #define ILOW d-0.0110
 #define IHIGH d0.0110
-#define ISTEP d0.0010
+#define ISTEP d0.001
 
-#define RLOW d-0.021
-#define RHIGH d0.021
-#define RSTEP d0.0004
+#define RLOW d-0.018
+#define RHIGH d0.018
+#define RSTEP d0.0005
 
 .00 .  .L1.rt.0.00.00   GOTO RESET
 
 #Leave room for formatting codes
-
 st:                     Start
-                        Reset Imaginary Position
-.04 .  .L1.L2.1.03.28   Imaginary Start -> AR
+                        Print a CR and a period
+.04 .  .L1.L2.1.03.28   AR = Format Newline
+.   b010 011 001 000 000 000 000 000 000 00
+.   .  .03.  .1.28.03   03:03 = AR
+.   .  .L2.  .0.08.31   Output AR to typewriter
+.%3 .  .L0.L0.0.28.31   Wait for IOReady
+
+                         Reset Imaginary Position
+.%0 .  .L1.L2.1.03.28   Imaginary Start -> AR
 .   ILOW                
 .   .  .00.  .1.28.23   AR -> Ci
 
