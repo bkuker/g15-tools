@@ -1,23 +1,11 @@
-rs:                     Return Setup
-.00 .  .L1.L2.0.04.28   Copy return command to A
-.   .  .rt.rt.4.20.31   Return Command
-.   .  .02.  .0.28.21   command for normal return
-.   .  .03.  .0.28.21   command for overflow return
-
-                        Skip the above code after the
-                        first call to this fractal code
-.   .  .L1.L2.0.04.28   Skip command to AR
-.   .  .01.07.0.00.00   
-.   .  .00.  .0.28.02   AR -> 2:0
-
                         Clear count
-.07 .  .L1.L2.0.04.28   1 -> AR
-.   2
+.00 .  .L1.L2.0.04.28   1 -> AR
+.   d1
 .   .  .%2.  .0.28.23   AR -> ct
 
                         Initialize Z
                         Load 23:0,1 (Ci,Cr) -> 20:0,1 (Zi,Zr)
-.L2 .  .%0.  .0.23.20   Ci -> Zi
+.07 .  .%0.  .0.23.20   Ci -> Zi
 .%1 .  .%1.  .0.23.20   Cr -> Zr
 
 
@@ -34,7 +22,7 @@ lp:
 .%1 .  .%2.  .0.28.22   AR -> P1i
 .L2 .  .%0.  .0.28.22   AR -> P2i
 
-.35 .  .40.40.1.20.31   "goto" 01.40 (complex multcily)
+.35 .  .40.40.1.20.31   "goto" 01.40 (complex multiply)
 
                         Add position to Z^2
 rt:

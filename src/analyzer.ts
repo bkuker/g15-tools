@@ -31,7 +31,7 @@ export function analyzeColor(program: ASM.Line[]): void {
                 str = colors.gray(str);
             }
 
-            console.log(str);
+            console.log(l.sourceLineNumber + ": " + str);
         } else {
             console.log(colors.gray(l.rawText));
         }
