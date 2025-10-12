@@ -51,6 +51,23 @@ rl:                     "Random Loop"
 
 .   . w.  .d1.0.21.31   GOSUB d1
 
+pp:                     PromPt
+.   .  .L1.L2.0.00.28 - Load into AR
+.   b 010 011 100 000 000 001 000 000 000 00
+.   .  .03.  .0.28.03   Copy format code to 3:03
+.   .  .L1.L2.0.00.28 - Load into AR
+.   +0000000
+.   .  .L2.  .0.08.31   Output AR to typewriter
+.L3 .  .L0.L0.0.28.31   Wait for IOReady
+
+.   .  .L1.L2.0.00.28 - Load into AR
+.   b 100 000 000 011 011 011 010 001 000 00
+.   .  .03.  .0.28.03   Copy format code to 3:03
+.   .  .L1.L2.0.00.28 - Load into AR
+.   -9999999
+.   .  .L2.  .0.08.31   Output AR to typewriter
+.L3 .  .L0.L0.0.28.31   Wait for IOReady
+
 gg:                     "Get Guess"
 
 # This clears line 23, and then adds a special bit in the last word.
@@ -94,7 +111,7 @@ in:
 .   .  .L2.rn.0.16.31   Halt
 
 d3:
-.   .  .L2.  .0.17.31   DING
+.   .  .00.  .0.17.31   DING
 .   .  .L2.  .0.00.00   NOP
 .   .  .L2.  .0.00.00   NOP
 .   .  .L2.  .0.00.00   NOP
@@ -108,7 +125,7 @@ d3:
 .   .  .L2.  .0.00.00   NOP
 .   .  .L2.  .0.00.00   NOP
 d2:
-.   .  .L2.  .0.17.31   DING
+.   .  .00.  .0.17.31   DING
 .   .  .L2.  .0.00.00   NOP
 .   .  .L2.  .0.00.00   NOP
 .   .  .L2.  .0.00.00   NOP
@@ -122,5 +139,5 @@ d2:
 .   .  .L2.  .0.00.00   NOP
 .   .  .L2.  .0.00.00   NOP
 d1:
-.   .  .L2.  .0.17.31   DING
+.   .  .00.  .0.17.31   DING
 .   .  .L1.L0.0.20.31   RETURN
