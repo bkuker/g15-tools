@@ -6,11 +6,19 @@
 #define RHIGH d0.0052
 #define RSTEP d0.0016
 
-.00 .  .01.sz.0.00.00   GOTO sz
+
+#1. Setup return commands
+su:                     Set Up
+#define RT 40
+.00 .  .L1.L2.0.00.28   Copy return command to A
+.   .  .RT.RT.2.20.31   Return Command
+.   .  .02.  .0.28.21   command for normal return
+.   .  .03.  .0.28.21   command for overflow return
+.   .  .01.sz.0.00.00   GOTO sz
 
 st:                     Start
                         Reset Imaginary Position
-.04 .  .L1.L2.1.00.28   Imaginary Start -> AR
+.08 .  .L1.L2.1.00.28   Imaginary Start -> AR
 .   ILOW                
 .   .  .00.  .1.28.23   AR -> Ci
 

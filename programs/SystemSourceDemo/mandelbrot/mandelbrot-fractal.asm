@@ -1,7 +1,7 @@
 rs:                     Return Setup
                         Set up the return instructions for the complex
                         multiplication routine.
-.00 .  .L1.L2.1.02.28   Copy return command to A
+.00 .  .01.07.0.00.00   Copy return command to A
 .   .  .rt.rt.2.20.31   Return Command
 .   .  .02.  .0.28.21   command for normal return
 .   .  .03.  .0.28.21   command for overflow return
