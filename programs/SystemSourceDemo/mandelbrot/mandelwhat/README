@@ -1,0 +1,6 @@
+The output of Paul's and Lloyd's emulators contained numeric
+differences.
+
+Using these files we determined that a DP subtraction of zero
+from PN caused an overflow, as it was incorrectly changed to
+a negative zero before adding.

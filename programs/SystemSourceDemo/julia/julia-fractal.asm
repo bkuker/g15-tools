@@ -1,0 +1,80 @@
+                        Clear count
+.00 .  .L1.L2.0.04.28   1 -> AR
+.   d1
+.   .  .%2.  .0.28.23   AR -> ct
+
+                        Initialize Z
+                        Load 23:0,1 (Ci,Cr) -> 20:0,1 (Zi,Zr)
+.07 .  .%0.  .0.23.20   Ci -> Zi
+.%1 .  .%1.  .0.23.20   Cr -> Zr
+
+
+lp:
+
+#43-55
+#                        Put Z into line 22 as complex mult params
+#                        Copy 20:0,1 (Zi,Zr) to...
+.L5 .  .%1.  .0.20.28   Zr -> AR
+.%2 .  .%3.  .0.28.22   AR -> P1r
+.%0 .  .%1.  .0.28.22   AR -> P2r
+
+.%2 .  .%0.  .0.20.28   Zi -> AR
+.%1 .  .%2.  .0.28.22   AR -> P1i
+.L2 .  .%0.  .0.28.22   AR -> P2i
+
+.35 .  .40.40.1.20.31   "goto" 01.40 (complex multiply)
+
+                        Add position to Z^2
+rt:
+                        Zr = Zr + Cr
+.40 .  .L1.L2.1.04.28   Cr -> AR
+.   d0                  Cr ( Set by rastr )
+.%2 .  .%1.  .1.20.29   AR += 20.01 (ResultR / Zr)
+.%2 .  .%1.  .1.28.20   AR -> 20.01
+
+                        Zi = Zi + Ci
+.51 .  .L1.L2.1.04.28   Ci -> AR
+.   d0                  Ci ( Set by rastr)
+.%1 .  .%0.  .1.20.29   AR += 20.00 (ResultI / Zi)
+.%1 .  .%0.  .1.28.20   AR -> 20.00
+
+                        if |Zi| > 2 goto ot
+.%1 .  .%0.  .2.20.28   |Zi| -> AR
+.%1 .  .L1.L2.3.04.29   Subtract two
+.   d0.02               Two shifted
+.   .  .L2.  .0.22.31   Test AR sign
+.L3 .  .L1.ot.0.00.00   if AR >= 0 goto ot
+                        else continue on
+
+                        if |Zr| > 2 goto ot
+.   .  .%1.  .2.20.28   |Zr| -> AR
+.%2 .  .L1.L2.3.04.29   Subtract two
+.   d0.02               Two shifted
+.   .  .L2.  .0.22.31   Test AR sign
+.L3 .  .L1.ot.0.00.00   if AR >= 0 goto ot
+                        else continue on
+
+                        ct = ct + 1
+.   .  .%2.  .1.23.28   ct -> AR
+.%3 .  .L1.L2.1.04.29   AR += 1
+.   +1
+.   .  .%2.  .1.28.23   AR -> ct
+
+                        if ct > limit goto in
+.%3 .  .L1.L2.3.04.29   Subtract limit
+.   +11                  Limit 12
+.   .  .L2.  .0.22.31   Test AR sign
+.L3 .  .L1.in.0.00.00   if AR >= 0 goto in
+.   .  .L1.lp.0.00.00   else loop
+
+
+ot:                     Point is OUT
+.   .  .L1.tp.0.04.28   0 -> AR; GOTO tp
+.   +0000000
+
+in:                     Point is IN
+.   .  .L1.tp.0.04.28   0 -> AR; GOTO tp
+.   +x000000
+
+tp:
+.17 .  .L2.L1.3.20.31   RETURN

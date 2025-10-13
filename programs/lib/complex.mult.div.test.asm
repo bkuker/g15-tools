@@ -1,4 +1,4 @@
-<INCLUDE src="bbl.asm">
+#include "bbl.asm"
 ct:                     Count
 .   d4                  Load 2 blocks
 
@@ -7,11 +7,11 @@ ct:                     Count
 
 <BLOCK>                 Line 2, BCD Routine
 
-<INCLUDE src="bcd.fraction.asm">
+#include "bcd.fraction.asm"
 
 <BLOCK>                 Block 1
 
-<INCLUDE src="complex.mult.div.asm">
+#include "complex.mult.div.asm"
 
 <BLOCK>                 Block 0
 

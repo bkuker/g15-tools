@@ -1,4 +1,4 @@
-<INCLUDE src="lib/bbl.asm">
+#include "lib/bbl.asm"
 ct:                     Count
 .     +3                Number of tracks to load
 
@@ -11,7 +11,7 @@ ct:                     Count
 
 
 <BLOCK>                 Line 2 BCD Code
-<INCLUDE src="lib/bcd.fraction.asm">
+#include "lib/bcd.fraction.asm"
 
 
 <BLOCK>                 Line 1, Unused

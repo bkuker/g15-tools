@@ -1,0 +1,24 @@
+verbosity drum 0
+verbosity cpu 0
+
+
+button dc off
+switch enable off
+switch tape off
+switch compute off
+
+ptr mount typeTest2.ptr
+button dc on
+
+
+run 12000
+
+type s
+
+run 12000
+
+type 7654321ts
+
+run 12000
+
+quit

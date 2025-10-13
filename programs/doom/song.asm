@@ -25,8 +25,8 @@
 #define F4 100110
 #define G3 000101
 #define G4 100101
-#define kk 000100
-#define ss 100100
+#define kk 010001 
+#define ss 000100
 
 #define .. 010010
 
@@ -60,9 +60,9 @@
 .00 +0
 # Block 1-B
 #2 & 3
-.   b Sx ss  V3 C3  V2 0
+.   b Sx ..  V3 C3  V2 0
 .   b Sx ..  V3 E2  V2 0
-.   b Sx ss  V2 E2  V2 0
+.   b Sx ..  V2 E2  V2 0
 .   b Ha A#2 V3 E2  V2 0
 .   b Sx ..  V2 ..  V2 0
 
@@ -78,9 +78,9 @@
 .   b Sx ..  V3 E2  V2 0
 .   b Sx ..  V2 E2  V2 0
 #2
-.   b Sx C3  V3 kk  V2 0
+.   b Sx C3  V3 ..  V2 0
 .   b Sx ..  V3 E2  V2 0
-.   b Sx ss  V2 E2  V2 0
+.   b Sx ..  V2 E2  V2 0
 .   b Sx A#2 V3 ..  V2 0
 #3
 .   b Sx ..  V3 E2  V2 0

@@ -19,7 +19,7 @@
 # ct = 4 will load 4 tracks into lines 3,2,1,0 and then jump
 # to 00:00
 #
-# <INCLUDE src="bbl.asm">
+# #include "bbl.asm"
 # ct:                      Count
 # .     +4                 Number of blocks to load
 #

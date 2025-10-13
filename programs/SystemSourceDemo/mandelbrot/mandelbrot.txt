@@ -1,0 +1,27 @@
+verbosity drum 0
+verbosity cpu 0
+
+
+button dc off
+switch enable off
+switch tape off
+switch compute off
+
+ptr mount mandelbrot.ptr
+button dc on
+
+status cpu
+
+
+run -1
+type 0000000ts
+
+run -1
+type 0000001ts
+
+run -1
+type 0000002ts
+
+status cpu
+
+quit

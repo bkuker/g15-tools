@@ -1,4 +1,4 @@
-<INCLUDE src="lib/bbl.asm">
+#include "lib/bbl.asm"
 ct:                     Count
 .     +4                Load 4 tape blocks into 3,2,1,0
 
@@ -11,7 +11,7 @@ ct:                     Count
 .04   0008801
 
 <BLOCK>                 Line 2, BCD Routine
-<INCLUDE src="lib/bcd.fraction.asm">
+#include "lib/bcd.fraction.asm"
 
 <BLOCK>                 Line 1, Unused
 

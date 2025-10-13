@@ -1,29 +1,24 @@
 {
   "name": "g15-tools",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview",
-    "asm": "tsx assembler/assembler.ts",
-    "dasm": "tsx assembler/disassembler.js",
-    "wtf": "tsx assembler/wtf.js"
+  "version": "1.0.0",
+  "bin": {
+    "g15asm": "./bin/g15asm.js",
+    "g15dasm": "./bin/g15dasm.js"
   },
+  "scripts": {
+    "asm": "ts-node src/assembler.ts",
+    "dasm": "ts-node src/disassembler.ts",
+    "wtf": "ts-node src/wtf.ts"
+  },
+  "keywords": [],
+  "author": "Bill Kuker <bkuker@billkuker.com>",
+  "license": "MIT",
+  "description": "Tools for writing code for the Bendix G15",
   "dependencies": {
     "colors": "^1.4.0",
     "commander": "^13.1.0",
-    "cytoscape": "^3.31.0",
-    "vue": "^3.5.13"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.1",
-    "@vue/tsconfig": "^0.7.0",
-    "tsx": "^4.19.2",
-    "typescript": "~5.7.2",
-    "vite": "^6.1.0",
-    "vite-plugin-node-polyfills": "^0.23.0",
-    "vue-tsc": "^2.2.0"
+    "@types/node": "^22.15.17",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }
