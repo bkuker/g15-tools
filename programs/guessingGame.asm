@@ -3,13 +3,14 @@
 .01 . u.02.02.0.19.00   Line 19 to Line 0 - Test set
 .02 .  .04.04.0.21.31   Transfer control to 0:rn
 
-.04 . u.L5.rn.0.00.20 - Copy next 4 values to 20:1,2,3,0
+.04 . u.L5.rn.0.00.20   Copy next 4 values to 20:1,2,3,0
 .   b00000000000000000000000011110
 .   b00000000000000000000111100000
 .   0
 .   b00000000000000000000111111110
 
 rn:
+.   .  .00.  .0.22.28
 .   .  .L2.rl.0.12.31   Enable Type In
 
 rf:                     "Random Fix"
@@ -49,26 +50,33 @@ rl:                     "Random Loop"
 .   .  .  .rf.0.00.00   Not Negative, bigger than 9
                         Negative, continue
 
-.   . w.  .d1.0.21.31   GOSUB d1
-
 pp:                     PromPt
-.   .  .L1.L2.0.00.28 - Load into AR
-.   b 010 011 100 000 000 001 000 000 000 00
+.   .  .L1.L2.0.00.28   Load into AR
+.   b 010 011 011 011 000 000 001 000 000 00
 .   .  .03.  .0.28.03   Copy format code to 3:03
-.   .  .L1.L2.0.00.28 - Load into AR
+.   .  .L1.L2.0.00.28   Load into AR
 .   +0000000
 .   .  .L2.  .0.08.31   Output AR to typewriter
-.L3 .  .L0.L0.0.28.31   Wait for IOReady
+.   .  .L0.L0.0.28.31   Wait for IOReady
 
-.   .  .L1.L2.0.00.28 - Load into AR
-.   b 100 000 000 011 011 011 010 001 000 00
+.   .  .L1.L2.0.00.28   Load into AR
+.   b 100 000 000 011 011 011 001 000 000 00
 .   .  .03.  .0.28.03   Copy format code to 3:03
-.   .  .L1.L2.0.00.28 - Load into AR
+.   .  .L1.L2.0.00.28   Load into AR
 .   -9999999
 .   .  .L2.  .0.08.31   Output AR to typewriter
-.L3 .  .L0.L0.0.28.31   Wait for IOReady
+.   .  .L0.L0.0.28.31   Wait for IOReady
 
+.   .  .L1.L2.0.00.28   Load into AR
+.   b 100 000 010 011 001 000 000 000 000 00
+.   .  .03.  .0.28.03   Copy format code to 3:03
+
+.   .  .L1.L2.0.00.28   Load into AR
+.   +0000000
 gg:                     "Get Guess"
+.   .  .  .  .1.28.28
+.   .  .L2.  .0.08.31   Output AR to typewriter
+.   .  .L0.L0.0.28.31   Wait for IOReady
 
 # This clears line 23, and then adds a special bit in the last word.
 # That bit will be shifted away after 9 bits of input. That is two
@@ -91,7 +99,9 @@ wt:                     Wait for 23:0 to equal zero
 .   .  .  .in.0.00.00       = 0, GOTO in 
 .   .  .  .wt.0.00.00       != 0 GOTO wt
 
+
 in:
+.   .  .L2.  .0.00.31   SET IOReady
                         Load guess into AR
 .   .  .00.  .0.23.28   23:0 -> AR
 
@@ -111,7 +121,14 @@ in:
 .   .  .L2.rn.0.16.31   Halt
 
 d3:
-.   .  .00.  .0.17.31   DING
+.   .  .L1.L2.0.00.28   Load into AR
+.   b 000 000 000 010 001 000 000 000 000 00
+.   .  .03.  .0.28.03   Copy format code to 3:03
+.   .  .L1.L2.0.00.28   Load into AR
+.   +w0w0000
+.   .  .L2.  .0.08.31   Output AR to typewriter
+.L3 .  .L0.L0.0.28.31   Wait for IOReady
+.   .  .d3.  .0.17.31   DING
 .   .  .L2.  .0.00.00   NOP
 .   .  .L2.  .0.00.00   NOP
 .   .  .L2.  .0.00.00   NOP
@@ -125,7 +142,7 @@ d3:
 .   .  .L2.  .0.00.00   NOP
 .   .  .L2.  .0.00.00   NOP
 d2:
-.   .  .00.  .0.17.31   DING
+.   .  .d2.  .0.17.31   DING
 .   .  .L2.  .0.00.00   NOP
 .   .  .L2.  .0.00.00   NOP
 .   .  .L2.  .0.00.00   NOP
@@ -139,5 +156,5 @@ d2:
 .   .  .L2.  .0.00.00   NOP
 .   .  .L2.  .0.00.00   NOP
 d1:
-.   .  .00.  .0.17.31   DING
+.   .  .d1.  .0.17.31   DING
 .   .  .L1.L0.0.20.31   RETURN
