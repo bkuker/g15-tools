@@ -98,6 +98,10 @@ To change to a different program, or restart a program...
 * Complex Multiplication Subroutine prepared by D. Stein & S. H. Lewis, March 1957
   * Transcription and typo fixes by David Green
 * Bendix G-15 Restoration & Operation: David Lovett, 2025
+* Bendix G-15 Emulation & Expertise:
+  * Paul Kimpel
+  * Lloyd Hasley
+  * Rob Kolstad 
 * Mandelbrot, Julia & Guessing Game prepared by Wm. Kuker, 2025
 
 The fractal programs were inspired when I found the scanned listings of the complex math subroutines from 1957. The first Mandelbrot set was computed and typed out by Robert W. Brooks and Peter Matelski in 1978. On September 9th, 2025 David Lovett executed this algorithm for the first time on Bendix G-15 SN: 369. As far as we know this was the first ever computation of the Mandelbrot set on a vacuum tube computer.
