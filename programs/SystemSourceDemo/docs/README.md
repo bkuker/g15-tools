@@ -20,7 +20,13 @@ Upon startup this program stops and waits for the user to select an image size a
 
 To select a size type `N[TAB]s` where N is one of 0,1,2 or 3. These are the smallest through largest sizes.
 
-TODO: Table of size and time estimate for each option.
+|   N | Paper Width | Paper Height | Run Time |
+| --- | ----------- | ------------ | -------- |
+|   0 |         ??? |          ??? |      ??? |
+|   1 |         ??? |          ??? |      ??? |
+|   2 |         ??? |          ??? |      ??? |
+|   3 |         ??? |          ??? |      ??? |
+
 
 Typeout will begin. There is a BREAKPOINT after each complete image, after which the image will begin printing again at the same size. This allows the program to either be run in repeat mode hands off (by setting Compute to GO) or to draw a single image and then stop (by setting Compute to BP).
 
