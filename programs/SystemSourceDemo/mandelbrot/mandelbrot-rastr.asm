@@ -111,34 +111,36 @@ un:
 .   d1
 ze:
 .   d0
-sm:                     SMALL
+sm:                     SMALL Size 0
 .   .  .L1.L2.0.00.28   Load to AR
-.   d0.0040
+.   d0.002
 .   .  .is.  .0.28.00   Save to is
 .   .  .L1.L2.0.00.28   Load to AR
-.   d0.0016
+.   d0.001156
 .   .  .rs.st.0.28.00   Save to rs
 
-md:                     MEDIUM
+md:                     MEDIUM Size 1
 .   .  .L1.L2.0.00.28   Load to AR
-.   d0.0020
+.   d0.001
 .   .  .is.  .0.28.00   Save to is
 .   .  .L1.L2.0.00.28   Load to AR
-.   d0.0008
+.   d0.000578
 .   .  .rs.st.0.28.00   Save to rs
 
-lg:                     LARGE
-.   .  .L1.L2.0.00.28   Load to AR
-.   d0.0010
-.   .  .is.  .0.28.00   Save to is
-.   .  .L1.L2.0.00.28   Load to AR
-.   d0.0004
-.   .  .rs.st.0.28.00   Save to rs
-
-hg:                     HUGE
+lg:                     LARGE Size 2
+                        8.5x11 paper
+                        43 Line, 132 column
 .   .  .L1.L2.0.00.28   Load to AR
 .   d0.0005
 .   .  .is.  .0.28.00   Save to is
 .   .  .L1.L2.0.00.28   Load to AR
-.   d0.0002
+.   d0.000289
+.   .  .rs.st.0.28.00   Save to rs
+
+hg:                     HUGE    
+.   .  .L1.L2.0.00.28   Load to AR
+.   d0.00025
+.   .  .is.  .0.28.00   Save to is
+.   .  .L1.L2.0.00.28   Load to AR
+.   d0.0001445
 .   .  .rs.st.0.28.00   Save to rs
