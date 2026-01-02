@@ -8,6 +8,7 @@
   "scripts": {
     "asm": "ts-node src/assembler.ts",
     "dasm": "ts-node src/disassembler.ts",
+    "alphaDump": "ts-node src/alphaDump.ts",
     "wtf": "ts-node src/wtf.ts"
   },
   "keywords": [],
@@ -15,9 +16,10 @@
   "license": "MIT",
   "description": "Tools for writing code for the Bendix G15",
   "dependencies": {
+    "@types/node": "^22.15.17",
     "colors": "^1.4.0",
     "commander": "^13.1.0",
-    "@types/node": "^22.15.17",
+    "glob": "^11.0.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
